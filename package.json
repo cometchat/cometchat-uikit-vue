@@ -7,7 +7,7 @@
     "dev": "watch 'npm run develop' ."
   },
   "dependencies": {
-    "@cometchat-pro/chat": "^2.1.6",
+    "@cometchat-pro/chat": "^2.1.7",
     "dateformat": "^4.4.1",
     "emoji-mart-vue-fast": "^7.0.7",
     "twemoji": "^13.0.1"
