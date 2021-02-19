@@ -62,7 +62,7 @@ export const headerNameStyle = () => {
 export const headerCloseStyle = (img) => {
   return {
     cursor: "pointer",
-    background: `url(${img}) center center no-repeat`,
+    background: `url(${img}) center center / 18px no-repeat`,
     width: "24px",
     height: "24px",
   };
