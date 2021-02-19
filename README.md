@@ -1,59 +1,32 @@
 <div style="width:100%">
     <div style="width:50%;">
         <div align="center">
-        <img align="center" width="180" height="180" alt="CometChat" src="./images/logo.png">    
+        <img align="center" width="180" height="180" alt="CometChat" src="./Screenshots/logo.png">    
         </div>    
     </div>    
 </div>
 
 <br/><br/>
 
-# CometChat Vue Chat UI Kit
-
-![GitHub repo size](https://img.shields.io/github/repo-size/cometchat-pro/javascript-vue-chat-ui-kit)
-![GitHub contributors](https://img.shields.io/github/contributors/cometchat-pro/javascript-vue-chat-ui-kit)
-![GitHub stars](https://img.shields.io/github/stars/cometchat-pro/javascript-vue-chat-ui-kit?style=social)
-![Twitter Follow](https://img.shields.io/twitter/follow/cometchat?style=social)
-
+# CometChat Vue UI Kit
 
 </br></br>
 
 <div style="width:100%">
     <div style="width:50%; display:inline-block">
         <div align="center">
-          <img align="left" alt="Main" src="./images/main.png">    
+          <img align="left" alt="Main" src="./Screenshots/main.png">    
         </div>    
     </div>    
 </div>
 
 </br></br>
   
-CometChat Vue Chat UI Kit is a collection of custom **UI Components** designed to build chat application with fully customizable UI. It is designed to avoid boilerplate code for building UI. 
+CometChat Vue UI Kit is a collection of custom UI Components designed to build text chat and voice/video callings features in your application. 
+
+The UI Kit is developed to keep developers in mind and aims to reduce development efforts significantly.
 
 ___
-
-
-## Features
-- Private(1-1) & Group Conversations
-- Voice & video calling & conferencing
-- Rich Media Attachments
-- Typing Indicators
-- Text, Media and Custom messages
-- Read receipts
-- Online Presence Indicators
-- Message History
-- Users & Friends List
-- Search by users and groups
-- Groups List
-- Conversations List
-- Threaded Conversations
-  
-
- ## Extensions
-
- [Thumbnail Generation](https://prodocs.cometchat.com/docs/extensions-thumbnail-generation) | [Link Preview](https://prodocs.cometchat.com/docs/extensions-link-preview) | [Rich Media Preview](https://prodocs.cometchat.com/docs/extensions-rich-media-preview) | [Smart Reply](https://prodocs.cometchat.com/docs/extensions-smart-reply)| [Emojis](https://prodocs.cometchat.com/docs/extensions-emojis) | [Polls](https://prodocs.cometchat.com/docs/extensions-polls) | [Reactions](https://prodocs.cometchat.com/docs/extensions-reactions) | [Stickers](https://prodocs.cometchat.com/docs/extensions-stickers)
-
-
 
 ## Prerequisites
 
@@ -65,11 +38,11 @@ Before you begin, ensure you have met the following requirements:
 
 - [npm](https://www.npmjs.com/get-npm)
 
-- [Vue](https://vuejs.org/)  `npm install vue@2.6.11`
+- [Vue](https://vuejs.org/)  `npm install vue@2.6.12`
 
 ___
 
-## Installing CometChat Vue Chat UI Kit 
+## Installing Vue UI Kit 
 
 ## 1. Setup
 
@@ -85,14 +58,17 @@ ___
 ### iii. Add the CometChat dependency 📦
 
 ```javascript
-  npm install @cometchat-pro/chat@2.1.6 --save
+  npm install @cometchat-pro/chat@2.1.7 --save
 ```
 
 <br/>
 
 ## 2. Configure CometChat inside your app
-
-### i. Initialize CometChat 🌟
+### i. Import CometChat SDK
+```
+import { CometChat } from "@cometchat-pro/chat";
+```
+### ii. Initialize CometChat 🌟
 
 The `init()` method initializes the settings required for CometChat.  
 We suggest calling the `init()` method on app startup, preferably in the `created()` method of the Application class.
@@ -120,7 +96,7 @@ CometChat.init(appID, appSetting).then(
 * Replace `APP_ID` and `REGION` with your CometChat `App ID` and `Region` in the above code.
 
 
-### ii. Login your user 👤
+### iii. Login your user 👤
 
 This method takes `UID` and `Auth Key` as input parameters and returns the User object containing all the information of the logged-in user.
 
@@ -148,21 +124,24 @@ CometChat.login(uid, authKey).then(
 
 ## 3. Add UI Kit to your project
 
-* Clone this repository.
+* Clone this repository
+```
+git clone https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit.git
+```
 * Copy the folder to your source folder.
 
-<img align="center" width="300" height="auto" src="./images/add-ui-kit.png">
+<img align="center" width="300" height="auto" src="./Screenshots/add-ui-kit.png">
 
-* Copy all the dependencies from package.json of `cometchat-pro-vue-chat-ui-kit` into your project's package.json and install them.
+* Copy all the dependencies from package.json of `cometchat-pro-vue-ui-kit` into your project's package.json and install them.
 
-<img align="center" width="500" height="auto"  src="./images/package-dependencies.png" />
+<img align="center" width="500" height="auto"  src="./Screenshots/package-dependencies.png" />
 
 <br/>
 
 ## 4. Launch CometChat
 
 Using the `CometChatUI` component from the UI Kit, you can launch a fully functional chat application.  
-In this component all UI Components are interlinked and work together to launch a fully functional chat on your website/application.  
+In this component all the UI Screens and UI Components are interlinked and work together to launch a fully functional chat on your website/application.  
 
 Usage of application in project:
 
@@ -195,9 +174,9 @@ Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-
 
 # Troubleshooting
 
-- To read the full documentation on UI Kit integration visit our [Documentation](https://prodocs.cometchat.com/docs/vue-ui-kit).
+- To read the full documentation on UI Kit integration visit our [Documentation](https://prodocs.cometchat.com/docs/ui-kit-vue-js).
 
-- Facing any issues while integrating or installing the UI Kit please <a href="https://app.cometchat.com/" target="_blank"> connect with us via real time support present in CometChat Dashboard.</a>
+- Facing any issues while integrating or installing the UI Kit please connect with us via real time support present in <a href="https://app.cometchat.com/" target="_blank">CometChat Dashboard.</a>
 
 ---
 

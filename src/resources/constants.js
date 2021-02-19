@@ -32,7 +32,7 @@ export const DEFAULT_ARRAY_PROP = {
   },
 };
 
-export const STRING_MESSAGES = {
+export const COMETCHAT_CONSTANTS = {
   NO_ITEM_SELECTED_MESSAGE: "Select a chat to start messaging",
   NO_TAB_SELECTED_MESSAGE: "Switch tabs to start messaging",
   LOADING_MESSSAGE: "Loading...",
@@ -152,6 +152,7 @@ export const STRING_MESSAGES = {
   ENTER_YOUR_OPTION: "Enter your option",
   ADD_NEW_OPTION: "Add new option",
   VIEW_MEMBERS: "View Members",
+  VIEW: "View",
   DETAILS: "Details",
   NOTIFICATIONS: "Notifications",
   OTHER: "Other",
