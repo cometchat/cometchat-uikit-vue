@@ -21,12 +21,12 @@
 </div>
 
 </br></br>
-  
-CometChat Vue UI Kit is a collection of custom UI Components designed to build text chat and voice/video callings features in your application. 
+
+CometChat Vue UI Kit is a collection of custom UI Components designed to build text chat and voice/video callings features in your application.
 
 The UI Kit is developed to keep developers in mind and aims to reduce development efforts significantly.
 
-___
+---
 
 ## Prerequisites
 
@@ -38,44 +38,47 @@ Before you begin, ensure you have met the following requirements:
 
 - [npm](https://www.npmjs.com/get-npm)
 
-- [Vue](https://vuejs.org/)  `npm install vue@2.6.12`
+- [Vue](https://vuejs.org/) `npm install vue@2.6.12`
 
-___
+---
 
-## Installing Vue UI Kit 
+## Installing Vue UI Kit
 
 ## 1. Setup
 
 ### i. Register on CometChat 🔧
 
-* To install Vue UI Kit, you need to first register on CometChat Dashboard. <a href="https://app.cometchat.com/" target="_blank">Click here to Sign Up.</a>
+- To install Vue UI Kit, you need to first register on CometChat Dashboard. <a href="https://app.cometchat.com/" target="_blank">Click here to Sign Up.</a>
 
 ### ii. Get your application keys 🔑
 
-* Create a new app.
-* Head over to the Quick Start or API & Auth Keys section and note the `App ID`, `Auth Key`, and `Region`.
+- Create a new app.
+- Head over to the Quick Start or API & Auth Keys section and note the `App ID`, `Auth Key`, and `Region`.
 
 ### iii. Add the CometChat dependency 📦
 
 ```javascript
-  npm install @cometchat-pro/chat@2.1.7 --save
+  npm install @cometchat-pro/chat@2.2.0 --save
 ```
 
 <br/>
 
 ## 2. Configure CometChat inside your app
+
 ### i. Import CometChat SDK
+
 ```
 import { CometChat } from "@cometchat-pro/chat";
 ```
+
 ### ii. Initialize CometChat 🌟
 
 The `init()` method initializes the settings required for CometChat.  
 We suggest calling the `init()` method on app startup, preferably in the `created()` method of the Application class.
 
 ```javascript
-const appID = "APP_ID";
-const region = "REGION";
+const appID = 'APP_ID';
+const region = 'REGION';
 const appSetting = new CometChat.AppSettingsBuilder()
   .subscribePresenceForAllUsers()
   .setRegion(region)
@@ -83,56 +86,61 @@ const appSetting = new CometChat.AppSettingsBuilder()
 
 CometChat.init(appID, appSetting).then(
   () => {
-    console.log("Initialization completed successfully");
+    console.log('Initialization completed successfully');
     // You can now call login function.
   },
-  error => {
-    console.log("Initialization failed with error:", error);
+  (error) => {
+    console.log('Initialization failed with error:', error);
     // Check the reason for error and take appropriate action.
   }
 );
 ```
-**Note:**</br>
-* Replace `APP_ID` and `REGION` with your CometChat `App ID` and `Region` in the above code.
 
+**Note:**</br>
+
+- Replace `APP_ID` and `REGION` with your CometChat `App ID` and `Region` in the above code.
 
 ### iii. Login your user 👤
 
 This method takes `UID` and `Auth Key` as input parameters and returns the User object containing all the information of the logged-in user.
 
 ```javascript
-const authKey = "AUTH_KEY";
-const uid = "SUPERHERO1";
+const authKey = 'AUTH_KEY';
+const uid = 'SUPERHERO1';
 
 CometChat.login(uid, authKey).then(
-  user => {
-    console.log("Login Successful:", { user });    
+  (user) => {
+    console.log('Login Successful:', { user });
   },
-  error => {
-    console.log("Login failed with exception:", { error });    
+  (error) => {
+    console.log('Login failed with exception:', { error });
   }
 );
 ```
+
 **Note:** </br>
-* Replace `AUTH_KEY` with your CometChat `Auth Key` in the above code.
 
-* We have setup 5 users for testing having UIDs: `SUPERHERO1`, `SUPERHERO2`, `SUPERHERO3`,`SUPERHERO4` and `SUPERHERO5`.
+- Replace `AUTH_KEY` with your CometChat `Auth Key` in the above code.
 
-* We have used uid  `SUPERHERO1` as an example here. You can create User from CometChat Dashboard as well.
+- We have setup 5 users for testing having UIDs: `SUPERHERO1`, `SUPERHERO2`, `SUPERHERO3`,`SUPERHERO4` and `SUPERHERO5`.
+
+- We have used uid `SUPERHERO1` as an example here. You can create User from CometChat Dashboard as well.
 
 <br/>
 
 ## 3. Add UI Kit to your project
 
-* Clone this repository
+- Clone this repository
+
 ```
 git clone https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit.git
 ```
-* Copy the folder to your source folder.
+
+- Copy the folder to your source folder.
 
 <img align="center" width="300" height="auto" src="./Screenshots/add-ui-kit.png">
 
-* Copy all the dependencies from package.json of `cometchat-pro-vue-ui-kit` into your project's package.json and install them.
+- Copy all the dependencies from package.json of `cometchat-pro-vue-ui-kit` into your project's package.json and install them.
 
 <img align="center" width="500" height="auto"  src="./Screenshots/package-dependencies.png" />
 
@@ -141,11 +149,11 @@ git clone https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit.git
 ## 4. Launch CometChat
 
 Using the `CometChatUI` component from the UI Kit, you can launch a fully functional chat application.  
-In this component all the UI Screens and UI Components are interlinked and work together to launch a fully functional chat on your website/application.  
+In this component all the UI Screens and UI Components are interlinked and work together to launch a fully functional chat on your website/application.
 
 Usage of application in project:
 
- ```html
+```html
 <template>
   <div id="app">
     <CometChatUI />
@@ -153,16 +161,15 @@ Usage of application in project:
 </template>
 
 <script>
-  import { CometChatUI } from "./cometchat-pro-vue-ui-kit";
+  import { CometChatUI } from './cometchat-pro-vue-ui-kit';
   export default {
-    name: "App",
+    name: 'App',
     components: {
       CometChatUI,
-    }
+    },
   };
 </script>
- ```
-
+```
 
 ---
 
