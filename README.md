@@ -181,7 +181,7 @@ Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-
 
 # Troubleshooting
 
-- To read the full documentation on UI Kit integration visit our [Documentation](https://prodocs.cometchat.com/docs/ui-kit-vue-js).
+- To read the full documentation on UI Kit integration visit our [Documentation](https://prodocs.cometchat.com/docs/vue-ui-kit).
 
 - Facing any issues while integrating or installing the UI Kit please connect with us via real time support present in <a href="https://app.cometchat.com/" target="_blank">CometChat Dashboard.</a>
 
