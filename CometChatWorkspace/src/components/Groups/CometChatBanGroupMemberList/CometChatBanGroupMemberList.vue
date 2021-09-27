@@ -31,9 +31,11 @@
             <p :style="styles.contactMsgTxt">{{ decoratorMessage }}</p>
           </caption>
           <tbody :style="styles.tableBody" @scroll="scrollHandler">
+            <!--For vue2 we need :key="i" on the real element -->
+            <!--For vue3 we need :key="i" on the template element -->
+            <!-- eslint-disable -->
             <template 
               v-for="(member, i) in bannedMembersList"
-              :key="i"
             >
               <comet-chat-ban-group-member-list-item
                 :item="item"

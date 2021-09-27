@@ -44,6 +44,7 @@
   </div>
 </template>
 
+<!--eslint-disable-->
 <script>
 import {
   COMETCHAT_CONSTANTS,
@@ -281,7 +282,7 @@ export default {
      */
     usersUpdateHandler(user) {
       this.logInfo("CometChatUserList :usersUpdateHandler", { user });
-      let users = [...this.userlist];
+      let users = [...this.userList];
 
       let userKey = users.findIndex((u) => u.uid === user.uid);
 
@@ -290,7 +291,7 @@ export default {
         let newUserObj = { ...userObj, ...user };
         users.splice(userKey, 1, newUserObj);
 
-        this.userlist = users;
+        this.userList = users;
       }
     },
   },
@@ -301,6 +302,12 @@ export default {
 
     this.getUsers();
     userListManager.attachListeners(this.usersUpdateHandler);
+  },
+  beforeDestroy() {
+    if (userListManager) {
+      userListManager.removeListeners();
+      userListManager = null;
+    }
   },
   beforeUnmount() {
     if (userListManager) {

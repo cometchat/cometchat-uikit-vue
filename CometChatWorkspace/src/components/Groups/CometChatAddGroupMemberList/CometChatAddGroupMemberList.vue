@@ -33,9 +33,11 @@
             class="cometchat__add__members__table"
             @scoll="scrollHandler"
           >
+            <!--For vue2 we need :key="i" on the real element -->
+            <!--For vue3 we need :key="i" on the template element -->
+            <!-- eslint-disable -->
             <template 
               v-for="(user, i) in filteredList"
-              :key="i"
             >
               <comet-chat-add-group-member-list-item
                 :user="user"
@@ -60,6 +62,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -353,6 +357,12 @@ export default {
 
     this.getUsers();
     addMembersManager.attachListeners(this.userUpdateHandler);
+  },
+  beforeDestroy() {
+    if (addMembersManager) {
+      addMembersManager.removeListeners();
+      addMembersManager = null;
+    }
   },
   beforeUnmount() {
     if (addMembersManager) {

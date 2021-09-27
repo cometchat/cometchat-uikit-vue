@@ -81,6 +81,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import {
   COMETCHAT_CONSTANTS,
@@ -326,6 +328,9 @@ export default {
   },
   beforeMount() {
     this.refreshManager();
+  },
+  beforeDestroy() {
+    this.removeManager();
   },
   beforeUnmount() {
     this.removeManager();

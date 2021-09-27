@@ -44,6 +44,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -429,6 +431,12 @@ export default {
 
     callScreenManager = new CallScreenManager();
     callScreenManager.attachListeners(this.callScreenUpdateHandler);
+  },
+  beforeDestroy() {
+    if (callScreenManager) {
+      callScreenManager.removeListeners();
+      callScreenManager = null;
+    }
   },
   beforeUnmount() {
     if (callScreenManager) {

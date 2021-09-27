@@ -60,6 +60,7 @@
   </div>
 </template>
 
+<!--eslint-disable-->
 <script>
 import dateFormat from "dateformat";
 
@@ -345,6 +346,12 @@ export default {
       this.setStatusForUser();
     } else {
       this.setStatusForGroup();
+    }
+  },
+  beforeDestroy() {
+    if (this.messageHeaderManager) {
+      this.messageHeaderManager.removeListeners();
+      this.messageHeaderManager = null;
     }
   },
   beforeUnmount() {
