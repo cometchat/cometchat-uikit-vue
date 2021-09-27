@@ -43,6 +43,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -291,6 +293,12 @@ export default {
 
     callAlertManager = new CallAlertManager();
     callAlertManager.attachListeners(this.callScreenUpdateHandler);
+  },
+  beforeDestroy() {
+    if (callAlertManager) {
+      callAlertManager.removeListeners();
+      callAlertManager = null;
+    }
   },
   beforeUnmount() {
     if (callAlertManager) {

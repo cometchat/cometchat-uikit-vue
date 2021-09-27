@@ -8,7 +8,7 @@ export class MessageListManager {
   type = "";
   parentMessageId = null;
   messageRequest = null;
-  limit = 30;
+  limit = enums.MESSAGE_REQUEST_LIMIT;
   categories = [
     enums.CATEGORY_MESSAGE,
     enums.CATEGORY_CUSTOM,

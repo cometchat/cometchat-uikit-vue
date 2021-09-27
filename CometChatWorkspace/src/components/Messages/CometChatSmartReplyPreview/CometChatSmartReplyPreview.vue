@@ -4,9 +4,11 @@
       <div :style="styles.previewClose" @click="emitEvent('close')"></div>
     </div>
     <div :style="styles.previewOptionsWrapper">
+      <!--For vue2 we need :key="i" on the real element -->
+      <!--For vue3 we need :key="i" on the template element -->
+      <!-- eslint-disable -->
       <template 
-        v-for="(option, i) in options" 
-        :key="i"
+        v-for="(option, i) in options"
       >
         <div
           :style="styles.previewOption"

@@ -39,9 +39,11 @@
             </tr>
           </thead>
           <tbody :style="styles.tableBody" @scroll="scrollHandler">
+            <!--For vue2 we need :key="i" on the real element -->
+            <!--For vue3 we need :key="i" on the template element -->
+            <!-- eslint-disable -->
             <template 
               v-for="(member, i) in membersList"
-              :key="i"
             >
               <comet-chat-view-group-member-list-item
                 :item="item"
