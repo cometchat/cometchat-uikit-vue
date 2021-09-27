@@ -44,6 +44,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -377,14 +379,8 @@ export default {
      */
     markMessageAsRead(message) {
       try {
-        const type = message.receiverType;
-        const id =
-          type === CometChat.RECEIVER_TYPE.USER
-            ? message.sender.uid
-            : message.receiverId;
-
         if (this.hasProperty(message, "readAt") === false) {
-          CometChat.markAsRead(message.id, id, type);
+          CometChat.markAsRead(message);
         }
       } catch (error) {
         this.logError("Error marking message as read", error);
@@ -429,6 +425,12 @@ export default {
 
     callScreenManager = new CallScreenManager();
     callScreenManager.attachListeners(this.callScreenUpdateHandler);
+  },
+  beforeDestroy() {
+    if (callScreenManager) {
+      callScreenManager.removeListeners();
+      callScreenManager = null;
+    }
   },
   beforeUnmount() {
     if (callScreenManager) {

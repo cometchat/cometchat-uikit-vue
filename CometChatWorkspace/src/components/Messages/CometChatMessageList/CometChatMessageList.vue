@@ -14,7 +14,7 @@
       </div>
       <template v-for="(message, i) in computedMessages">
         <div
-          :key="uid(i)"
+          :key="i"
           v-if="message.messageSentDate"
           :style="styles.msgDateContainer"
         >
@@ -24,7 +24,7 @@
         </div>
         <template v-if="message.category === 'call'">
           <comet-chat-action-message-bubble
-            :key="uid(i)"
+            :key="JSON.stringify(message)"
             :theme="theme"
             :message="message"
             :logged-in-user="loggedInUser"
@@ -34,7 +34,7 @@
           <template v-if="loggedInUser.uid === message.sender.uid">
             <template v-if="hasProperty(message, 'deletedAt')">
               <comet-chat-delete-message-bubble
-                :key="uid(i)"
+                :key="JSON.stringify(message)"
                 :item="item"
                 :type="type"
                 :theme="theme"
@@ -49,7 +49,7 @@
                 "
               >
                 <comet-chat-sender-text-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -62,7 +62,7 @@
                 "
               >
                 <comet-chat-sender-image-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -75,7 +75,7 @@
                 "
               >
                 <comet-chat-sender-file-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -88,7 +88,7 @@
                 "
               >
                 <comet-chat-sender-video-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -101,7 +101,7 @@
                 "
               >
                 <comet-chat-sender-audio-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -112,7 +112,7 @@
           <template v-else>
             <template v-if="hasProperty(message, 'deletedAt')">
               <comet-chat-delete-message-bubble
-                :key="uid(i)"
+                :key="JSON.stringify(message)"
                 :item="item"
                 :type="type"
                 :theme="theme"
@@ -127,7 +127,7 @@
                 "
               >
                 <comet-chat-receiver-text-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -140,7 +140,7 @@
                 "
               >
                 <comet-chat-receiver-image-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -153,7 +153,7 @@
                 "
               >
                 <comet-chat-receiver-file-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -166,7 +166,7 @@
                 "
               >
                 <comet-chat-receiver-video-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -179,7 +179,7 @@
                 "
               >
                 <comet-chat-receiver-audio-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -192,7 +192,7 @@
           <template v-if="loggedInUser.uid === message.sender.uid">
             <template v-if="hasProperty(message, 'deletedAt')">
               <comet-chat-delete-message-bubble
-                :key="uid(i)"
+                :key="JSON.stringify(message)"
                 :item="item"
                 :type="type"
                 :theme="theme"
@@ -203,7 +203,7 @@
             <template v-else>
               <template v-if="message.type === ENUMS.CUSTOM_TYPE_POLL">
                 <comet-chat-sender-poll-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -211,7 +211,7 @@
               </template>
               <template v-else-if="message.type === ENUMS.CUSTOM_TYPE_STICKER">
                 <comet-chat-sender-sticker-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -222,7 +222,7 @@
           <template v-else>
             <template v-if="hasProperty(message, 'deletedAt')">
               <comet-chat-delete-message-bubble
-                :key="uid(i)"
+                :key="JSON.stringify(message)"
                 :item="item"
                 :type="type"
                 :theme="theme"
@@ -233,7 +233,7 @@
             <template v-else>
               <template v-if="message.type === ENUMS.CUSTOM_TYPE_POLL">
                 <comet-chat-receiver-poll-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -241,7 +241,7 @@
               </template>
               <template v-if="message.type === ENUMS.CUSTOM_TYPE_STICKER">
                 <comet-chat-receiver-sticker-message-bubble
-                  :key="uid(i)"
+                  :key="JSON.stringify(message)"
                   :message="message"
                   @action="actionHandler"
                   v-bind="senderRecieverMessageCommonProps"
@@ -253,7 +253,7 @@
         <template
           v-else-if="message.category === 'action' && canShowMessage(message)"
         >
-          <div :style="styles.actionMsg" :key="uid(i)">
+          <div :style="styles.actionMsg" :key="JSON.stringify(message)">
             <p :style="styles.actionMsgText">{{ message.message }}</p>
           </div>
         </template>
@@ -261,6 +261,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -297,6 +299,7 @@ import CometChatReceiverStickerMessageBubble from "../Extensions/CometChatReceiv
 let cometChatManager;
 
 import * as style from "./style";
+import { CometChatEvent } from '../../../util/CometChatEvent';
 
 /**
  * Displays list of messages.
@@ -468,6 +471,14 @@ export default {
       this.emitAction(action, { message });
     },
     /**
+     * Mark message as delivered
+     */
+    markMessageAsDelivered(message) {
+      if (!message.getDeliveredAt()) {
+        CometChat.markAsDelivered(message);
+      }
+    },
+    /**
      * Handles listener events
      */
     messageUpdateHandler(key, message, group, options) {
@@ -490,9 +501,11 @@ export default {
           break;
         case enums.TEXT_MESSAGE_RECEIVED:
         case enums.MEDIA_MESSAGE_RECEIVED:
+          this.markMessageAsDelivered(message);
           this.messageReceived(message);
           break;
         case enums.CUSTOM_MESSAGE_RECEIVED:
+          this.markMessageAsDelivered(message);
           this.customMessageReceived(message);
           break;
         case enums.GROUP_MEMBER_SCOPE_CHANGED:
@@ -510,18 +523,32 @@ export default {
         case enums.OUTGOING_CALL_REJECTED:
           this.callUpdated(message);
           break;
+        case enums.TRANSIENT_MESSAGE_RECEIVED: {
+          this.onTransientMessageReceived(message)
+          break;
+        }
         default:
           break;
       }
     },
     /**
-     * Handles mesaage list scroll
+     * Handles message list scroll
      */
     scrollHandler(e) {
       this.$nextTick(() => {
         try {
           const scrollTop = e.currentTarget.scrollTop;
-          this.lastScrollTop = this.$refs.messagesEnd.scrollHeight - scrollTop;
+          const scrollHeight = this.$refs.messagesEnd ? this.$refs.messagesEnd.scrollHeight : 0;
+          const clientHeight = this.$refs.messagesEnd ? this.$refs.messagesEnd.clientHeight : 0;          
+          
+          this.lastScrollTop = scrollHeight - scrollTop;
+
+          if (
+            Math.ceil(this.lastScrollTop) === clientHeight ||
+            Math.ceil(this.lastScrollTop) === (clientHeight + 1)
+          ) {
+            CometChatEvent.triggerHandler(enums.EVENTS["CLEAR_UNREAD_MESSAGES"], {});
+          }
 
           const top = Math.round(scrollTop) === 0;
           if (top && this.messages.length) {
@@ -531,6 +558,27 @@ export default {
           this.logError("Error in scrolling", error);
         }
       });
+    },
+    /**
+     * On Transient message received 
+     */
+    onTransientMessageReceived(message) {
+      if (this.type === CometChat.RECEIVER_TYPE.GROUP && message.getReceiverType() === CometChat.RECEIVER_TYPE.GROUP && message.getReceiverId() === this.item.guid) {
+        this.showAndStopReaction(message)
+      } else if (this.type === CometChat.RECEIVER_TYPE.USER && message.getReceiverType() === CometChat.RECEIVER_TYPE.USER && message.getSender().uid === this.item.uid) {
+        this.showAndStopReaction(message)    
+      }
+    },
+    /**
+     * Show & stop reaction
+     */
+    showAndStopReaction(message) {
+      this.emitAction("showReaction", { reaction: message });
+          
+      const typingInterval = enums.LIVE_REACTION_TIMER;
+      setTimeout(() => {
+        this.emitAction("stopReaction", { reaction: message });
+      }, typingInterval);
     },
     /**
      * Emits group updated event
@@ -559,11 +607,7 @@ export default {
           message.getReceiverType() === CometChat.RECEIVER_TYPE.GROUP
         ) {
           if (!message.getReadAt()) {
-            CometChat.markAsRead(
-              message.getId().toString(),
-              message.getReceiverId(),
-              message.getReceiverType()
-            );
+            CometChat.markAsRead(message);
           }
 
           this.emitAction("callUpdated", { message });
@@ -573,11 +617,7 @@ export default {
           message.getReceiverType() === CometChat.RECEIVER_TYPE.USER
         ) {
           if (!message.getReadAt()) {
-            CometChat.markAsRead(
-              message.getId().toString(),
-              message.getSender().uid,
-              message.getReceiverType()
-            );
+            CometChat.markAsRead(message);
           }
 
           this.emitAction("callUpdated", { message });
@@ -654,29 +694,13 @@ export default {
         message.getReceiverType() === CometChat.RECEIVER_TYPE.GROUP &&
         message.getReceiverId() === this.item.guid
       ) {
-        if (!message.getReadAt()) {
-          CometChat.markAsRead(
-            message.getId().toString(),
-            message.getReceiverId(),
-            message.getReceiverType()
-          );
-        }
-
-        this.emitAction("messageReceived", { messages: [message] });
+        this.messageReceivedHandler(message)
       } else if (
         this.type === "user" &&
         message.getReceiverType() === CometChat.RECEIVER_TYPE.USER &&
         message.getSender().uid === this.item.uid
       ) {
-        if (!message.getReadAt()) {
-          CometChat.markAsRead(
-            message.getId().toString(),
-            message.getSender().uid,
-            message.getReceiverType()
-          );
-        }
-
-        this.emitAction("messageReceived", { messages: [message] });
+        this.messageReceivedHandler(message)
       }
     },
     /**
@@ -689,15 +713,11 @@ export default {
         message.getReceiverId() === this.item.guid
       ) {
         if (!message.getReadAt()) {
-          CometChat.markAsRead(
-            message.getId().toString(),
-            message.getReceiverId(),
-            message.getReceiverType()
-          );
+          CometChat.markAsRead(message);
         }
 
         if (this.hasProperty(message, "metadata")) {
-          this.emitAction("customMessageReceived", { messages: [message] });
+          this.customMessageReceivedHandler(message)
         } else if (message.type === enums.CUSTOM_TYPE_STICKER) {
           this.emitAction("customMessageReceived", { messages: [message] });
         } else if (message.type === enums.CUSTOM_TYPE_POLL) {
@@ -712,15 +732,11 @@ export default {
         message.getSender().uid === this.item.uid
       ) {
         if (!message.getReadAt()) {
-          CometChat.markAsRead(
-            message.getId().toString(),
-            message.getSender().uid,
-            message.getReceiverType()
-          );
+          CometChat.markAsRead(message);
         }
 
         if (this.hasProperty(message, "metadata")) {
-          this.emitAction("customMessageReceived", { messages: [message] });
+          this.customMessageReceivedHandler(message)
         } else if (message.type === enums.CUSTOM_TYPE_STICKER) {
           this.emitAction("customMessageReceived", { messages: [message] });
         } else if (message.type === enums.CUSTOM_TYPE_POLL) {
@@ -730,6 +746,77 @@ export default {
           this.emitAction("customMessageReceived", { messages: [newMessage] });
         }
       }
+    },
+    /**
+     * Message Receive handler
+     */
+    messageReceivedHandler(message) {
+      //handling dom lag
+      if (!message.parentMessageId) {
+        /**If user has not scrolled up */
+        if(Math.floor(this.$refs.messagesEnd.scrollHeight -this.$refs.messagesEnd.scrollTop -this.$refs.messagesEnd.clientHeight) <= 0) {
+          if (this.messages.length > enums.MAX_MESSAGE_COUNT) {
+            /**Re initialize the message builder */
+            this.reInitializeMessageBuilder();
+          } else {
+            this.markMessageAsRead(message)
+            this.emitAction("messageReceived", { messages: [message] });
+          }
+        } else {
+          /**Fire new message event */
+          CometChatEvent.triggerHandler(enums.EVENTS["NEW_MESSAGES"], { messages: [message] })
+        }
+      } else {
+        if (message.parentMessageId === this.parentMessageId) {
+          this.markMessageAsRead(message);
+        }
+        this.emitAction("messageReceived", { messages: [message] });
+      }
+    },
+    /**
+     * Custom Message Receive handler
+     */
+    customMessageReceivedHandler(message) {
+      //handling dom lag
+      if (!message.parentMessageId) {
+        if(Math.floor(this.$refs.messagesEnd.scrollHeight -this.$refs.messagesEnd.scrollTop -this.$refs.messagesEnd.clientHeight) <= 0) {
+          if (this.messages.length > enums.MAX_MESSAGE_COUNT) {
+            /**Re initialize the message builder */
+            this.reInitializeMessageBuilder();
+          } else {
+            this.emitAction("customMessageReceived", { messages: [message] });
+          }
+        } else {
+          /**Fire new message event */
+          CometChatEvent.triggerHandler(enums.EVENTS["NEW_MESSAGES"], { messages: [message] })
+        }
+      } else {
+        this.emitAction("customMessageReceived", { messages: [message] });
+      }
+    },
+    /**
+     * Mark message as read
+     */
+    markMessageAsRead(message) {
+      if (!message.getReadAt()) {
+        CometChat.markAsRead(message);
+      }
+    },
+    /**
+     * reInitializeMessageBuilder
+     */
+    reInitializeMessageBuilder() {
+      /**Empty the message list */
+      CometChatEvent.triggerHandler(enums.EVENTS["REFRESHING_MESSAGES"], { messages: [] });
+      
+      /**Show the loading state */
+      this.messagesLoading = true;
+      this.decoratorMessage = "Loading...";
+      
+      /**Remove the old messageList listeners and instance */
+      /**Call the getMessages method */
+      /**Attach the listener */
+      this.refresh()
     },
     /**
      * Adds metadata prop to given message
@@ -838,19 +925,11 @@ export default {
             !message.getReadAt()
           ) {
             if (message.getReceiverType() === CometChat.RECEIVER_TYPE.USER) {
-              CometChat.markAsRead(
-                message.getId().toString(),
-                message.getSender().getUid(),
-                message.getReceiverType()
-              );
+              CometChat.markAsRead(message);
             } else if (
               message.getReceiverType() === CometChat.RECEIVER_TYPE.GROUP
             ) {
-              CometChat.markAsRead(
-                message.getId().toString(),
-                message.getReceiverId(),
-                message.getReceiverType()
-              );
+              CometChat.markAsRead(message);
             }
           }
           this.emitAction("messageRead", { message });
@@ -949,6 +1028,9 @@ export default {
   },
   beforeMount() {
     this.refresh();
+  },
+  beforeDestroy() {
+    this.removeMessageListeners();
   },
   beforeUnmount() {
     this.removeMessageListeners();

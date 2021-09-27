@@ -10,6 +10,8 @@
     </span>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import {
   DEFAULT_OBJECT_PROP,
@@ -161,6 +163,9 @@ export default {
   mounted() {
     this.setItems();
     this.requestAnimation();
+  },
+  beforeDestroy() {
+    this.timer = null;
   },
   beforeUnmount() {
     this.timer = null;

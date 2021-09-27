@@ -29,6 +29,7 @@ export const USER_OFFLINE = "onUserOffline";
 
 export const TYPING_STARTED = "onTypingStarted";
 export const TYPING_ENDED = "onTypingEnded";
+export const TRANSIENT_MESSAGE_RECEIVED = "onTransientMessageReceived";
 
 export const CATEGORY_MESSAGE = "message";
 export const MESSAGE_TYPE_TEXT = "text";
@@ -57,3 +58,16 @@ export const LIVE_REACTIONS = {
   clap: "👏",
   wink: "😉",
 };
+
+export const LIVE_REACTION_TIMER = 1500;
+export const MAX_MESSAGE_COUNT = 100;
+export const MESSAGE_REQUEST_LIMIT = 30;
+
+export const EVENTS = {
+  NEW_MESSAGES: "newMessagesArrived",
+  NEW_MESSAGES_TRIGGERED: "newMessagesTriggered",
+  REFRESHING_MESSAGES: "refreshingMessages",
+  CLEAR_UNREAD_MESSAGES: "clearUnreadMessages",
+  CLEAR_UNREAD_MESSAGES_TRIGGERED: "clearUnreadMessagesTriggered",
+  NEW_MESSAGE_CLICKED: "newMessageClicked",
+}

@@ -500,27 +500,32 @@ export default {
       try {
         if (this.isBlockedByMe) return;
 
-        const typingInterval = 2000;
-
-        const typingMetadata = {
-          reaction: this.reaction,
-          type: enums.LIVE_REACTION_KEY,
-        };
-
-        this.startTyping(typingMetadata, typingInterval);
+        const typingInterval = enums.LIVE_REACTION_TIMER;
         this.emitAction("sendReaction");
+        this.sendMessage()
 
         if (event.persist) {
           event.persist();
         }
 
         setTimeout(() => {
-          this.endTyping(typingMetadata);
           this.emitAction("stopReaction");
         }, typingInterval);
       } catch (error) {
         this.logError("Error sending reaction", error);
       }
+    },
+    /**
+     * Send transient message
+     */
+    sendMessage() {
+      //fetching the metadata type from constants
+      const metadata = { type: enums.LIVE_REACTION_KEY, reaction: this.reaction };
+      const receiverType = this.type === CometChat.ACTION_TYPE.TYPE_USER ? CometChat.ACTION_TYPE.TYPE_USER : CometChat.ACTION_TYPE.TYPE_GROUP;
+      const receiverId = (this.type === CometChat.ACTION_TYPE.TYPE_USER) ? this.item.uid : this.item.guid;
+
+      let transientMessage = new CometChat.TransientMessage(receiverId, receiverType, metadata);
+      CometChat.sendTransientMessage(transientMessage);
     },
     /**
      * Sends start typing indicator signal to server

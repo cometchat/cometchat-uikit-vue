@@ -53,9 +53,7 @@ Before you begin, ensure you have met the following requirements:
 
 - [npm](https://www.npmjs.com/get-npm)
 
-- [Vue](https://vuejs.org/) `npm install vue@3.0.0-0`
-
----
+- [Vue](https://vuejs.org/)
 
 ## Installing Vue UI Kit
 
@@ -63,7 +61,7 @@ Before you begin, ensure you have met the following requirements:
 
 ### i. Register on CometChat 🔧
 
-- To install Vue UI Kit, you need to first register on CometChat Dashboard. <a href="https://app.cometchat.com/" target="_blank">Click here to Sign Up.</a>
+- To install Vue UI Kit, you need to first register on CometChat Dashboard. <a href="https://app.cometchat.com/signup" target="_blank">Click here to Sign Up.</a>
 
 ### ii. Get your application keys 🔑
 
@@ -73,7 +71,7 @@ Before you begin, ensure you have met the following requirements:
 ### iii. Add the CometChat dependency 📦
 
 ```javascript
-  npm install @cometchat-pro/chat@2.4.0 --save
+  npm install @cometchat-pro/chat@3.0.1 --save
 ```
 
 <br/>
@@ -157,6 +155,10 @@ git clone https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit.git
 
 - Copy all the dependencies from package.json of `cometchat-pro-vue-ui-kit` into your project's package.json and install them.
 
+- We are using [emoji-mart-vue-fast](https://www.npmjs.com/package/emoji-mart-vue-fast)
+Please install respective library depending on your Vue version
+    - For Vue2 : `npm install emoji-mart-vue-fast@7.0.7`
+    - For Vue3 : `npm install emoji-mart-vue-fast@8.0.3`
 <img align="center" width="500" height="auto"  src="./Screenshots/package-dependencies.png" />
 
 <br/>
@@ -190,13 +192,16 @@ Usage of application in project:
 
 # Checkout our sample app
 
-Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-app) repo to run the Vue sample app.
+Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-app/) repo to run the Vue sample app.
+
+- For Vue2 sample app, navigate to vue2 folder
+- For Vue3 sample app, navigate to vue3 folder
 
 ---
 
 # Troubleshooting
 
-- To read the full documentation on UI Kit integration visit our [Documentation](https://prodocs.cometchat.com/v2.1/docs/vue-ui-kit).
+- To read the full documentation on UI Kit integration visit our [Documentation](https://prodocs.cometchat.com/docs/vue-ui-kit).
 
 - Facing any issues while integrating or installing the UI Kit please connect with us via real time support present in <a href="https://app.cometchat.com/" target="_blank">CometChat Dashboard.</a>
 

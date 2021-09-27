@@ -60,6 +60,7 @@
   </div>
 </template>
 
+<!--eslint-disable-->
 <script>
 import dateFormat from "dateformat";
 
@@ -298,25 +299,22 @@ export default {
             this.item.guid === item.receiverId
           ) {
             this.status = `${item.sender.name} ${COMETCHAT_CONSTANTS.IS_TYPING}`;
-            this.emitAction("showReaction", { reaction: item });
           } else if (
             this.type === "user" &&
             this.type === item.receiverType &&
             this.item.uid === item.sender.uid
           ) {
             this.status = COMETCHAT_CONSTANTS.TYPING;
-            this.emitAction("showReaction", { reaction: item });
           }
           break;
         }
-        case enums.TYPING_ENDED: {
+        case enums.TYPING_ENDED: {          
           if (
             this.type === "group" &&
             this.type === item.receiverType &&
             this.item.guid === item.receiverId
           ) {
             this.setStatusForGroup();
-            this.emitAction("stopReaction", { reaction: item });
           } else if (
             this.type === "user" &&
             this.type === item.receiverType &&
@@ -327,7 +325,6 @@ export default {
               this.presence = "online";
             } else {
               this.setStatusForUser();
-              this.emitAction("stopReaction", { reaction: item });
             }
           }
           break;
@@ -345,6 +342,12 @@ export default {
       this.setStatusForUser();
     } else {
       this.setStatusForGroup();
+    }
+  },
+  beforeDestroy() {
+    if (this.messageHeaderManager) {
+      this.messageHeaderManager.removeListeners();
+      this.messageHeaderManager = null;
     }
   },
   beforeUnmount() {
