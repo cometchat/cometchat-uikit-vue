@@ -27,15 +27,7 @@
 
 </br></br>
 
-<div style="width:100%">
-    <div style="width:50%; display:inline-block">
-        <div align="center">
-          <img align="left" alt="Main" src="./Screenshots/main.png">    
-        </div>    
-    </div>    
-</div>
-
-</br></br>
+![alt text](./Screenshots/main.png "Main")
 
 CometChat Vue UI Kit is a collection of custom UI Components designed to build text chat and voice/video callings features in your application.
 
