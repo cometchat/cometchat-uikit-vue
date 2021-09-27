@@ -25,6 +25,7 @@
         :theme="themeValue" 
       />
     </div>
+
     <comet-chat-message-composer
       :item="item"
       :type="type"
@@ -33,6 +34,14 @@
       :message-to-edit="messageToBeEdited"
       @action="actionHandler"
     />
+    <div v-if="canShowNewMessageIndicator">
+      <cometchat-new-message-indicator
+        :theme="themeValue"
+        :unreadMessages="unreadMessages"
+        @action="actionHandler" 
+      />
+    </div>
+    
   </div>
 </template>
 <script>
@@ -61,6 +70,9 @@ import { theme } from "../../../resources/theme";
 import * as style from "./style";
 
 import { incomingMessageAlert } from "../../../resources/audio/";
+import cometchatNewMessageIndicator from '../CometChatNewMessageIndicator/index.vue';
+import { CometChat } from '@cometchat-pro/chat';
+import { CometChatEvent } from '../../../util/CometChatEvent';
 
 /**
  * Displays message list with message composer and header.
@@ -75,6 +87,7 @@ export default {
     CometChatLiveReactions,
     CometChatMessageHeader,
     CometChatMessageComposer,
+    cometchatNewMessageIndicator,
   },
   props: {
     /**
@@ -125,6 +138,7 @@ export default {
   data() {
     return {
       messageList: [],
+      unreadMessages: [],
       replyPreview: null,
       scrollToBottom: true,
       reactionName: "heart",
@@ -142,10 +156,12 @@ export default {
 
         if (prevProps.item[idKey] !== this.item[idKey]) {
           this.messageList = [];
+          this.unreadMessages = [];
           this.scrollToBottom = true;
           this.messageToBeEdited = null;
         } else if (prevProps.type !== this.type) {
           this.messageList = [];
+          this.unreadMessages = [];
           this.scrollToBottom = true;
           this.messageToBeEdited = null;
         } else if (
@@ -186,6 +202,12 @@ export default {
      */
     canShowLiveReaction() {
       return this.item.blockedByMe ? false : this.showLiveReaction;
+    },
+    /**
+     * Whether it can show new message button.
+     */
+    canShowNewMessageIndicator() {
+      return this.unreadMessages.length > 0 ? true : false;
     },
     /**
      * Computed object, made of props, for watcher.
@@ -358,8 +380,79 @@ export default {
       }
     },
     /**
-     *
+     * Refreshing messages
      */
+    refreshingMessages() {
+      this.messageList = [];
+      this.messageToBeEdited = ""; 
+      this.replyPreview = null; 
+      this.liveReaction = false; 
+      this.messageToReact = null;
+      CometChatEvent.triggerHandler(enums.EVENTS["CLEAR_UNREAD_MESSAGES_TRIGGERED"], {});
+    },
+    /**
+     * 
+     * Handle new messages 
+     */
+    newMessagesArrived(newMessage) {
+      let unreadMessages = [...this.unreadMessages];
+      unreadMessages.push(newMessage[0]);
+      this.unreadMessages = unreadMessages;
+
+      CometChatEvent.triggerHandler(enums.EVENTS["NEW_MESSAGES_TRIGGERED"], { unreadMessages: unreadMessages });
+    },
+    /**
+     * Jump to new messages on click of new message button
+     */
+    jumpToMessages() {
+
+      if (this.unreadMessages.length === 0) {
+        return false;
+      }
+  
+      let unreadMessages = [...this.unreadMessages];
+      let messageList = [...this.messageList];
+      messageList = messageList.concat(unreadMessages);
+
+      CometChatEvent.triggerHandler(enums.EVENTS["CLEAR_UNREAD_MESSAGES_TRIGGERED"], {});
+
+      if (messageList.length > enums.EVENTS["MAX_MESSAGE_COUNT"]) {
+        if (this.$refs.messageListRef) {
+          this.$refs.messageListRef.reInitializeMessageBuilder();
+        }
+      } else {
+        this.markMessagesAsRead(true);
+      }
+    },
+    /**
+     * Mark new messages as read
+     */
+    markMessagesAsRead(scrollToBottom) {
+      if (this.unreadMessages.length === 0) {
+        return false;
+      }
+  
+      let unreadMessages = [...this.unreadMessages];
+      let messageList = [...this.messageList];
+  
+      unreadMessages.forEach(unreadMessage => {
+        if (unreadMessage.receiverType === CometChat.RECEIVER_TYPE.USER) {
+          if (this.$refs.messageListRef) {
+            messageList.push(unreadMessage);
+            this.$refs.messageListRef.markMessageAsRead(unreadMessage);
+          }
+        } else if (unreadMessage.receiverType === CometChat.RECEIVER_TYPE.GROUP) {
+          if (this.$refs.messageListRef) {
+            messageList.push(unreadMessage);
+            this.$refs.messageListRef.markMessageAsRead(unreadMessage);
+          }
+        }
+      });
+ 
+      this.messageList = messageList
+      this.scrollToBottom = scrollToBottom
+      this.unreadMessages = []
+    },
     callUpdated(message) {
       this.appendMessage([message]);
     },
@@ -401,10 +494,22 @@ export default {
     //     }
     //   });
     // },
+    /**
+     * CometChat Events Listeners
+     */
+    cometChatEventListeners() {
+      CometChatEvent.on(enums.EVENTS["NEW_MESSAGES"], (args) => this.newMessagesArrived(args.messages));
+      CometChatEvent.on(enums.EVENTS["REFRESHING_MESSAGES"], () => this.refreshingMessages());
+      CometChatEvent.on(enums.EVENTS["CLEAR_UNREAD_MESSAGES"], () => this.jumpToMessages());
+      CometChatEvent.on(enums.EVENTS["NEW_MESSAGE_CLICKED"], () => this.jumpToMessages());
+    }
   },
   mounted() {
     this.reactionName = this.reaction;
     this.audio = new Audio(incomingMessageAlert);
+
+    this.cometChatEventListeners()
+          
   },
 };
 </script>

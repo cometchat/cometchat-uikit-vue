@@ -90,6 +90,8 @@
     />
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -614,6 +616,9 @@ export default {
         this.logError("[CometChatGroupDetails] getLoggedInUser error", error);
       }
     })();
+  },
+  beforeDestroy() {
+    this.removeManager();
   },
   beforeUnmount() {
     this.removeManager();

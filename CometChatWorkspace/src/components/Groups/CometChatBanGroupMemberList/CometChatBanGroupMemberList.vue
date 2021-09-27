@@ -31,9 +31,9 @@
             <p :style="styles.contactMsgTxt">{{ decoratorMessage }}</p>
           </caption>
           <tbody :style="styles.tableBody" @scroll="scrollHandler">
+            <!-- eslint-disable -->
             <template 
               v-for="(member, i) in bannedMembersList"
-              :key="i"
             >
               <comet-chat-ban-group-member-list-item
                 :item="item"
