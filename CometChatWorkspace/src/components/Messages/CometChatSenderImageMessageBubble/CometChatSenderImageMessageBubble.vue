@@ -40,6 +40,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import {
   DEFAULT_OBJECT_PROP,
@@ -126,6 +128,9 @@ export default {
     this.onResize();
     this.setImage();
     window.addEventListener("resize", this.onResize);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.onResize);
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);

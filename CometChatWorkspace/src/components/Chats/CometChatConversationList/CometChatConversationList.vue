@@ -34,10 +34,13 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
 import { CometChatManager } from "../../../util/controller";
+import {CometChatEvent} from "../../../util/CometChatEvent"
 import { ConversationListManager } from "./controller";
 
 import { SvgAvatar } from "../../../util/svgavatar";
@@ -506,7 +509,19 @@ export default {
           this.selectedConversation.conversationId ===
             conversation.conversationId
         ) {
-          unreadMessageCount = 0;
+          if (this.selectedConversation.unreadMessages && this.selectedConversation.unreadMessages.length) {
+            const firstUnreadMessage = this.selectedConversation.unreadMessages[0];
+            const selectedConversation = this.selectedConversation;
+
+            if (firstUnreadMessage.conversationId && firstUnreadMessage.conversationId === selectedConversation.conversationId) {
+              unreadMessageCount = 0;
+              this.selectedConversation.unreadMessages.forEach(message => {
+                unreadMessageCount = this.shouldIncrementCount(message) ? ++unreadMessageCount : unreadMessageCount;
+              });
+            }
+          } else {
+            unreadMessageCount = 0;
+          }
         } else if (
           (this.item &&
             this.hasProperty(this.item, "guid") &&
@@ -535,6 +550,19 @@ export default {
           error
         );
       }
+    },
+    /**
+     * 
+     */
+    shouldIncrementCount(incomingMessage) {
+      let output = false;
+      if (
+        incomingMessage.sender.uid !== this.loggedInUser?.uid
+      ) {
+        output = true;
+      }
+
+      return output;
     },
     /**
      * Makes last message
@@ -953,6 +981,36 @@ export default {
         this.logError("Error playing audio", error);
       }
     },
+    /**
+     * Uupdate unread count
+     */
+    updateUnreadCount(params) {	
+      if (this.selectedConversation) {
+        this.selectedConversation["unreadMessages"] = params.unreadMessages;
+        return false;
+      }
+    },
+    /**
+     * clear unread count
+     */
+    clearUnreadCount() {
+      if (this.selectedConversation) {
+        
+        this.selectedConversation["unreadMessages"] = [];
+        let conversationList = [...this.conversationList];
+
+        let conversationKey = conversationList.findIndex(c => c.conversationId === this.selectedConversation.conversationId);
+
+        if (conversationKey > -1) {
+          let conversationObj = { ...conversationList[conversationKey] };
+          let newConversationObj = { ...conversationObj, unreadMessageCount: 0 };
+
+          conversationList.splice(conversationKey, 1);
+          conversationList.unshift(newConversationObj);
+          this.conversationList = conversationList
+        }
+      }
+    },
     createManager() {
       conversationListManager = new ConversationListManager();
     },
@@ -977,6 +1035,15 @@ export default {
 
     this.getConversations();
     this.attachListeners();
+
+    /**Listen for the new messages if user is already in the chat window and has scrolled up*/
+    CometChatEvent.on(enums.EVENTS["NEW_MESSAGES_TRIGGERED"], args => this.updateUnreadCount(args));
+
+    /** clearing unreadcount whenever scrolled to the bottom.*/
+		CometChatEvent.on(enums.EVENTS["CLEAR_UNREAD_MESSAGES_TRIGGERED"], args => this.clearUnreadCount(args));
+  },
+  beforeDestroy() {
+    this.removeListeners();
   },
   beforeUnmount() {
     this.removeListeners();

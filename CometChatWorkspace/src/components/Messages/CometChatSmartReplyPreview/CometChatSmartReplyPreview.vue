@@ -4,9 +4,9 @@
       <div :style="styles.previewClose" @click="emitEvent('close')"></div>
     </div>
     <div :style="styles.previewOptionsWrapper">
+      <!--eslint-disable-->
       <template 
         v-for="(option, i) in options" 
-        :key="i"
       >
         <div
           :style="styles.previewOption"

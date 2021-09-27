@@ -53,6 +53,7 @@
   </div>
 </template>
 
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -661,6 +662,12 @@ export default {
 
     this.getGroups();
     groupListManager.attachListeners(this.groupsUpdateHandler);
+  },
+  beforeDestroy() {
+    if (groupListManager) {
+      groupListManager.removeListeners();
+      groupListManager = null;
+    }
   },
   beforeUnmount() {
     if (groupListManager) {

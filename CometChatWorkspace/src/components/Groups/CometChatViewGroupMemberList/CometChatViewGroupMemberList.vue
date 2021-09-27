@@ -39,9 +39,9 @@
             </tr>
           </thead>
           <tbody :style="styles.tableBody" @scroll="scrollHandler">
+            <!--eslint-disable-->
             <template 
               v-for="(member, i) in membersList"
-              :key="i"
             >
               <comet-chat-view-group-member-list-item
                 :item="item"
