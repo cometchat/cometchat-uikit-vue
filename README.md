@@ -185,6 +185,7 @@ Usage of application in project:
 # Checkout our sample app
 
 Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-app/) repo to run the sample app.
+
 ---
 
 # Troubleshooting
