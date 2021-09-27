@@ -187,10 +187,7 @@ Usage of application in project:
 
 # Checkout our sample app
 
-Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-app/tree/v2) repo to run the Vue sample app.
-
-- For Vue2 sample app, navigate to vue2 folder
-- For Vue3 sample app, navigate to vue3 folder
+Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-app/tree/v2) repo to run the sample app.
 
 ---
 
