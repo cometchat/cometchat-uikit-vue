@@ -7,12 +7,13 @@
     >
       <comet-chat-message-actions
         v-bind="commonProps"
+        v-if="parsedMessage.sentAt"
         @action="actionHandler"
       />
       <div :style="styles.wrapper">
         <div :style="styles.videoWrapper">
           <video controls :style="styles.video" class="sender__video__message">
-            <source :src="parsedMessage.data.url" />
+            <source :src="fileUrl" />
           </video>
         </div>
       </div>
@@ -33,6 +34,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import {
   DEFAULT_OBJECT_PROP,
@@ -83,6 +86,7 @@ export default {
   data() {
     return {
       messageFrom: "sender",
+      fileUrl: "",
     };
   },
   computed: {
@@ -103,6 +107,16 @@ export default {
       };
     },
   },
+  mounted() {
+    this.getFileData();
+    window.addEventListener("resize", this.getFileData);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.getFileData);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.getFileData);
+  }
 };
 </script>
 <style scoped>

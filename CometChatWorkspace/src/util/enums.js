@@ -62,6 +62,7 @@ export const LIVE_REACTIONS = {
 export const LIVE_REACTION_TIMER = 1500;
 export const MAX_MESSAGE_COUNT = 100;
 export const MESSAGE_REQUEST_LIMIT = 30;
+export const FILE_METADATA = "file";
 
 export const EVENTS = {
   NEW_MESSAGES: "newMessagesArrived",
@@ -70,4 +71,13 @@ export const EVENTS = {
   CLEAR_UNREAD_MESSAGES: "clearUnreadMessages",
   CLEAR_UNREAD_MESSAGES_TRIGGERED: "clearUnreadMessagesTriggered",
   NEW_MESSAGE_CLICKED: "newMessageClicked",
+  MESSAGE_COMPOSED: "messageComposed",
+	THREAD_MESSAGE_COMPOSED: "threadMessageComposed",
+  MESSAGE_SENT: "messageSent",
+	THREAD_MESSAGE_SENT: "threadMessageSent",
+  ERROR_IN_SENDING_MESSAGE: "errorInSendingMessage",
+  ERROR_IN_SENDING_THREAD_MESSAGE: "errorInSendingThreadMessage",
+  UPDATED_LAST_MESSAGES: "updateLastMessage",
+  DELETE_CONVERSATION: "deleteConversation",
+  CONFIRM_RESPONSE: "confirmResponse",
 }

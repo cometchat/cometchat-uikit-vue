@@ -16,6 +16,7 @@ export const listItem = (theme, conversation, selectedConversation) => {
     cursor: "pointer",
     width: "100%",
     padding: "10px 20px",
+    position: "relative",
     ...selectedState,
     "--chat-item-bg-color-hover": `${theme.backgroundColor.primary}`,
   };

@@ -7,6 +7,7 @@
     >
       <comet-chat-message-actions
         v-bind="commonProps"
+        v-if="parsedMessage.sentAt"
         @action="actionHandler"
       />
       <div :style="styles.wrapper">

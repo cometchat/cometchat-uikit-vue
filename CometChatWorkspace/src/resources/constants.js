@@ -217,4 +217,7 @@ export const COMETCHAT_CONSTANTS = {
   BLOCKED_USER: "You have blocked this user",
   BLOCKED_DESCRIPTION:
     "To start a conversation, click on the icon at the top right corner and unblock the user",
+  DELETE_CONFIRMATION: "Are you sure you want to delete?",
+  DELETE: "DELETE",
+  CANCEL: "CANCEL",
 };

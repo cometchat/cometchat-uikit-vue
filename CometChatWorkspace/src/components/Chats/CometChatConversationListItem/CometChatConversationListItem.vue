@@ -1,5 +1,11 @@
 <template>
-  <div class="chat__item--hover" :style="styles.list" @click="itemClickHandler">
+  <div 
+    class="chat__item--hover" 
+    :style="styles.list" 
+    @click="itemClickHandler"
+    @mouseenter="handleMouseHover(true)"
+    @mouseleave="handleMouseHover(false)"
+  >
     <div :style="styles.thumbnail">
       <comet-chat-avatar
         border-width="1px"
@@ -44,6 +50,12 @@
           :count="conversation.unreadMessageCount"
         />
       </div>
+      <div v-if="isHovering">
+        <cometchat-conversation-list-actions
+          :theme="theme"
+          :conversation="conversation"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -64,6 +76,7 @@ import {
   CometChatBadgeCount,
   CometChatUserPresence,
 } from "../../Shared/";
+import cometchatConversationListActions from "../CometChatConversationListActions/index.vue";
 
 import * as style from "./style";
 
@@ -79,6 +92,7 @@ export default {
     CometChatAvatar,
     CometChatBadgeCount,
     CometChatUserPresence,
+    cometchatConversationListActions,
   },
   props: {
     /**
@@ -101,6 +115,11 @@ export default {
      * Selected conversation object.
      */
     selectedConversation: { ...DEFAULT_OBJECT_PROP },
+  },
+  data() {
+    return {
+      isHovering: false,
+    }
   },
   computed: {
     /**
@@ -131,6 +150,13 @@ export default {
         item: this.conversation.conversationWith,
         type: this.conversation.conversationType,
       });
+    },
+    handleMouseHover(toggleFlag) {
+      if(toggleFlag && !this.isHovering) {
+        this.isHovering = true;
+      } else if(!toggleFlag && this.isHovering) {
+        this.isHovering = false;
+      }
     },
     /**
      * Gets SVG avatar

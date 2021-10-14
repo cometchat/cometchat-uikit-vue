@@ -7,6 +7,7 @@
     >
       <comet-chat-message-actions
         v-bind="commonProps"
+        v-if="parsedMessage.sentAt"
         @action="actionHandler"
       />
       <div :style="styles.wrapper">
@@ -16,11 +17,11 @@
             rel="noopener noreferrer"
             :style="styles.fileLink"
             class="sender__message__file__link"
-            :href="message.data.attachments[0].url"
+            :href="fileUrl"
           >
             <span :style="styles.fileLinkContainer">
               <span>
-                {{ message.data.attachments[0].name }}
+                {{ fileName }}
               </span>
               <img
                 :src="fileIcon"
@@ -48,6 +49,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -102,6 +105,8 @@ export default {
   data() {
     return {
       messageFrom: "sender",
+      fileName: "",
+      fileUrl: "",
     };
   },
   computed: {
@@ -135,11 +140,21 @@ export default {
       return CometChat;
     },
   },
+  mounted() {
+    this.getFileData();
+    window.addEventListener("resize", this.getFileData);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.getFileData);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.getFileData);
+  }
 };
 </script>
 <style scoped>
 .sender__message__file__link {
-  background-color: var(--file-message-bg-color);
+  color: var(--file-message-bg-color);
 }
 .sender__message__file__link:visited,
 .sender__message__file__link:active,
@@ -150,7 +165,6 @@ export default {
 .sender__message__file__img {
   margin-left: 8px;
   border-radius: 4px;
-  background-color: var(--file-message-bg-color);
 }
 </style>
 <style>
