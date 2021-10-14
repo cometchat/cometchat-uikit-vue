@@ -1,7 +1,7 @@
 <template>
-  <span :style="styles">
+  <span :style="styles.msgTimestampStyle">
     {{ messageTime }}
-    <img v-if="ticks" :src="ticks" alt="time" class="message__timestamp__img" />
+    <i :style="styles.iconStyle" class="message__timestamp__img"></i>
   </span>
 </template>
 <script>
@@ -9,11 +9,14 @@ import { DEFAULT_OBJECT_PROP, DEFAULT_STRING_PROP } from "../../../resources/con
 
 import { propertyCheck, cometChatBubbles } from "../../../mixins/";
 
-import blueDoubleTick from "./resources/blue-double-tick-icon.png";
-import greyDoubleTick from "./resources/grey-double-tick-icon.png";
-import greyTick from "./resources/grey-tick-icon.png";
+import blueDoubleTick from "./resources/message-read.svg";
+import greyDoubleTick from "./resources/message-delivered.svg";
+import greyTick from "./resources/message-sent.svg";
+import sendingTick from "./resources/wait.svg";
+import errorTick from "./resources/warning-small.svg";
 
-import { msgTimestampStyle } from "./style";
+import { msgTimestampStyle, iconStyle } from "./style";
+import { CometChat } from '@cometchat-pro/chat';
 
 /**
  * Shows the read receipt for a given message.
@@ -43,34 +46,88 @@ export default {
      * Computed styles for the component.
      */
     styles() {
-      return msgTimestampStyle(this.theme);
+      return {
+        msgTimestampStyle: msgTimestampStyle(this.theme),
+        iconStyle: iconStyle(this.ticks.ticks, this.ticks.color),
+      }
     },
     /**
      * computes the tick image.
      */
     ticks() {
-      let ticks = null;
+      let ticks,
+          receiptText = null,
+          dateField = null,
+          color = null;
 
       if (this.message.messageFrom === "sender") {
-        ticks = blueDoubleTick;
+        if (this.message.receiverType === CometChat.RECEIVER_TYPE.GROUP) {
+          if (this.message.error) {
+          
+            ticks = errorTick;
+            receiptText = "ERROR";
+            dateField = this.message._composedAt;
+            color = this.theme.color.red;
+          
+          } else if (this.message.sentAt) {
+            
+            ticks = greyTick;
+            receiptText = "SENT";
+            dateField = this.message.sentAt;
+            color = this.theme.secondaryTextColor;
+            
+          } else {
+              
+            ticks = sendingTick;
+            receiptText = "SENDING";
+            dateField = this.message._composedAt;
+            color = this.theme.secondaryTextColor;
+            
+          }
+        } else if (this.message.error) {
+          ticks = errorTick;
+          receiptText = "ERROR";
+          dateField = this.message._composedAt;
+          color = this.theme.color.red;
+        } else if (this.message.readAt) {
 
-        if (
-          this.message.sentAt &&
-          !this.message.readAt &&
-          !this.message.deliveredAt
-        ) {
-          ticks = greyTick;
-        } else if (
-          this.message.sentAt &&
-          !this.message.readAt &&
-          this.message.deliveredAt
-        ) {
+          ticks = blueDoubleTick;
+          receiptText = "SEEN";
+          color = this.theme.color.blue;
+          dateField = this.message.readAt;
+
+        } else if (this.message.deliveredAt) {
+
           ticks = greyDoubleTick;
+          receiptText = "DELIVERED";
+          dateField = this.message.deliveredAt;
+          color = this.theme.secondaryTextColor;
+          
+        } else if (this.message.sentAt) {
+          
+          ticks = greyTick;
+          receiptText = "SENT";
+          dateField = this.message.sentAt;
+          color = this.theme.secondaryTextColor;
+
+        } else {
+          
+          ticks = sendingTick;
+          receiptText = "SENDING";
+          dateField = this.message._composedAt;
+          color = this.theme.secondaryTextColor;
+        
         }
       }
 
-      return ticks;
+      return {
+        ticks: ticks,
+        receiptText: receiptText,
+        dateField: dateField,
+        color: color
+      };
     },
+
   },
 };
 </script>

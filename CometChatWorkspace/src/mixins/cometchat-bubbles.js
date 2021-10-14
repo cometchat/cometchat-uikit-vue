@@ -2,6 +2,8 @@ import dateFormat from "dateformat";
 
 import { SvgAvatar } from "../util/svgavatar";
 import { COMETCHAT_CONSTANTS } from "../resources/constants";
+import { FILE_METADATA } from "../util/enums";
+import { getMessageFileMetadata } from "../util/common";
 
 export default {
   computed: {
@@ -27,6 +29,16 @@ export default {
 
       return message;
     },
+    attachmentUrl() {
+      let attachmentUrl = null
+      if(this.message.data.attachments && this.message.data.attachments[0]) {
+        attachmentUrl = this.message.data.attachments[0].url
+      } else {
+        attachmentUrl = this.message.data.url
+      }
+
+      return attachmentUrl
+    },
     messageTime() {
       return dateFormat(this.parsedMessage.sentAt * 1000, "shortTime");
     },
@@ -38,6 +50,23 @@ export default {
     },
   },
   methods: {
+    async getFileData() {
+      
+      const metadataKey = FILE_METADATA;
+      const fileMetadata = getMessageFileMetadata(this.message, metadataKey);
+		
+      if (fileMetadata instanceof Blob) {
+
+        this.fileName = fileMetadata["name"];
+
+      } else if (this.message.data.attachments 
+        && typeof this.message.data.attachments === "object" 
+        && this.message.data.attachments.length) {
+          
+        this.fileName = this.message.data.attachments[0]?.name;
+        this.fileUrl = this.message.data.attachments[0]?.url;
+      }
+    },
     /**
      * Handles emitted action events
      * @param {*} event

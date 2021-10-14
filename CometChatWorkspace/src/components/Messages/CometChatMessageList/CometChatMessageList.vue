@@ -57,8 +57,7 @@
               </template>
               <template
                 v-else-if="
-                  message.type === COMET_CHAT.MESSAGE_TYPE.IMAGE &&
-                  message.data.url
+                  message.type === COMET_CHAT.MESSAGE_TYPE.IMAGE
                 "
               >
                 <comet-chat-sender-image-message-bubble
@@ -70,8 +69,7 @@
               </template>
               <template
                 v-else-if="
-                  message.type === COMET_CHAT.MESSAGE_TYPE.FILE &&
-                  message.data.attachments
+                  message.type === COMET_CHAT.MESSAGE_TYPE.FILE
                 "
               >
                 <comet-chat-sender-file-message-bubble
@@ -83,8 +81,7 @@
               </template>
               <template
                 v-else-if="
-                  message.type === COMET_CHAT.MESSAGE_TYPE.VIDEO &&
-                  message.data.url
+                  message.type === COMET_CHAT.MESSAGE_TYPE.VIDEO
                 "
               >
                 <comet-chat-sender-video-message-bubble
@@ -96,8 +93,7 @@
               </template>
               <template
                 v-else-if="
-                  message.type === COMET_CHAT.MESSAGE_TYPE.AUDIO &&
-                  message.data.url
+                  message.type === COMET_CHAT.MESSAGE_TYPE.AUDIO
                 "
               >
                 <comet-chat-sender-audio-message-bubble
@@ -440,8 +436,9 @@ export default {
     computedMessages() {
       let cDate = null;
       return this.messages.map((message) => {
+        const dateField = message._composedAt || message.sentAt;
         const messageSentDate = new Date(
-          message.sentAt * 1000
+          dateField * 1000
         ).toLocaleDateString();
 
         if (cDate !== messageSentDate) {

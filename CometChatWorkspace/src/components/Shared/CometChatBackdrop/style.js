@@ -1,9 +1,9 @@
-export const backdropStyle = () => {
+export const backdropStyle = (position) => {
   return {
     zIndex: "1000",
     backgroundColor: "#000",
     opacity: ".3",
-    position: "fixed",
+    position: `${position ? position : "fixed"}`,
     width: "100%",
     height: "100%",
     top: "0",
