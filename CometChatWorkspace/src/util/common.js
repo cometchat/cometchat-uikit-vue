@@ -1,4 +1,6 @@
 /*eslint no-prototype-builtins: "error"*/
+import dateFormat from "dateformat";
+
 const emailPattern = new RegExp(
   "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}",
   "gi"
@@ -80,3 +82,59 @@ export const logger = (type = "error", ...args) => {
     }
   }
 };
+
+export const ID = () => {
+  // Math.random should be unique because of its seeding algorithm.
+  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+  // after the decimal.
+  return '_' + Math.random().toString(36).substr(2, 9);
+};
+
+export const getUnixTimestamp = () => {
+
+  return Math.round(+new Date() / 1000);
+}
+
+export const checkMessageForExtensionsData = (message, extensionKey) => {
+
+  let output = null;
+  
+  if (message.metadata) {
+
+      const metadata = message.metadata;
+      const injectedObject = metadata["@injected"];
+      if (injectedObject && injectedObject.extensions) {
+
+          const extensionsObject = injectedObject["extensions"];
+          if (extensionsObject && extensionsObject.extensionKey) {
+
+              output = extensionsObject[extensionKey];
+          }
+      }
+  }
+
+  return output;
+}
+
+export const getMessageFileMetadata = (message, metadataKey) => {
+
+  let fileMetadata = null;
+  if(message.metadata) {
+      const metadata = message.metadata;
+      if (metadata[metadataKey]) {
+        fileMetadata = metadata[metadataKey];
+      }
+  }
+
+  return fileMetadata;
+}
+
+export const getMessageSentTime = (timestamp) => {
+
+  let oTimestamp = null;
+
+  const messageTimestamp = new Date(timestamp) * 1000;
+  oTimestamp = dateFormat(messageTimestamp, "shortTime");
+
+  return oTimestamp;
+}

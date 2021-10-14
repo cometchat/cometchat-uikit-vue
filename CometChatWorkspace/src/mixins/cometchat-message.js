@@ -136,19 +136,34 @@ export default {
      * Appends a message to the message list
      */
     appendMessage(newMessages = []) {
-      if (
-        this.messageList &&
-        newMessages.length &&
-        this.messageList.length &&
-        newMessages[newMessages.length - 1].id ===
-          this.messageList[this.messageList.length - 1].id
-      ) {
-        return;
-      }
+      // if (
+      //   this.messageList &&
+      //   newMessages.length &&
+      //   this.messageList.length &&
+      //   newMessages[newMessages.length - 1]._id ===
+      //     this.messageList[this.messageList.length - 1]._id
+      // ) {
+      //   return;
+      // }
 
       this.scrollToBottom = true;
-      let messages = [...this.messageList];
-      this.messageList = messages.concat(newMessages);
+      let messages = [...this.messageList, ...newMessages];
+      this.messageList = messages
+    },
+    /**Message sent handler */
+    messageSent(messages) {
+      const message = messages[0];
+      const messageList = [...this.messageList];
+  
+      let messageKey = messageList.findIndex(m => m._id === message._id);
+      if (messageKey > -1) {
+        const newMessageObj = { ...message };
+  
+        messageList.splice(messageKey, 1, newMessageObj);
+        messageList.sort((a, b) => a.id - b.id);
+        this.messageList = messageList;
+        this.scrollToBottom = true
+      }
     },
     /**
      * Prepends a message to the message list

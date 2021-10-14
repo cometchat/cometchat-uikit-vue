@@ -186,7 +186,7 @@ export default {
       const isUser = this.type === "user";
       let avatar = isUser ? this.item.avatar : this.item.icon;
       if (!avatar) {
-        if (!isUser) {
+        if (isUser) {
           avatar = SvgAvatar.getAvatar(
             this.item.uid,
             this.item.name.charAt(0).toUpperCase()

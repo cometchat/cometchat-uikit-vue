@@ -23,6 +23,7 @@
           <comet-chat-message-actions
             :is-group="isGroup"
             v-bind="commonProps"
+            v-if="parsedMessage.sentAt"
             @action="actionHandler"
           />
           <div :style="styles.audioContainer">
@@ -32,7 +33,7 @@
                 :style="styles.audio"
                 class="receiver__audio__message"
               >
-                <source :src="parsedMessage.data.url" />
+                <source :src="fileUrl" />
               </audio>
             </div>
           </div>
@@ -55,6 +56,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import {
   DEFAULT_OBJECT_PROP,
@@ -107,6 +110,7 @@ export default {
   data() {
     return {
       messageFrom: "receiver",
+      fileUrl: "",
     };
   },
   computed: {
@@ -134,6 +138,16 @@ export default {
       };
     },
   },
+  mounted() {
+    this.getFileData();
+    window.addEventListener("resize", this.getFileData);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.getFileData);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.getFileData);
+  }
 };
 </script>
 <style scoped>
