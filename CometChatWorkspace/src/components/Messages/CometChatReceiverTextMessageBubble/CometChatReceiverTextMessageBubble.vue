@@ -21,6 +21,7 @@
           <comet-chat-message-actions
             :is-group="isGroup"
             v-bind="commonProps"
+            v-if="parsedMessage.sentAt"
             @action="actionHandler"
           />
           <div :style="styles.messageTextContainer">

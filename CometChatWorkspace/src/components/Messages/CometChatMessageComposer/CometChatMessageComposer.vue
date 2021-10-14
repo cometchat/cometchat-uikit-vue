@@ -64,7 +64,7 @@
             <div :style="styles.filePicker">
               <div :style="styles.fileList">
                 <label
-                  for="videoUploaderRef"
+                  :for="componentId('videoUploaderRef')"
                   class="composer__file__item"
                   :title="STRINGS.ATTACH_VIDEO"
                   :style="styles.videoFileItem"
@@ -73,12 +73,12 @@
                     hidden
                     type="file"
                     accept="video/*"
-                    id="videoUploaderRef"
+                    :id="componentId('videoUploaderRef')"
                     @change="onVideoChange"
                   />
                 </label>
                 <label
-                  for="audioUploaderRef"
+                  :for="componentId('audioUploaderRef')"
                   class="composer__file__item"
                   :title="STRINGS.ATTACH_AUDIO"
                   :style="styles.audioFileItem"
@@ -87,12 +87,12 @@
                     hidden
                     type="file"
                     accept="audio/*"
-                    id="audioUploaderRef"
+                    :id="componentId('audioUploaderRef')"
                     @change="onAudioChange"
                   />
                 </label>
                 <label
-                  for="imageUploaderRef"
+                  :for="componentId('imageUploadRef')"
                   class="composer__file__item"
                   :title="STRINGS.ATTACH_IMAGE"
                   :style="styles.imageFileItem"
@@ -101,19 +101,20 @@
                     hidden
                     type="file"
                     accept="image/*"
-                    id="imageUploaderRef"
+                    :id="componentId('imageUploadRef')"
+                    :parentMessageId="parentMessageId"
                     @change="onImageChange"
                   />
                 </label>
                 <label
-                  for="fileUploaderRef"
+                  :for="componentId('fileUploaderRef')"
                   class="composer__file__item"
                   :title="STRINGS.ATTACH_FILE"
                   :style="styles.docFileItem"
                 >
                   <input
                     type="file"
-                    id="fileUploaderRef"
+                    :id="componentId('fileUploaderRef')"
                     @change="onFileChange"
                   />
                 </label>
@@ -214,7 +215,7 @@ import {
 
 import * as enums from "../../../util/enums";
 import { propertyCheck, cometChatCommon } from "../../../mixins/";
-import { getExtensionsDataFromMessage } from "../../../util/common";
+import { getExtensionsDataFromMessage, getUnixTimestamp, ID } from "../../../util/common";
 
 import CometChatCreatePoll from "../../Messages/Extensions/CometChatCreatePoll/CometChatCreatePoll";
 import CometChatSmartReplyPreview from "../CometChatSmartReplyPreview/CometChatSmartReplyPreview";
@@ -235,6 +236,8 @@ import roundedPlus from "./resources/rounded-plus.svg";
 import stickerIcon from "./resources/insertsticker.png";
 
 import * as style from "./style";
+import CometChatManager from '../../../util/controller';
+import { CometChatEvent } from '../../../util/CometChatEvent';
 
 let sel, range;
 
@@ -294,6 +297,8 @@ export default {
       messageToBeEdited: null,
       showStickerPicker: false,
       emojiIndex: new EmojiIndex(data),
+      loggedInUser: null,
+      parentMessageIdData: this.parentMessageId
     };
   },
   watch: {
@@ -446,6 +451,14 @@ export default {
     },
   },
   methods: {
+    componentId(ref) {
+      let componentId = ref
+      if(this.parentMessageId) {
+        componentId += `-${this.parentMessageId}`
+      }
+
+      return componentId
+    },
     /**
      * Handles emitted action events
      */
@@ -727,14 +740,16 @@ export default {
     },
     /**
      * Uploads on image chnage
-     */ onImageChange() {
+     */ 
+    onImageChange() {
       if (this.isBlockedByMe) return;
 
       this.uploadMedia(event, "image");
     },
     /**
      * Uploads on file chnage
-     */ onFileChange() {
+     */ 
+    onFileChange(event) {
       if (this.isBlockedByMe) return;
 
       this.uploadMedia(event, "file");
@@ -744,8 +759,6 @@ export default {
      */
     async sendSticker(sticker) {
       if (this.isBlockedByMe) return;
-
-      this.messageSending = true;
 
       try {
         const { receiverId, receiverType } = this.getReceiverDetails();
@@ -767,15 +780,39 @@ export default {
           customMessage.setParentMessageId(this.parentMessageId);
         }
 
-        const response = await CometChat.sendCustomMessage(customMessage);
+        customMessage.setSender(this.loggedInUser);
+        customMessage.setReceiver(this.type);
+        customMessage.setMetadata({ incrementUnreadCount: true });
+        customMessage._composedAt = getUnixTimestamp();
+        customMessage._id = ID();
 
+        
+        if(this.parentMessageId) {
+          CometChatEvent.triggerHandler(enums.EVENTS["THREAD_MESSAGE_COMPOSED"], { messages: [customMessage] });
+        } else {
+          CometChatEvent.triggerHandler(enums.EVENTS["MESSAGE_COMPOSED"], { messages: [customMessage] });
+        }
         this.playAudio();
-
-        this.emitAction("messageComposed", { messages: [response] });
+        
+        CometChat.sendMessage(customMessage)
+          .then(message => {
+            const newMessageObj = { ...message, _id: customMessage._id };
+            if(this.parentMessageId) {
+              CometChatEvent.triggerHandler(enums.EVENTS["THREAD_MESSAGE_SENT"], { messages: [newMessageObj] });
+            } else {
+              CometChatEvent.triggerHandler(enums.EVENTS["MESSAGE_SENT"], { messages: [newMessageObj] });
+            }
+          })
+          .catch(error => {
+            const newMessageObj = { ...customMessage, error: error };
+            if(this.parentMessageId) {
+              CometChatEvent.triggerHandler(enums.EVENTS["THREAD_MESSAGE_SENT"], { messages: [newMessageObj] });
+            } else {
+              CometChatEvent.triggerHandler(enums.EVENTS["MESSAGE_SENT"], { messages: [newMessageObj] });
+            }
+        });
       } catch (error) {
         this.logError("custom message sending failed with error", error);
-      } finally {
-        this.messageSending = false;
       }
     },
     /**
@@ -786,13 +823,9 @@ export default {
 
       try {
         this.toggleFilePicker();
-
-        if (this.messageSending) {
-          return false;
-        }
-
-        this.messageSending = true;
-
+        
+        this.endTyping();
+        
         let receiverId;
         let receiverType = this.type;
         if (this.type === "user") {
@@ -801,7 +834,7 @@ export default {
           receiverId = this.item.guid;
         }
 
-        let message = new CometChat.MediaMessage(
+        let mediaMessage = new CometChat.MediaMessage(
           receiverId,
           messageInput,
           messageType,
@@ -809,19 +842,44 @@ export default {
         );
 
         if (this.parentMessageId) {
-          message.setParentMessageId(this.parentMessageId);
+          mediaMessage.setParentMessageId(this.parentMessageId);
         }
 
-        this.endTyping();
+        mediaMessage.setSender(this.loggedInUser);
+        mediaMessage.setReceiver(this.type);
+        mediaMessage.setType(messageType);
+        mediaMessage.setMetadata({
+          [enums.FILE_METADATA]: messageInput,
+        });
+        mediaMessage._composedAt = getUnixTimestamp();
+        mediaMessage._id = ID();
 
-        const response = await CometChat.sendMessage(message);
-
+        if(this.parentMessageId) {
+          CometChatEvent.triggerHandler(enums.EVENTS["THREAD_MESSAGE_COMPOSED"], { messages: [mediaMessage] });
+        } else {
+          CometChatEvent.triggerHandler(enums.EVENTS["MESSAGE_COMPOSED"], { messages: [mediaMessage] });
+        }
         this.playAudio();
-        this.emitAction("messageComposed", { messages: [response] });
+        
+        CometChat.sendMessage(mediaMessage)
+          .then(message => {
+            const newMessageObj = { ...message, _id: mediaMessage._id };
+            if(this.parentMessageId) {
+              CometChatEvent.triggerHandler(enums.EVENTS["THREAD_MESSAGE_SENT"], { messages: [newMessageObj] });
+            } else {
+              CometChatEvent.triggerHandler(enums.EVENTS["MESSAGE_SENT"], { messages: [newMessageObj] });
+            }
+          })
+          .catch(error => {
+            const newMessageObj = { ...mediaMessage, error: error };
+            if(this.parentMessageId) {
+              CometChatEvent.triggerHandler(enums.EVENTS["ERROR_IN_SENDING_THREAD_MESSAGE"], { messages: [newMessageObj] });
+            } else {
+              CometChatEvent.triggerHandler(enums.EVENTS["ERROR_IN_SENDING_MESSAGE"], { messages: [newMessageObj] });
+            }
+        });
       } catch (error) {
         this.logError("Message sending failed with error:", error);
-      } finally {
-        this.messageSending = false;
       }
     },
     /**
@@ -835,12 +893,6 @@ export default {
       try {
         let { receiverId, receiverType } = this.getReceiverDetails();
 
-        if (this.messageSending) {
-          return false;
-        }
-
-        this.messageSending = true;
-
         let textMessage = new CometChat.TextMessage(
           receiverId,
           messageInput,
@@ -851,15 +903,39 @@ export default {
           textMessage.setParentMessageId(this.parentMessageId);
         }
 
-        const message = await CometChat.sendMessage(textMessage);
+        textMessage.setSender(this.loggedInUser);
+        textMessage.setReceiver(this.type);
+        textMessage._composedAt = getUnixTimestamp();
+        textMessage._id = ID();
 
+        
+        if(this.parentMessageId) {
+          CometChatEvent.triggerHandler(enums.EVENTS["THREAD_MESSAGE_COMPOSED"], { messages: [textMessage] });
+        } else {
+          CometChatEvent.triggerHandler(enums.EVENTS["MESSAGE_COMPOSED"], { messages: [textMessage] });
+        }
         this.playAudio();
         this.replyPreview = null;
-        this.emitAction("messageComposed", { messages: [message] });
+
+        CometChat.sendMessage(textMessage)
+          .then(message => {
+            const newMessageObj = { ...message, _id: textMessage._id };
+            if(this.parentMessageId) {
+              CometChatEvent.triggerHandler(enums.EVENTS["THREAD_MESSAGE_SENT"], { messages: [newMessageObj] });
+            } else {
+              CometChatEvent.triggerHandler(enums.EVENTS["MESSAGE_SENT"], { messages: [newMessageObj] });
+            }
+          })
+          .catch(error => {
+            const newMessageObj = { ...textMessage, error: error };
+            if(this.parentMessageId) {
+              CometChatEvent.triggerHandler(enums.EVENTS["ERROR_IN_SENDING_THREAD_MESSAGE"], { messages: [newMessageObj] });
+            } else {
+              CometChatEvent.triggerHandler(enums.EVENTS["ERROR_IN_SENDING_MESSAGE"], { messages: [newMessageObj] });
+            }
+        });
       } catch (error) {
         this.logError("Message sending failed with error:", error);
-      } finally {
-        this.messageSending = false;
       }
     },
     /**
@@ -876,12 +952,6 @@ export default {
         if (!this.messageInput.trim().length) {
           return false;
         }
-
-        if (this.messageSending) {
-          return false;
-        }
-
-        this.messageSending = true;
 
         if (this.messageToBeEdited) {
           this.editMessage();
@@ -900,20 +970,41 @@ export default {
         if (this.parentMessageId) {
           textMessage.setParentMessageId(this.parentMessageId);
         }
+        textMessage.setSender(this.loggedInUser);
+        textMessage.setReceiver(this.type);
+        textMessage.setText(messageInput);
+        textMessage._composedAt = getUnixTimestamp();
+        textMessage._id = ID();
 
         this.endTyping();
-
-        const message = await CometChat.sendMessage(textMessage);
-
+        if(this.parentMessageId) {
+          CometChatEvent.triggerHandler(enums.EVENTS["THREAD_MESSAGE_COMPOSED"], { messages: [textMessage] });
+        } else {
+          CometChatEvent.triggerHandler(enums.EVENTS["MESSAGE_COMPOSED"], { messages: [textMessage] });
+        }
         this.messageInput = "";
         this.updateMessageTextDOM("");
-
         this.playAudio();
-        this.emitAction("messageComposed", { messages: [message] });
+        
+        CometChat.sendMessage(textMessage)
+          .then(message => {
+            const newMessageObj = { ...message, _id: textMessage._id };
+            if(this.parentMessageId) {
+              CometChatEvent.triggerHandler(enums.EVENTS["THREAD_MESSAGE_SENT"], { messages: [newMessageObj] });
+            } else {
+              CometChatEvent.triggerHandler(enums.EVENTS["MESSAGE_SENT"], { messages: [newMessageObj] });
+            }
+          })
+          .catch(error => {
+            const newMessageObj = { ...textMessage, error: error };
+            if(this.parentMessageId) {
+              CometChatEvent.triggerHandler(enums.EVENTS["ERROR_IN_SENDING_THREAD_MESSAGE"], { messages: [newMessageObj] });
+            } else {
+              CometChatEvent.triggerHandler(enums.EVENTS["ERROR_IN_SENDING_MESSAGE"], { messages: [newMessageObj] });
+            }
+        });
       } catch (error) {
         this.logError("Message sending failed with error:", error);
-      } finally {
-        this.messageSending = false;
       }
     },
     /**
@@ -1004,8 +1095,10 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.audio = new Audio(outgoingMessageAlert);
+    const user = await new CometChatManager().getLoggedInUser();
+    this.loggedInUser = user
   },
 };
 </script>

@@ -97,6 +97,7 @@ export const messageFileLinkContainerStyle = () => {
   return {
     display: "flex",
     alignItems: "center",
+    wordBreak: "break-all",
   };
 };
 

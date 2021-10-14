@@ -21,6 +21,7 @@
           <comet-chat-message-actions
             :is-group="isGroup"
             v-bind="commonProps"
+            v-if="parsedMessage.sentAt"
             @action="actionHandler"
           />
           <div :style="styles.fileContainer">
@@ -30,10 +31,10 @@
                 rel="noopener noreferrer"
                 :style="styles.fileLink"
                 class="receiver__message__file__link"
-                :href="parsedMessage.data.attachments[0].url"
+                :href="fileUrl"
                 ><span :style="styles.fileLinkContainer">
                   <span>
-                    {{ parsedMessage.data.attachments[0].name }}
+                    {{ fileName }}
                   </span>
                   <img
                     :src="fileIcon"
@@ -63,6 +64,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -119,6 +122,8 @@ export default {
   data() {
     return {
       messageFrom: "receiver",
+      fileName: "",
+      fileUrl: "",
     };
   },
   computed: {
@@ -158,6 +163,16 @@ export default {
       return CometChat;
     },
   },
+  mounted() {
+    this.getFileData();
+    window.addEventListener("resize", this.getFileData);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.getFileData);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.getFileData);
+  }
 };
 </script>
 <style scoped>
@@ -173,7 +188,6 @@ export default {
 .receiver__message__file__img {
   margin-left: 8px;
   border-radius: 4px;
-  background-color: var(--file-recieve-message-bg-color);
 }
 </style>
 <style>
