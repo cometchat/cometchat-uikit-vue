@@ -191,6 +191,7 @@
         @action="actionHandler"
       />
       <comet-chat-message-composer
+        :key="JSON.stringify(parentMessage)"
         :item="item"
         :type="type"
         :theme="theme"
@@ -202,6 +203,8 @@
     </div>
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
@@ -236,6 +239,7 @@ import CometChatReceiverStickerMessageBubble from "../Extensions/CometChatReceiv
 import * as style from "./style";
 
 import clearIcon from "./resources/close.png";
+import { CometChatEvent } from '../../../util/CometChatEvent';
 
 /**
  * Displays message thread.
@@ -448,11 +452,38 @@ export default {
         this.emitAction("listenerData", { action, messages });
       }
     },
+    cometChatEventListeners() {
+      CometChatEvent.on(enums.EVENTS["THREAD_MESSAGE_COMPOSED"], ({messages}) => {
+        this.replyCount = this.replyCount + 1;
+        this.appendMessage(messages);
+
+        this.emitAction("threadMessageComposed", { messages });
+      });
+      CometChatEvent.on(enums.EVENTS["THREAD_MESSAGE_SENT"], ({messages}) => {
+        this.messageSent(messages);
+        CometChatEvent.triggerHandler(enums.EVENTS["UPDATED_LAST_MESSAGES"], { ...messages[0] });
+      });
+      CometChatEvent.on(enums.EVENTS["ERROR_IN_SENDING_THREAD_MESSAGE"], ({messages}) => {
+        this.messageSent(messages);
+      });
+    },
+    cometChatRemoveEventListeners() {
+      CometChatEvent.remove(enums.EVENTS["THREAD_MESSAGE_COMPOSED"]);
+      CometChatEvent.remove(enums.EVENTS["THREAD_MESSAGE_SENT"]);
+      CometChatEvent.remove(enums.EVENTS["ERROR_IN_SENDING_THREAD_MESSAGE"]);
+    },
+  },
+  beforeDestroy() {
+    this.cometChatRemoveEventListeners();
+  },
+  beforeUnmount() {
+    this.cometChatRemoveEventListeners();
   },
   mounted() {
     if (this.parentMessage.replyCount) {
       this.replyCount = this.parentMessage.replyCount;
     }
+    this.cometChatEventListeners();
   },
 };
 </script>

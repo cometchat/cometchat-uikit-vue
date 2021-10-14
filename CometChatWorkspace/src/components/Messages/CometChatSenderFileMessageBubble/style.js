@@ -50,6 +50,7 @@ export const messageFileLinkContainerkStyle = () => {
   return {
     display: "flex",
     alignItems: "center",
+    wordBreak: "break-all",
   };
 };
 

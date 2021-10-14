@@ -66,7 +66,7 @@ Before you begin, ensure you have met the following requirements:
 ### iii. Add the CometChat dependency 📦
 
 ```javascript
-  npm install @cometchat-pro/chat@2.4.0 --save
+  npm install @cometchat-pro/chat@2.4.1-beta1 --save
 ```
 
 <br/>
@@ -187,13 +187,16 @@ Usage of application in project:
 
 # Checkout our sample app
 
-Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-app/tree/v2) repo to run the sample app.
+Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-app/tree/v2) repo to run the Vue sample app.
+
+- For Vue2 sample app, navigate to vue2 folder
+- For Vue3 sample app, navigate to vue3 folder
 
 ---
 
 # Troubleshooting
 
-- To read the full documentation on UI Kit integration visit our [Documentation](https://prodocs.cometchat.com/v2.1/docs/vue-ui-kit).
+- To read the full documentation on UI Kit integration visit our [Documentation](https://www.cometchat.com/docs/v2/vue-chat-ui-kit/overview).
 
 - Facing any issues while integrating or installing the UI Kit please connect with us via real time support present in <a href="https://app.cometchat.com/" target="_blank">CometChat Dashboard.</a>
 
@@ -202,3 +205,11 @@ Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-
 # Contact 📪
 
 Contact us via real time support present in [CometChat Dashboard](https://app.cometchat.com/).
+
+---
+
+# License
+
+---
+
+This project uses the following [license](https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit/blob/v2/LICENSE).

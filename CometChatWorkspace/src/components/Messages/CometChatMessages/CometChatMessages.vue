@@ -44,6 +44,8 @@
     
   </div>
 </template>
+
+<!--eslint-disable-->
 <script>
 import {
   DEFAULT_ARRAY_PROP,
@@ -250,10 +252,6 @@ export default {
 
           this.playAudio();
 
-          break;
-        case "messageComposed":
-          this.appendMessage(messages);
-          this.emitAction(action, { messages });
           break;
         case "messageUpdated":
           this.scrollToBottom = false;
@@ -502,7 +500,30 @@ export default {
       CometChatEvent.on(enums.EVENTS["REFRESHING_MESSAGES"], () => this.refreshingMessages());
       CometChatEvent.on(enums.EVENTS["CLEAR_UNREAD_MESSAGES"], () => this.jumpToMessages());
       CometChatEvent.on(enums.EVENTS["NEW_MESSAGE_CLICKED"], () => this.jumpToMessages());
+      CometChatEvent.on(enums.EVENTS["MESSAGE_COMPOSED"], ({messages}) => this.appendMessage(messages));
+      CometChatEvent.on(enums.EVENTS["MESSAGE_SENT"], ({messages}) => {
+        this.messageSent(messages);
+        CometChatEvent.triggerHandler(enums.EVENTS["UPDATED_LAST_MESSAGES"], { ...messages[0] });
+      });
+      CometChatEvent.on(enums.EVENTS["ERROR_IN_SENDING_MESSAGE"], ({messages}) => {
+        this.messageSent(messages);
+      });
+    },
+    cometChatRemoveEventListeners() {
+      CometChatEvent.remove(enums.EVENTS["NEW_MESSAGES"]);
+      CometChatEvent.remove(enums.EVENTS["REFRESHING_MESSAGES"]);
+      CometChatEvent.remove(enums.EVENTS["CLEAR_UNREAD_MESSAGES"]);
+      CometChatEvent.remove(enums.EVENTS["NEW_MESSAGE_CLICKED"]);
+      CometChatEvent.remove(enums.EVENTS["MESSAGE_COMPOSED"]);
+      CometChatEvent.remove(enums.EVENTS["MESSAGE_SENT"]);
+      CometChatEvent.remove(enums.EVENTS["ERROR_IN_SENDING_MESSAGE"]);
     }
+  },
+  beforeDestroy() {
+    this.cometChatRemoveEventListeners();
+  },
+  beforeUnmount() {
+    this.cometChatRemoveEventListeners();
   },
   mounted() {
     this.reactionName = this.reaction;

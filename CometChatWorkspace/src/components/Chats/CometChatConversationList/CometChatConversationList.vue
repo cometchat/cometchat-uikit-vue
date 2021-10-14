@@ -31,6 +31,14 @@
           @click="conversationClickHandler"
         />
       </div>
+      <div v-if="showConfirmDialog">
+        <cometchat-confirm-dialog
+          :theme="themeValue"
+          :message="STRINGS.DELETE_CONFIRMATION"
+          :confirmButtonText="STRINGS.DELETE"
+          :cancelButtonText="STRINGS.CANCEL"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -57,7 +65,7 @@ import { theme } from "../../../resources/theme";
 import * as enums from "../../../util/enums.js";
 
 import CometChatConversationListItem from "../CometChatConversationListItem/CometChatConversationListItem";
-
+import cometchatConfirmDialog from "../../Shared/CometChatConfirmDialog/index.vue";
 import { incomingOtherMessageAlert } from "../../../resources/audio/";
 
 import navigateIcon from "./resources/navigate.png";
@@ -76,6 +84,7 @@ export default {
   mixins: [propertyCheck, cometChatCommon],
   components: {
     CometChatConversationListItem,
+    cometchatConfirmDialog,
   },
   props: {
     /**
@@ -124,6 +133,8 @@ export default {
       conversationList: [],
       selectedConversation: null,
       decoratorMessage: COMETCHAT_CONSTANTS.LOADING_MESSSAGE,
+      showConfirmDialog: false,
+      conversationToBeDeleted: null,
     };
   },
   watch: {
@@ -971,6 +982,27 @@ export default {
       }
     },
     /**
+     * Update last message
+     */
+    updateLastMessage(lastMessage) {
+      const conversationList = [...this.conversationList];
+      const conversationKey = conversationList.findIndex(c => c.conversationId === lastMessage.conversationId);
+
+      if (conversationKey > -1) {
+        const conversationObj = conversationList[conversationKey];
+        let newConversationObj = { ...conversationObj, lastMessage: { ...lastMessage } };
+
+        if (conversationKey === 0) {
+          conversationList.splice(conversationKey, 1, newConversationObj);
+        } else {
+          conversationList.splice(conversationKey, 1);
+          conversationList.unshift(newConversationObj);
+        }
+
+        this.conversationList = conversationList;
+      }
+    },
+    /**
      * Uupdate unread count
      */
     updateUnreadCount(params) {	
@@ -1000,6 +1032,49 @@ export default {
         }
       }
     },
+    deleteConversation(conversation) {
+      if (!this.showConfirmDialog) {
+        this.showConfirmDialog = true;
+        this.conversationToBeDeleted = conversation;
+      }
+    },
+    onDeleteConfirm(e) {
+      const optionSelected = e.target.value;
+      this.showConfirmDialog = false;
+      if (optionSelected === "yes") {
+        const conversation = this.conversationToBeDeleted;
+        const conversationWith = conversation.conversationType === CometChat.RECEIVER_TYPE.GROUP ? conversation?.conversationWith?.guid : conversation?.conversationWith?.uid;
+        CometChat.deleteConversation(conversationWith, conversation.conversationType)
+          .then(deletedConversation => {
+            console.log(deletedConversation)
+            this.conversationDeleted(conversation);
+          })
+          .catch(error => console.log(error));
+
+      } else {
+        this.showConfirmDialog = false; 
+        this.conversationToBeDeleted = null;
+      }
+    },
+    conversationDeleted(conversation) {
+
+      const conversationList = [...this.conversationList];
+      const conversationKey = conversationList.findIndex(c => c.conversationId === conversation.conversationId);
+
+      if (conversationKey > -1) {
+        if (this.selectedConversation && this.selectedConversation.conversationId === conversation.conversationId) {
+          this.selectedConversation = null;
+          this.emitAction("item-click", { item:{}, type: "" });
+        }
+
+        conversationList.splice(conversationKey, 1);
+        this.conversationList = conversationList; 
+        this.conversationToBeDeleted = null;
+        if (this.conversationList.length === 0) {
+          this.decoratorMessage = COMETCHAT_CONSTANTS.NO_CHATS_FOUND;
+        }
+      }
+    },
     createManager() {
       conversationListManager = new ConversationListManager();
     },
@@ -1016,6 +1091,33 @@ export default {
         conversationListManager = null;
       }
     },
+    cometChatEventListeners() {
+      /** updating last message whenever a message is composed and sent */
+      CometChatEvent.on(enums.EVENTS["UPDATED_LAST_MESSAGES"], args => this.updateLastMessage(args));
+
+      /**Listen for the new messages if user is already in the chat window and has scrolled up*/
+      CometChatEvent.on(enums.EVENTS["NEW_MESSAGES_TRIGGERED"], args => this.updateUnreadCount(args));
+
+      /** clearing unreadcount whenever scrolled to the bottom.*/
+      CometChatEvent.on(enums.EVENTS["CLEAR_UNREAD_MESSAGES_TRIGGERED"], args => this.clearUnreadCount(args));
+
+      /**Delete conversation */
+      CometChatEvent.on(enums.EVENTS["DELETE_CONVERSATION"], args => {
+        this.deleteConversation(args)
+      })
+
+      /**Confirm delete */
+      CometChatEvent.on(enums.EVENTS["CONFIRM_RESPONSE"], (e) => {
+        this.onDeleteConfirm(e)
+      })
+    },
+    cometChatRemoveEventListeners() {
+      CometChatEvent.remove(enums.EVENTS["UPDATED_LAST_MESSAGES"]);
+      CometChatEvent.remove(enums.EVENTS["NEW_MESSAGES_TRIGGERED"]);
+      CometChatEvent.remove(enums.EVENTS["CLEAR_UNREAD_MESSAGES_TRIGGERED"]);
+      CometChatEvent.remove(enums.EVENTS["DELETE_CONVERSATION"])
+      CometChatEvent.remove(enums.EVENTS["CONFIRM_RESPONSE"])
+    }
   },
   beforeMount() {
     this.audio = new Audio(incomingOtherMessageAlert);
@@ -1025,17 +1127,15 @@ export default {
     this.getConversations();
     this.attachListeners();
 
-    /**Listen for the new messages if user is already in the chat window and has scrolled up*/
-    CometChatEvent.on(enums.EVENTS["NEW_MESSAGES_TRIGGERED"], args => this.updateUnreadCount(args));
-
-    /** clearing unreadcount whenever scrolled to the bottom.*/
-		CometChatEvent.on(enums.EVENTS["CLEAR_UNREAD_MESSAGES_TRIGGERED"], args => this.clearUnreadCount(args));
+    this.cometChatEventListeners();
   },
   beforeDestroy() {
     this.removeListeners();
+    this.cometChatRemoveEventListeners();
   },
   beforeUnmount() {
     this.removeListeners();
+    this.cometChatRemoveEventListeners();
   },
 };
 </script>

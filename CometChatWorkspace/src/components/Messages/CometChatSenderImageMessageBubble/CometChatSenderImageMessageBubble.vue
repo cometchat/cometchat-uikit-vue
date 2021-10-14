@@ -7,6 +7,7 @@
     >
       <comet-chat-message-actions
         v-bind="commonProps"
+        v-if="parsedMessage.sentAt"
         @action="actionHandler"
       />
       <div :style="styles.wrapper">
@@ -16,7 +17,7 @@
           @click="emitEvent('action', { action: 'viewActualImage', message })"
         >
           <img
-            alt="message"
+            :alt="imageName"
             :src="imageUrl"
             :style="styles.img"
             @load="positionTooltip"
@@ -102,6 +103,7 @@ export default {
   data() {
     return {
       imageUrl: srcIcon,
+      imageName: "message",
       windowWidth: 1000,
       messageFrom: "sender",
     };
