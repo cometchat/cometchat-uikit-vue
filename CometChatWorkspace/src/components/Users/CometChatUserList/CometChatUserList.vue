@@ -7,14 +7,14 @@
         :style="styles.headerClose"
         @click="emitAction('closeMenuClicked')"
       ></div>
-      <h4 :style="styles.headerTitle">{{ STRINGS.USERS }}</h4>
+      <h4 :style="styles.headerTitle">{{ title }}</h4>
     </div>
     <div :style="styles.search">
       <input
         type="text"
         autocomplete="off"
         :style="styles.searchInput"
-        :placeholder="STRINGS.SEARCH"
+        :placeholder="searchBarPlaceholder"
         @input="userSearchHandler"
       />
     </div>
@@ -50,6 +50,7 @@ import {
   COMETCHAT_CONSTANTS,
   DEFAULT_OBJECT_PROP,
   DEFAULT_BOOLEAN_PROP,
+  DEFAULT_STRING_PROP,
 } from "../../../resources/constants";
 
 import { CometChatManager } from "../../../util/controller";
@@ -100,6 +101,58 @@ export default {
      * Shows/hides the close menu button.
      */
     enableCloseMenu: { ...DEFAULT_BOOLEAN_PROP },
+    /**
+     * _parent item.
+     */
+    _parent: { ...DEFAULT_STRING_PROP, default: "" },
+    /**
+     * width.
+     */
+    width: { ...DEFAULT_STRING_PROP, default: "100%" },
+    /**
+     * height.
+     */
+    height: { ...DEFAULT_STRING_PROP, default: "100%" },
+    /**
+     * title.
+     */
+    title: { ...DEFAULT_STRING_PROP, default: "Users" },
+    /**
+     * titleFont.
+     */
+    titleFont: { ...DEFAULT_STRING_PROP, default: "bold 22px Inter" },
+    /**
+     * titleColor.
+     */
+    titleColor: { ...DEFAULT_STRING_PROP, default: "#141414" },
+    /**
+     * searchBarPlaceholder.
+     */
+    searchBarPlaceholder: { ...DEFAULT_STRING_PROP, default: "Search" },
+    /**
+     * searchBarTextFont.
+     */
+    searchBarTextFont: { ...DEFAULT_STRING_PROP, default: "15px Inter" },
+    /**
+     * searchBarTextColor.
+     */
+    searchBarTextColor: { ...DEFAULT_STRING_PROP, default: "#f1f1f1" },
+    /**
+     * searchBarBackgroundColor.
+     */
+    searchBarBackgroundColor: { ...DEFAULT_STRING_PROP, default: "rgba(20, 20, 20, 0.04)" },
+    /**
+     * searchBarCornerRadius.
+     */
+    searchBarCornerRadius: { ...DEFAULT_STRING_PROP, default: "8px" },
+    /**
+     * backgroundColor.
+     */
+    backgroundColor: { ...DEFAULT_STRING_PROP, default: "#ffffff" },
+    /**
+     * userType.
+     */
+    userType: { ...DEFAULT_STRING_PROP, default: "all_users" },
   },
   data() {
     return {
@@ -130,13 +183,13 @@ export default {
       return {
         msg: style.contactMsgStyle(),
         list: style.contactListStyle(),
-        search: style.contactSearchStyle(),
-        wrapper: style.contactWrapperStyle(),
-        alphabet: style.contactAlphabetStyle(),
+        search: style.contactSearchStyle(this),
+        wrapper: style.contactWrapperStyle(this),
+        alphabet: style.contactAlphabetStyle(this),
         header: style.contactHeaderStyle(this.themeValue),
-        msgText: style.contactMsgTxtStyle(this.themeValue),
-        headerClose: style.contactHeaderCloseStyle(navigateIcon),
-        headerTitle: style.contactHeaderTitleStyle(this.enableCloseMenu),
+        msgText: style.contactMsgTxtStyle(this),
+        headerClose: style.contactHeaderCloseStyle(navigateIcon, this.themeValue),
+        headerTitle: style.contactHeaderTitleStyle(this),
         searchInput: style.contactSearchInputStyle(this.themeValue, searchIcon),
       };
     },

@@ -93,13 +93,9 @@ export default {
   },
   props: {
     /**
-     * Theme of the UI.
-     */
-    theme: { ...DEFAULT_OBJECT_PROP },
-    /**
      * The message object.
      */
-    message: { ...DEFAULT_OBJECT_PROP },
+    messageObject: { ...DEFAULT_OBJECT_PROP },
     /**
      * Message from.
      * @values sender, receiver
@@ -130,8 +126,8 @@ export default {
         ),
         emojiButton: style.emojiButtonStyle(reactIcon),
         wrapper: style.emojiWrapperStyle(this.messageFrom),
-        reactionCount: style.reactionCountStyle(this.theme),
-        addReactionStyle: style.messageReactionsStyle(this.theme, {}, {}),
+        reactionCount: style.reactionCountStyle(),
+        addReactionStyle: style.messageReactionsStyle({}, {}),
       };
     },
     /**
@@ -144,7 +140,7 @@ export default {
      * Reactions present in the message.
      */
     reactions() {
-      return getExtensionsDataFromMessage(this.message, "reactions");
+      return getExtensionsDataFromMessage(this.messageObject, "reactions");
     },
     /**
      * Parsed message reactions.
@@ -175,7 +171,6 @@ export default {
           title: reactionTitle,
           count: reactionCount,
           reactionStyle: style.messageReactionsStyle(
-            this.theme,
             reactionData,
             this.loggedInUser
           ),
@@ -261,7 +256,7 @@ export default {
         }
 
         await CometChat.callExtension("reactions", "POST", "v1/react", {
-          msgId: this.message.id,
+          msgId: this.messageObject.id,
           emoji: emoji.colons,
         });
       } catch (error) {

@@ -19,11 +19,9 @@
 
 <script>
 
-import { DEFAULT_ARRAY_PROP, DEFAULT_OBJECT_PROP } from "../../../resources/constants";
-import { propertyCheck, cometChatBubbles } from "../../../mixins/";
+import { DEFAULT_ARRAY_PROP } from "../";
 import * as style from "./style";
 import { CometChatEvent } from '../../../util/CometChatEvent';
-import { EVENTS } from '../../../util/enums';
 
 /**
  * Shows the new message marker if the user has scrolled up and there are unread messages.
@@ -32,12 +30,7 @@ import { EVENTS } from '../../../util/enums';
  */
 export default {
   name: "cometchatNewMessageIndicator",
-  mixins: [propertyCheck, cometChatBubbles],
   props: {
-    /**
-     * Theme of the UI.
-     */
-    theme: { ...DEFAULT_OBJECT_PROP },
     /**
      * unreadMessages
      */
@@ -49,9 +42,9 @@ export default {
      */ styles() {
       return {
         messagePaneTopStyle: style.messagePaneTopStyle(),
-        messagePaneBannerStyle: style.messagePaneBannerStyle(this.theme),
+        messagePaneBannerStyle: style.messagePaneBannerStyle(),
         messagePaneUnreadBannerStyle: style.messagePaneUnreadBannerStyle(),
-        messagePaneUnreadBannerMessageStyle: style.messagePaneUnreadBannerMessageStyle(this.theme),
+        messagePaneUnreadBannerMessageStyle: style.messagePaneUnreadBannerMessageStyle(),
         iconArrowDownStyle: style.iconArrowDownStyle(),
       };
     },
@@ -61,7 +54,7 @@ export default {
      * Jump to new messages
      */
     jumpToMessages() {
-      CometChatEvent.triggerHandler(EVENTS["NEW_MESSAGE_CLICKED"], [])
+      CometChatEvent.triggerHandler("newMessageClicked", [])
     },
   }
 };

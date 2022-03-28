@@ -1,31 +1,16 @@
 <template>
   <div :style="styles.root" class="cometchat__chats">
     <div :style="styles.sidebar" class="chats__sidebar">
-      <comet-chat-conversation-list
-        :item="item"
-        :type="type"
-        :theme="themeValue"
-        :last-message="lastMessage"
-        :group-to-leave="groupToLeave"
-        :group-to-delete="groupToDelete"
-        :group-to-update="groupToUpdate"
-        :enable-close-menu="isItemPresent"
-        :message-to-mark-read="messageToMarkRead"
-        @action="actionHandler"
-      />
+      <CometChatConversations v-bind="$props" />
     </div>
     <div v-if="isItemPresent" class="chats__main" :style="styles.main">
-      <comet-chat-messages
+      <CometChatMessages
         :tab="tab"
-        :item="item"
-        :type="type"
-        :theme="themeValue"
-        :call-message="callMessage"
-        :logged-in-user="loggedInUser"
-        :group-messages="groupMessages"
-        :action-from-listener="actionFromListener"
-        :composed-thread-message="composedThreadMessage"
-        @action="actionHandler"
+        :user="user"
+        :group="group"
+        :messageFilterList="messageFilterList"
+        :messageAlignment="'leftAligned'"
+        :messageTimeAlignment="'bottom'"
       />
     </div>
     <div
@@ -33,14 +18,14 @@
       :style="styles.secondary"
       class="chats__secondary-view"
     >
-      <comet-chat-user-details
+      <CometChatUserDetails
         :item="item"
         :type="type"
         :theme="themeValue"
         v-if="type === 'user'"
         @action="actionHandler"
       />
-      <comet-chat-group-details
+      <CometChatGroupDetails
         :item="item"
         :type="type"
         :theme="themeValue"
@@ -53,7 +38,7 @@
       :style="styles.secondary"
       class="chats__secondary-view"
     >
-      <comet-chat-message-thread
+      <CometChatMessageThread
         :tab="tab"
         :theme="themeValue"
         :item="threadMessageItem"
@@ -63,8 +48,8 @@
         @action="actionHandler"
       />
     </div>
-    <comet-chat-incoming-call :theme="themeValue" @action="actionHandler" />
-    <comet-chat-outgoing-call
+    <CometChatIncomingCall :theme="themeValue" @action="actionHandler" />
+    <CometChatOutgoingCall
       :item="item"
       :type="type"
       :theme="themeValue"
@@ -73,7 +58,7 @@
       :logged-in-user="loggedInUser"
       @action="actionHandler"
     />
-    <comet-chat-image-viewer
+    <CometChatImageViewer
       :open="true"
       v-if="imageView"
       :message="imageView"
@@ -82,26 +67,34 @@
   </div>
 </template>
 
+<!--eslint-disable-->
 <script>
-import { DEFAULT_OBJECT_PROP } from "../../../resources/constants";
+import { DEFAULT_OBJECT_PROP } from "../";
 
 import { CometChatManager } from "../../../util/controller";
-import { cometChatScreens } from "../../../mixins/";
 
 import {
   CometChatMessages,
   CometChatImageViewer,
   CometChatMessageThread,
+  CometChatMessageTemplate,
+  CometChatCustomMessageTypes,
+  CometChatCustomMessageOptions,
+  CometChatMessageTypes,
+  CometChatMessageOptions,
 } from "../../Messages/";
 import { CometChatUserDetails } from "../../Users";
 import { CometChatGroupDetails } from "../../Groups";
 import { CometChatIncomingCall, CometChatOutgoingCall } from "../../Calls";
 
-import CometChatConversationList from "../CometChatConversationList/CometChatConversationList";
-
+import CometChatConversations from "../CometChatConversations/CometChatConversations";
 import { theme } from "../../../resources/theme";
 
 import * as style from "./style";
+import { DEFAULT_STRING_PROP } from './resources/constants';
+import { CometChatConversationEvents } from '../CometChatConversationEvents';
+import { CometChatConversationConstants } from '../CometChatConversationConstants';
+import { CometChat } from '@cometchat-pro/chat';
 
 /**
  * Displays a list of conversation with messages.
@@ -110,7 +103,6 @@ import * as style from "./style";
  */
 export default {
   name: "CometChatConversationListWithMessages",
-  mixins: [cometChatScreens],
   components: {
     CometChatImageViewer,
     CometChatIncomingCall,
@@ -118,17 +110,20 @@ export default {
     CometChatUserDetails,
     CometChatGroupDetails,
     CometChatMessageThread,
-    CometChatConversationList,
     CometChatMessages,
+    CometChatConversations,
   },
   props: {
     /**
      * Theme of the UI.
      */
     theme: { ...DEFAULT_OBJECT_PROP },
+    title: { ...DEFAULT_STRING_PROP, default: 'Chats'},
   },
   data() {
     return {
+      user: {},
+      group: {},
       item: {},
       type: "",
       imageView: null,
@@ -152,6 +147,100 @@ export default {
       threadMessageParent: {},
       viewThreadMessage: false,
       composedThreadMessage: {},
+      state: this,
+      messageFilterList: [
+        new CometChatMessageTemplate({
+          type: CometChatMessageTypes.text,
+          name: "Text",
+          options: [
+            CometChatMessageOptions.edit,
+            CometChatMessageOptions.delete,
+            CometChatMessageOptions.replyInPrivate,
+            CometChatMessageOptions.reactToMessage,
+            CometChatMessageOptions.translate,
+          ],
+        }),
+        new CometChatMessageTemplate({
+          type: CometChatMessageTypes.image,
+          name: "Image",
+          options: [
+            CometChatMessageOptions.edit,
+            CometChatMessageOptions.delete,
+            CometChatMessageOptions.replyInPrivate,
+            CometChatMessageOptions.reactToMessage,
+            CometChatMessageOptions.translate,
+          ],
+        }),
+        new CometChatMessageTemplate({
+          type: CometChatMessageTypes.file,
+          name: "File",
+          options: [
+            CometChatMessageOptions.edit,
+            CometChatMessageOptions.delete,
+            CometChatMessageOptions.replyInPrivate,
+            CometChatMessageOptions.reactToMessage,
+            CometChatMessageOptions.translate,
+          ],
+        }),
+        new CometChatMessageTemplate({
+          type: CometChatMessageTypes.audio,
+          name: "Audio",
+          options: [
+            CometChatMessageOptions.edit,
+            CometChatMessageOptions.delete,
+            CometChatMessageOptions.replyInPrivate,
+            CometChatMessageOptions.reactToMessage,
+            CometChatMessageOptions.translate,
+          ],
+        }),
+        new CometChatMessageTemplate({
+          type: CometChatMessageTypes.video,
+          name: "Video",
+          options: [
+            CometChatMessageOptions.edit,
+            CometChatMessageOptions.delete,
+            CometChatMessageOptions.replyInPrivate,
+            CometChatMessageOptions.reactToMessage,
+            CometChatMessageOptions.translate,
+          ],
+        }),
+        new CometChatMessageTemplate({
+          type: CometChatCustomMessageTypes.poll,
+          name: "Poll",
+          options: [
+            CometChatCustomMessageOptions.delete,
+            CometChatCustomMessageOptions.replyInPrivate,
+            CometChatCustomMessageOptions.reactToMessage
+          ],
+        }),
+        new CometChatMessageTemplate({
+          type: CometChatCustomMessageTypes.sticker,
+          name: "Sticker",
+          options: [
+            CometChatCustomMessageOptions.delete,
+            CometChatCustomMessageOptions.replyInPrivate,
+            CometChatCustomMessageOptions.reactToMessage
+          ],
+        }),
+        new CometChatMessageTemplate({
+          type: CometChatCustomMessageTypes.document,
+          name: "Document",
+          options: [
+            CometChatCustomMessageOptions.delete,
+            CometChatCustomMessageOptions.replyInPrivate,
+            CometChatCustomMessageOptions.reactToMessage
+          ],
+        }),
+        new CometChatMessageTemplate({
+          type: CometChatCustomMessageTypes.whiteboard,
+          name: "Whiteboard",
+          options: [
+            CometChatCustomMessageOptions.delete,
+            CometChatCustomMessageOptions.replyInPrivate,
+            CometChatCustomMessageOptions.reactToMessage
+          ],
+        }),
+      ],
     };
   },
   computed: {
@@ -180,6 +269,9 @@ export default {
      */
     themeValue() {
       return Object.assign({}, theme, this.theme);
+    },
+    isItemPresent() {
+      return !!Object.keys(this.user).length || !!Object.keys(this.group).length;
     },
   },
   methods: {
@@ -301,6 +393,33 @@ export default {
           break;
       }
     },
+    toggleSideBar() {
+      this.viewSidebar = !this.viewSidebar;
+    },
+    addListeners() {
+      CometChatConversationEvents.addListener(
+        CometChatConversationEvents.onItemClick,
+        "onItemClick",
+        (data) => {
+          this.toggleSideBar();
+          // this.item = data;
+          if(data?.uid) {
+            this.user = data;
+            this.group = {};
+          } else if(data?.guid) {
+            this.group = data;
+            this.user = {};
+          }
+        
+        }
+      );
+    },
+    removeListeners() {
+      CometChatConversationEvents.removeListener(
+        CometChatConversationEvents.onItemClick,
+        "onItemClick"
+      );
+    },
   },
   beforeMount() {
     if (!Object.keys(this.item).length) {
@@ -317,7 +436,15 @@ export default {
         );
       }
     })();
+
+    this.addListeners();
   },
+  beforeDestroy() {
+    this.removeListeners();
+  },
+  beforeUnmount() {
+    this.removeListeners();
+  }
 };
 </script>
 

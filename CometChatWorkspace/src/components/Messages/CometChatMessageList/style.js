@@ -1,92 +1,83 @@
-export const chatListStyle = (theme) => {
-  return {
-    backgroundColor: `${theme.backgroundColor.white}`,
-    zIndex: "1",
-    width: "100%",
-    flex: "1 1 0",
-    order: "2",
-    position: "relative",
-  };
+import { messageAlignment } from "../";
+
+export const chatListStyle = props => {
+	return {
+		background: props.background,
+		zIndex: "1",
+		width: props.width,
+		height: props.height,
+		flex: "1 1 0",
+		order: "2",
+		position: "relative",
+	};
 };
 
 export const listWrapperStyle = () => {
-  return {
-    boxSizing: "border-box",
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-    overflowX: "hidden",
-    overflowY: "scroll",
-    position: "absolute",
-    top: "0",
-    transition: "background .3s ease-out .1s",
-    width: "100%",
-    zIndex: "100",
-    paddingTop: "14px",
-  };
-};
-
-export const actionMessageStyle = () => {
-  return {
-    padding: "8px 12px",
-    marginBottom: "16px",
-    textAlign: "center",
-  };
-};
-
-export const actionMessageTextStyle = () => {
-  return {
-    fontSize: "13.5px",
-    margin: "0",
-    lineHeight: "20px",
-  };
-};
-
-export const messageDateContainerStyle = () => {
-  return {
-    textAlign: "center",
-    marginBottom: "16px",
-  };
-};
-
-export const messageDateStyle = (theme) => {
-  return {
-    padding: "8px 12px",
-    backgroundColor: `${theme.backgroundColor.secondary}`,
-    color: `${theme.color.primary}`,
-    borderRadius: "10px",
-  };
+	
+	return {
+		boxSizing: "border-box",
+		display: "flex",
+		flexDirection: "column",
+		height: "100%",
+		overflowX: "hidden",
+		overflowY: "scroll",
+		position: "absolute",
+		top: "0",
+		transition: "background .3s ease-out .1s",
+		width: "100%",
+		zIndex: "100",
+		paddingTop: "16px",
+	};
 };
 
 export const decoratorMessageStyle = () => {
-  return {
-    overflow: "hidden",
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    top: "50%",
-  };
+	return {
+		overflow: "hidden",
+		width: "100%",
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+		position: "absolute",
+		top: "50%",
+	};
 };
 
-export const decoratorMessageTextStyle = (theme) => {
-  return {
-    margin: "0",
-    height: "30px",
-    color: `${theme.color.secondary}`,
-    fontSize: "24px!important",
-    fontWeight: "600",
-  };
+export const decoratorMessageTxtStyle = () => {
+    
+	return {
+		margin: "0",
+		height: "36px",
+		color: `rgba(20,20,20, 60%)`,
+		font: "400 20px Inter, sans-serif",
+		lineHeight: "30px",
+		wordWrap: "break-word",
+		padding: "0 16px",
+	};
 };
 
-export const loadingMessageTextStyle = (theme) => {
-  return {
-    margin: "0",
-    padding: "4px 24px 24px",
-    textAlign: "center",
-    color: `${theme.color.secondary}`,
-    fontSize: "18px!important",
-    fontWeight: "600",
-  };
-};
+export const messageBubbleStyle = (props, loggedInUser, messageObject) => {
+
+	let flexAlignment = { alignSelf: "flex-start" };
+	let userNameAlignment = { textAlign: "left" };
+	let justifyContent = { justifyContent: "flex-start" };
+
+	if (props.messageAlignment === messageAlignment.standard && loggedInUser?.uid === messageObject?.sender?.uid) {
+		flexAlignment = { alignSelf: "flex-end" };
+		userNameAlignment = { textAlign: "right" };
+		justifyContent = { justifyContent: "flex-end" };
+	}
+
+	return {
+		maxWidth: "65%",
+		height: "auto",
+		userSelect: "text",
+		marginBottom: "8px",
+		...flexAlignment,
+		".message_kit__sender": {
+			...userNameAlignment,
+		},
+		".message_kit__username_bar": {
+			...justifyContent,
+		},
+	};
+}

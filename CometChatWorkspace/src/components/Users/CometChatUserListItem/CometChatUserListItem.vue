@@ -8,13 +8,13 @@
       <comet-chat-avatar
         border-width="1px"
         corner-radius="50%"
-        :image="user.avatar"
+        :user="user"
         :border-color="theme.borderColor.primary"
       />
-      <comet-chat-user-presence
+      <comet-chat-status-indicator
         border-width="1px"
         corner-radius="50%"
-        :status="user.status"
+        :status="status || user.status"
         :border-color="theme.borderColor.primary"
       />
     </div>
@@ -24,18 +24,18 @@
         @mouseenter="toggleTooltip($event, true)"
         @mouseleave="toggleTooltip($event, false)"
       >
-        {{ user.name }}
+        {{ getTitle }}
       </div>
       <div :style="styles.itemDescription"></div>
     </div>
   </div>
 </template>
 <script>
-import { DEFAULT_OBJECT_PROP } from "../../../resources/constants";
+import { DEFAULT_OBJECT_PROP, DEFAULT_STRING_PROP } from "../../../resources/constants";
 
 import { tooltip, cometChatCommon } from "../../../mixins";
 
-import { CometChatAvatar, CometChatUserPresence } from "../../Shared/";
+import { CometChatAvatar, CometChatStatusIndicator } from "../../Shared/";
 
 import * as style from "./style";
 
@@ -49,13 +49,13 @@ export default {
   mixins: [tooltip, cometChatCommon],
   components: {
     CometChatAvatar,
-    CometChatUserPresence,
+    CometChatStatusIndicator,
   },
   props: {
     /**
      * User object.
      */
-    user: { ...DEFAULT_OBJECT_PROP },
+    user: { ...DEFAULT_OBJECT_PROP, default: null },
     /**
      * Theme of the UI.
      */
@@ -64,6 +64,42 @@ export default {
      * Selected user in the list.
      */
     selectedUser: { ...DEFAULT_OBJECT_PROP },
+    /**
+     * title.
+     */
+    title: { ...DEFAULT_STRING_PROP, default: "" },
+    /**
+     * titleColor.
+     */
+    titleColor: { ...DEFAULT_STRING_PROP, default: "#141414" },
+    /**
+     * titleFont.
+     */
+    titleFont: { ...DEFAULT_STRING_PROP, default: "600 15px Inter" },
+    /**
+     * subTitle.
+     */
+    subTitle: { ...DEFAULT_STRING_PROP, default: "" },
+    /**
+     * subTitleColor.
+     */
+    subTitleColor: { ...DEFAULT_STRING_PROP, default: "rgba(20, 20, 20, 0.8)" },
+    /**
+     * subTitleFont.
+     */
+    subTitleFont: { ...DEFAULT_STRING_PROP, default: "400 13px Inter" },
+    /**
+     * backgroundColor.
+     */
+    backgroundColor: { ...DEFAULT_STRING_PROP, default: "#ffffff" },
+    /**
+     * status.
+     */
+    status: { ...DEFAULT_STRING_PROP, default: "" },
+    /**
+     * avatar.
+     */
+    avatar: { ...DEFAULT_STRING_PROP, default: "" },
   },
   computed: {
     /**
@@ -71,13 +107,31 @@ export default {
      */
     styles() {
       return {
-        itemName: style.itemNameStyle(),
+        itemName: style.itemNameStyle(this),
         itemDetail: style.itemDetailStyle(),
         itemThumbnail: style.itemThumbnailStyle(),
-        itemDescription: style.itemDescriptionStyle(this.theme),
-        listItem: style.listItemStyle(this.theme, this.user, this.selectedUser),
+        itemDescription: style.itemDescriptionStyle(this),
+        listItem: style.listItemStyle(this),
       };
     },
+    getTitle() {
+      let title = null;
+      if(this.title && this.title.length) {
+        title = this.title;
+      } else {
+        if (!this.user) {
+          return null;
+        }
+
+        if (!this.user.name) {
+          return null;
+        }
+
+        title = this.user.name;
+      }
+
+      return title
+    }
   },
 };
 </script>

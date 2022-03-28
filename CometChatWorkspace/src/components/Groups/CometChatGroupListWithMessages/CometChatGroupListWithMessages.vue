@@ -13,7 +13,7 @@
       />
     </div>
     <div v-if="isItemPresent" class="groups__main" :style="styles.main">
-      <comet-chat-messages
+      <CometChatMessages
         :tab="tab"
         :item="item"
         :type="type"

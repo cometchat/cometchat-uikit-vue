@@ -45,12 +45,12 @@
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
-import { DEFAULT_OBJECT_PROP } from "../../../resources/constants";
+import { DEFAULT_OBJECT_PROP } from "../";
 import { propertyCheck, cometChatCommon } from "../../../mixins";
 
 import * as style from "./style";
 
-import closeIcon from "./resources/clear.svg";
+import closeIcon from "./resources/close.svg";
 
 /**
  * Used to choose and send sticker messages.

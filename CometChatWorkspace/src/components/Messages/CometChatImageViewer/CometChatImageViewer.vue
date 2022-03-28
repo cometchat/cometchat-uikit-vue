@@ -1,26 +1,20 @@
 <template>
   <div>
-    <comet-chat-backdrop :show="open" @click="emitAction('closeActualImage')" />
-    <div :style="styles.imageWrapper" @click="emitAction('closeActualImage')">
+    <comet-chat-backdrop :show="open" @click="onClose()" />
+    <div :style="styles.imageWrapper" @click="onClose()">
       <img
         :src="computedImage"
         :style="styles.image"
-        :alt="STRINGS.FULL_SCREEN_VIEW"
+        :alt="localize('FULL_SCREEN_VIEW')"
         @error="() => (error = true)"
       />
     </div>
   </div>
 </template>
 <script>
-import {
-  COMETCHAT_CONSTANTS,
-  DEFAULT_OBJECT_PROP,
-  DEFAULT_BOOLEAN_PROP,
-} from "../../../resources/constants";
+import { DEFAULT_OBJECT_PROP, DEFAULT_BOOLEAN_PROP, DEFAULT_FUNCTION_PROP } from "../";
 
-import { cometChatCommon } from "../../../mixins/";
-
-import { CometChatBackdrop } from "../../Shared";
+import { CometChatBackdrop, localize } from "../../Shared";
 
 import closeIcon from "./resources/close.png";
 import srcIcon from "./resources/1px.png";
@@ -34,7 +28,6 @@ import * as style from "./style";
  */
 export default {
   name: "CometChatImageViewer",
-  mixins: [cometChatCommon],
   components: { CometChatBackdrop },
   props: {
     /**
@@ -45,6 +38,7 @@ export default {
      * The message object.
      */
     message: { ...DEFAULT_OBJECT_PROP },
+    onClose: { ...DEFAULT_FUNCTION_PROP, default: () => {} },
   },
   data() {
     return {
@@ -70,8 +64,8 @@ export default {
     /**
      * Local string constants.
      */
-    STRINGS() {
-      return COMETCHAT_CONSTANTS;
+    localize() {
+      return localize;
     },
   },
 };

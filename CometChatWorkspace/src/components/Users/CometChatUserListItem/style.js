@@ -1,8 +1,10 @@
-export const listItemStyle = (theme, user, selectedUser) => {
+import {hexToRGB} from '../../../util/common'
+
+export const listItemStyle = (props) => {
   const selectedState =
-    selectedUser && selectedUser.uid === user.uid
+    props.selectedUser && props.selectedUser.uid === props.user.uid
       ? {
-          backgroundColor: `${theme.backgroundColor.primary}`,
+          backgroundColor: `${props.theme.backgroundColor.primary}`,
         }
       : {};
 
@@ -15,13 +17,14 @@ export const listItemStyle = (theme, user, selectedUser) => {
     width: "100%",
     padding: "10px 20px",
     ...selectedState,
-    "--list-item-bg-color-hover": `${theme.backgroundColor.primary}`,
+    "--list-item-bg-color-hover": `${props.theme.backgroundColor.primary}`,
   };
 };
 
 export const itemThumbnailStyle = () => {
   return {
-    display: "inline-block",
+    display: "flex",
+    position: "relative",
     width: "36px",
     height: "36px",
     flexShrink: "0",
@@ -36,10 +39,10 @@ export const itemDetailStyle = () => {
   };
 };
 
-export const itemNameStyle = () => {
+export const itemNameStyle = (props) => {
   return {
-    fontSize: "15px",
-    fontWeight: "600",
+    fontSize: `${props.titleFont}`,
+    color: `${props.titleColor}`,
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
@@ -48,9 +51,11 @@ export const itemNameStyle = () => {
   };
 };
 
-export const itemDescriptionStyle = (theme) => {
-  return {
-    marginTop: "10px",
-    borderBottom: `1px solid ${theme.borderColor.primary}`,
-  };
+export const itemDescriptionStyle = (props) => {
+	const titleColorInRGB = hexToRGB(props.titleColor);
+
+	return {
+		marginTop: "10px",
+		borderBottom: `1px solid rgba(${titleColorInRGB}, 10%)`,
+	};
 };

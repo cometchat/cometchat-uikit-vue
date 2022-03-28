@@ -6,7 +6,8 @@
       class="live__reaction__emoji"
       v-for="(_, i) in Array(6).fill(0)"
     >
-      <img :src="reactionIconSrc" :alt="reaction" />
+      <span v-if="reaction" :style="{style}">{{reaction}}</span>
+      <img  v-else :src="reactionIconSrc" :alt="reaction" />
     </span>
   </div>
 </template>
@@ -16,9 +17,9 @@
 import {
   DEFAULT_OBJECT_PROP,
   DEFAULT_STRING_PROP,
-} from "../../../resources/constants";
+} from "../";
 
-import * as enums from "../../../util/enums.js";
+import { messageConstants } from '../CometChatMessageConstants';
 
 import heart from "./resources/heart.png";
 
@@ -35,7 +36,7 @@ export default {
     /**
      * Theme of the UI.
      */
-    theme: { ...DEFAULT_OBJECT_PROP },
+    style: { ...DEFAULT_OBJECT_PROP },
     /**
      * The reaction to animate.
      */
@@ -66,8 +67,8 @@ export default {
      */
     reactionIconSrc() {
       return this.reaction
-        ? this.icons[enums.LIVE_REACTIONS[this.reaction]]
-        : this.icons[enums.LIVE_REACTIONS["heart"]];
+        ? this.icons["heart"]
+        : this.icons["heart"];
     },
     /**
      * Icons computed from file images.
@@ -157,7 +158,7 @@ export default {
      * Looper function that controls the animation
      */
     requestAnimation() {
-      this.timer = setTimeout(this.animate, 1000 / 60);
+      this.timer = setTimeout(this.animate, messageConstants.liveReactionTimeout / 60);
     },
   },
   mounted() {

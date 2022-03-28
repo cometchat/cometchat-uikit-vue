@@ -1,11 +1,11 @@
-export const messageReactionsStyle = (theme, reactionData, loggedInUser) => {
+export const messageReactionsStyle = (reactionData, loggedInUser) => {
   const uid = loggedInUser.uid;
   let borderStyle = {};
   let hoveredBorderStyle = {};
 
   if (Object.hasOwnProperty.call(reactionData, uid)) {
     borderStyle = {
-      border: `1px solid ${theme.borderColor.blue}`,
+      border: `1px solid #39f`,
     };
 
     hoveredBorderStyle = {
@@ -17,7 +17,7 @@ export const messageReactionsStyle = (theme, reactionData, loggedInUser) => {
     };
 
     hoveredBorderStyle = {
-      "--reaction-hover-border": `1px solid ${theme.borderColor.primary}`,
+      "--reaction-hover-border": `1px solid #eaeaea`,
     };
   }
 
@@ -28,7 +28,7 @@ export const messageReactionsStyle = (theme, reactionData, loggedInUser) => {
     display: "inline-flex",
     alignItems: "center",
     verticalAlign: "top",
-    backgroundColor: `${theme.backgroundColor.secondary}`,
+    backgroundColor: `#f6f6f6`,
     borderRadius: "12px",
     margin: "4px 4px 0 0",
     cursor: "pointer",
@@ -55,9 +55,9 @@ export const emojiButtonStyle = (img) => {
   };
 };
 
-export const reactionCountStyle = (theme) => {
+export const reactionCountStyle = () => {
   return {
-    color: `${theme.color.primary}`,
+    color: `#141414`,
     paddingRight: "4px",
   };
 };

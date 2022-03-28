@@ -20,14 +20,14 @@
               corner-radius="50%"
               v-if="type === 'user'"
               :border-color="theme.borderColor.primary"
-              :image="callInProgress.receiver.avatar"
+              :user="callInProgress.receiver"
             />
             <comet-chat-avatar
               border-width="1px"
               corner-radius="50%"
               v-else-if="type === 'group'"
               :border-color="theme.borderColor.primary"
-              :image="callInProgress.receiver.icon"
+              :group="callInProgress.receiver"
             />
           </template>
         </div>

@@ -12,14 +12,14 @@ export const messagePaneTopStyle = () => {
   }
 }
 
-export const messagePaneBannerStyle = (theme) => {
+export const messagePaneBannerStyle = () => {
 
 return {
   marginBottom: "0",
   display: "block",
   fontSize: "13px",
   flex: "1",
-  background: `${theme.color.blue}`,
+  background: `#39f`,
   borderRadius: "6px",
   zIndex: 200,
 };
@@ -36,7 +36,7 @@ export const messagePaneUnreadBannerStyle = () => {
   }
 }
 
-export const messagePaneUnreadBannerMessageStyle = (theme) => {
+export const messagePaneUnreadBannerMessageStyle = () => {
 
 return {
   padding: "0 16px",
@@ -46,7 +46,7 @@ return {
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
-  color: `${theme.color.white}`,
+  color: `#fff`,
 };
 };
 

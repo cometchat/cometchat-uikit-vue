@@ -9,10 +9,10 @@
         <comet-chat-avatar
           border-width="1px"
           corner-radius="50%"
-          :image="user.avatar"
+          :user="user"
           :border-color="theme.borderColor.primary"
         />
-        <comet-chat-user-presence
+        <comet-chat-status-indicator
           border-width="1px"
           corner-radius="50%"
           :status="user.status"
@@ -42,7 +42,7 @@ import {
 
 import { tooltip, cometChatCommon } from "../../../mixins/";
 
-import { CometChatAvatar, CometChatUserPresence } from "../../Shared";
+import { CometChatAvatar, CometChatStatusIndicator } from "../../Shared";
 
 import * as style from "./style";
 
@@ -59,7 +59,7 @@ export default {
   mixins: [tooltip, cometChatCommon],
   components: {
     CometChatAvatar,
-    CometChatUserPresence,
+    CometChatStatusIndicator
   },
   props: {
     /**

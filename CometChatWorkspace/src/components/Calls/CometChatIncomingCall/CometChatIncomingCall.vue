@@ -28,7 +28,7 @@
         <div :style="styles.thumbnail">
           <comet-chat-avatar
             corner-radius="50%"
-            :image="incomingCall.sender.avatar"
+            :user="incomingCall.sender"
           />
         </div>
       </div>

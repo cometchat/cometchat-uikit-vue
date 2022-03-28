@@ -1,14 +1,11 @@
-import { CometChat } from "@cometchat-pro/chat";
+import { CometChatMessageReceiverType } from "../CometChatMessageConstants";
 
-export const messageContainerStyle = (messageOf) => {
-  const alignment =
-    messageOf === "sender"
-      ? {
-          alignSelf: "flex-end",
-        }
-      : {
-          alignSelf: "flex-start",
-        };
+export const messageContainerStyle = (props) => {
+  const alignment = (props.messageObject?.sender?.uid === props.loggedInUser?.uid) ? {
+    alignSelf: "flex-end"
+  } : {
+    alignSelf: "flex-start"
+  };
 
   return {
     marginBottom: "16px",
@@ -21,14 +18,11 @@ export const messageContainerStyle = (messageOf) => {
   };
 };
 
-export const messageWrapperStyle = (messageOf) => {
-  const alignment =
-    messageOf === "sender"
-      ? {
-          display: "flex",
-          flexDirection: "column",
-        }
-      : {};
+export const messageWrapperStyle = (props) => {
+  const alignment = (props.messageObject?.sender?.uid === props.loggedInUser?.uid) ? {
+    display: "flex",
+    flexDirection: "column",
+  } : {};
 
   return {
     flex: "1 1",
@@ -38,15 +32,12 @@ export const messageWrapperStyle = (messageOf) => {
   };
 };
 
-export const messageTextWrapperStyle = (theme, messageOf) => {
-  const alignment =
-    messageOf === "sender"
-      ? {
-          alignSelf: "flex-end",
-        }
-      : {
-          alignSelf: "flex-start",
-        };
+export const messageTextWrapperStyle = (props) => {
+  const alignment = (props.messageObject?.sender?.uid === props.loggedInUser?.uid) ? {
+    alignSelf: "flex-end"
+  } : {
+    alignSelf: "flex-start"
+  };
 
   return {
     display: "inline-block",
@@ -54,42 +45,40 @@ export const messageTextWrapperStyle = (theme, messageOf) => {
     padding: "8px 12px",
     alignSelf: "flex-end",
     Width: "100%",
-    backgroundColor: `${theme.backgroundColor.secondary}`,
+    backgroundColor: `#E6E6E6`,
     fontStyle: "italic",
     ...alignment,
   };
 };
 
-export const messageTextStyle = (theme) => {
+export const messageTextStyle = () => {
   return {
     fontSize: "14px!important",
     margin: "0",
     lineHeight: "20px!important",
-    color: `${theme.color.helpText}`,
+    color: `rgba(20, 20, 20, 0.6)`,
   };
 };
 
-export const messageInfoWrapperStyle = (messageOf) => {
-  const alignment =
-    messageOf === "sender"
-      ? {
-          alignSelf: "flex-end",
-        }
-      : {
-          alignSelf: "flex-start",
-        };
+export const messageInfoWrapperStyle = (props) => {
+  const alignment = (props.messageObject?.sender?.uid === props.loggedInUser?.uid) ? {
+    alignSelf: "flex-end"
+  } : {
+    alignSelf: "flex-start"
+  };
+
 
   return alignment;
 };
 
-export const messageTimeStampStyle = (theme) => {
+export const messageTimeStampStyle = () => {
   return {
     display: "inline-block",
     fontSize: "11px",
     fontWeight: 500,
     lineHeight: "12px",
     textTransform: "uppercase",
-    color: `${theme.color.helpText}`,
+    color: `rgba(20, 20, 20, 0.6)`,
   };
 };
 
@@ -102,16 +91,14 @@ export const messageThumbnailStyle = () => {
   };
 };
 
-export const messageDetailStyle = (message, messageOf) => {
+export const messageDetailStyle = (props) => {
   let paddingSpace = {};
-  if (
-    messageOf === "receiver" &&
-    message.receiverType === CometChat.RECEIVER_TYPE.GROUP
-  ) {
-    paddingSpace = {
-      paddingLeft: "5px",
-    };
-  }
+	if (props.messageObject?.sender?.uid === props.loggedInUser?.uid 
+    && props.messageObject.receiverType === CometChatMessageReceiverType.group) {
+		paddingSpace = {
+			padding: "5px",
+		};
+	}
 
   return {
     flex: "1 1",
@@ -122,16 +109,14 @@ export const messageDetailStyle = (message, messageOf) => {
   };
 };
 
-export const nameWrapperStyle = (message, messageOf) => {
+export const nameWrapperStyle = (props) => {
   let paddingSpace = {};
-  if (
-    messageOf === "receiver" &&
-    message.receiverType === CometChat.RECEIVER_TYPE.GROUP
-  ) {
-    paddingSpace = {
-      padding: "3px 5px",
-    };
-  }
+	if (props.messageObject?.sender?.uid === props.loggedInUser?.uid 
+    && props.messageObject.receiverType === CometChatMessageReceiverType.group) {
+		paddingSpace = {
+			padding: "3px 5px",
+		};
+	}
 
   return {
     alignSelf: "flex-start",
@@ -139,9 +124,9 @@ export const nameWrapperStyle = (message, messageOf) => {
   };
 };
 
-export const nameStyle = (theme) => {
+export const nameStyle = () => {
   return {
     fontSize: "10px",
-    color: `${theme.color.helpText}`,
+    color: `rgba(20, 20, 20, 0.6)`,
   };
 };

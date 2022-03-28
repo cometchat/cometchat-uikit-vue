@@ -23,8 +23,8 @@
               parentMessage.text
             "
           >
-            <comet-chat-sender-text-message-bubble
-              :message="parentMessage"
+            <CometChatTextBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -35,8 +35,8 @@
               parentMessage.data.url
             "
           >
-            <comet-chat-sender-image-message-bubble
-              :message="parentMessage"
+            <CometChatImageBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -47,8 +47,8 @@
               parentMessage.data.attachments
             "
           >
-            <comet-chat-sender-file-message-bubble
-              :message="parentMessage"
+            <CometChatFileBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -59,8 +59,8 @@
               parentMessage.data.url
             "
           >
-            <comet-chat-sender-video-message-bubble
-              :message="parentMessage"
+            <CometChatVideoBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -71,15 +71,15 @@
               parentMessage.data.url
             "
           >
-            <comet-chat-sender-audio-message-bubble
-              :message="parentMessage"
+            <CometChatAudioBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
           </template>
           <template v-else-if="parentMessage.type === ENUMS.CUSTOM_TYPE_POLL">
-            <comet-chat-sender-poll-message-bubble
-              :message="parentMessage"
+            <CometChatPollBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -87,8 +87,8 @@
           <template
             v-else-if="parentMessage.type === ENUMS.CUSTOM_TYPE_STICKER"
           >
-            <comet-chat-sender-sticker-message-bubble
-              :message="parentMessage"
+            <CometChatStickerBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -101,8 +101,8 @@
               parentMessage.text
             "
           >
-            <comet-chat-receiver-text-message-bubble
-              :message="parentMessage"
+            <CometChatTextBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -113,8 +113,8 @@
               parentMessage.data.url
             "
           >
-            <comet-chat-receiver-image-message-bubble
-              :message="parentMessage"
+            <CometChatImageBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -125,8 +125,8 @@
               parentMessage.data.attachments
             "
           >
-            <comet-chat-receiver-file-message-bubble
-              :message="parentMessage"
+            <CometChatFileBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -137,8 +137,8 @@
               parentMessage.data.url
             "
           >
-            <comet-chat-receiver-video-message-bubble
-              :message="parentMessage"
+            <CometChatVideoBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -149,15 +149,15 @@
               parentMessage.data.url
             "
           >
-            <comet-chat-receiver-audio-message-bubble
-              :message="parentMessage"
+            <CometChatAudioBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
           </template>
           <template v-else-if="parentMessage.type === ENUMS.CUSTOM_TYPE_POLL">
-            <comet-chat-receiver-poll-message-bubble
-              :message="parentMessage"
+            <CometChatPollBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -165,8 +165,8 @@
           <template
             v-else-if="parentMessage.type === ENUMS.CUSTOM_TYPE_STICKER"
           >
-            <comet-chat-receiver-sticker-message-bubble
-              :message="parentMessage"
+            <CometChatStickerBubble
+              :messageObject="parentMessage"
               @action="actionHandler"
               v-bind="senderRecieverMessageCommonProps"
             />
@@ -220,22 +220,15 @@ import { cometChatMessage, cometChatCommon } from "../../../mixins/";
 
 import CometChatMessageList from "../CometChatMessageList/CometChatMessageList";
 import CometChatMessageComposer from "../CometChatMessageComposer/CometChatMessageComposer";
-
-import CometChatSenderTextMessageBubble from "../CometChatSenderTextMessageBubble/CometChatSenderTextMessageBubble";
-import CometChatSenderFileMessageBubble from "../CometChatSenderFileMessageBubble/CometChatSenderFileMessageBubble";
-import CometChatSenderImageMessageBubble from "../CometChatSenderImageMessageBubble/CometChatSenderImageMessageBubble";
-import CometChatSenderVideoMessageBubble from "../CometChatSenderVideoMessageBubble/CometChatSenderVideoMessageBubble";
-import CometChatSenderAudioMessageBubble from "../CometChatSenderAudioMessageBubble/CometChatSenderAudioMessageBubble";
-import CometChatReceiverTextMessageBubble from "../CometChatReceiverTextMessageBubble/CometChatReceiverTextMessageBubble";
-import CometChatReceiverFileMessageBubble from "../CometChatReceiverFileMessageBubble/CometChatReceiverFileMessageBubble";
-import CometChatReceiverImageMessageBubble from "../CometChatReceiverImageMessageBubble/CometChatReceiverImageMessageBubble";
-import CometChatReceiverVideoMessageBubble from "../CometChatReceiverVideoMessageBubble/CometChatReceiverVideoMessageBubble";
-import CometChatReceiverAudioMessageBubble from "../CometChatReceiverAudioMessageBubble/CometChatReceiverAudioMessageBubble";
-import CometChatSenderPollMessageBubble from "../Extensions/CometChatSenderPollMessageBubble/CometChatSenderPollMessageBubble";
-import CometChatReceiverPollMessageBubble from "../Extensions/CometChatReceiverPollMessageBubble/CometChatReceiverPollMessageBubble";
-import CometChatSenderStickerMessageBubble from "../Extensions/CometChatSenderStickerMessageBubble/CometChatSenderStickerMessageBubble";
-import CometChatReceiverStickerMessageBubble from "../Extensions/CometChatReceiverStickerMessageBubble/CometChatReceiverStickerMessageBubble";
-
+import {
+  CometChatTextBubble,
+  CometChatFileBubble,
+  CometChatImageBubble,
+  CometChatAudioBubble,
+  CometChatVideoBubble,
+  CometChatStickerBubble,
+  CometChatPollBubble,
+} from "../"
 import * as style from "./style";
 
 import clearIcon from "./resources/close.png";
@@ -252,20 +245,13 @@ export default {
   components: {
     CometChatMessageList,
     CometChatMessageComposer,
-    CometChatSenderTextMessageBubble,
-    CometChatSenderPollMessageBubble,
-    CometChatSenderFileMessageBubble,
-    CometChatSenderImageMessageBubble,
-    CometChatSenderAudioMessageBubble,
-    CometChatSenderVideoMessageBubble,
-    CometChatSenderStickerMessageBubble,
-    CometChatReceiverTextMessageBubble,
-    CometChatReceiverFileMessageBubble,
-    CometChatReceiverPollMessageBubble,
-    CometChatReceiverImageMessageBubble,
-    CometChatReceiverAudioMessageBubble,
-    CometChatReceiverVideoMessageBubble,
-    CometChatReceiverStickerMessageBubble,
+    CometChatTextBubble,
+    CometChatFileBubble,
+    CometChatImageBubble,
+    CometChatAudioBubble,
+    CometChatVideoBubble,
+    CometChatStickerBubble,
+    CometChatPollBubble,
   },
   props: {
     /**
