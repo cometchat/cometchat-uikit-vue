@@ -1,90 +1,73 @@
 <template>
-  <div :style="styles.root">
-    <div :style="styles.detail">
-      <div
-        class="cometchat_sidebar_btn"
-        :style="styles.sidebarBtn"
-        @click="emitAction('menuClicked')"
-      ></div>
-      <div :style="styles.thumbnail">
-        <comet-chat-avatar
-          border-width="1px"
-          corner-radius="18px"
-          :image="avatarImage"
-          :border-color="theme.borderColor.primary"
+  <div :style="styles.chatHeaderStyle" class="chat__header">
+    <div :style="styles.chatDetailStyle" class="chat__details">
+      <div :style="styles.chatThumbnailStyle" class="chat__thumbnail">
+        <CometChatAvatar v-if="getAvatar()" :image="getAvatar()" />
+        <CometChatAvatar v-else-if="getName()" :name="getName()" />
+        <CometChatStatusIndicator
+          v-if="Object.keys(user).length"
+          :backgroundColor="userPresence === 'offline' ? '#ccc' : '#3BDF2F'"
+          :style="{ position: 'absolute', bottom: '1px', right: '0px' }"
         />
-        <comet-chat-user-presence
-          border-width="1px"
-          corner-radius="50%"
-          :status="presence"
-          v-if="type === 'user'"
-          :border-color="theme.borderColor.primary"
+        <CometChatStatusIndicator
+          v-else-if="Object.keys(group).length"
+          :backgroundImage="groupIcon"
+          :style="{ position: 'absolute', bottom: '1px', right: '0px', width: '20px', height: '20px', border: 'none' }"
         />
+        
       </div>
-      <div :style="styles.user" class="cometchat__message__header__user">
+      <div :style="styles.chatUserStyle" :class="chatWithClassName">
         <h6
-          :style="styles.name"
+          :style="styles.chatNameStyle"
+          :class="chatNameClassName"
           @mouseenter="toggleTooltip($event, true)"
           @mouseleave="toggleTooltip($event, false)"
         >
-          {{ item.name }}
+          {{ chatWith?.name }}
         </h6>
         <span
-          :style="styles.status"
+          :style="styles.chatStatusStyle"
+          :class="chatStatusClassName"
           @mouseenter="toggleTooltip($event, true)"
           @mouseleave="toggleTooltip($event, false)"
         >
-          {{ status }}
+          <span
+            :style="styles.chatStatusStyle"
+            :class="chatStatusClassName"
+            v-if="typingText"
+          >
+            {{ typingText }}
+          </span>
+          <span
+            v-else
+            :style="styles.chatStatusStyle"
+            :class="chatStatusClassName"
+          >
+            {{ messageHeaderStatus }}
+          </span>
         </span>
       </div>
-    </div>
-    <div :style="styles.optionWrapper">
-      <span
-        v-if="canShowAudioCall"
-        class="cometchat_chat_option"
-        :style="styles.audioCallOption"
-        @click="emitAction('audioCall')"
-      ></span>
-      <span
-        v-if="canShowVideoCall"
-        class="cometchat_chat_option"
-        :style="styles.videoCallOption"
-        @click="emitAction('videoCall')"
-      ></span>
-      <span
-        class="cometchat_chat_option"
-        :style="styles.detailPaneOption"
-        @click="emitAction('viewDetail')"
-      ></span>
     </div>
   </div>
 </template>
 
 <!--eslint-disable-->
 <script>
-import dateFormat from "dateformat";
+import { DEFAULT_STRING_PROP, DEFAULT_OBJECT_PROP } from "../";
+
+import { MessageHeaderManager } from "./controller";
 
 import {
-  COMETCHAT_CONSTANTS,
-  DEFAULT_STRING_PROP,
-  DEFAULT_OBJECT_PROP,
-  DEFAULT_BOOLEAN_PROP,
-} from "../../../resources/constants";
-
-import { cometChatCommon, propertyCheck, tooltip } from "../../../mixins/";
-import { MessageHeaderManager } from "./controller";
-import { SvgAvatar } from "../../../util/svgavatar";
-
-import { CometChatAvatar, CometChatUserPresence } from "../../Shared";
-
-import * as enums from "../../../util/enums.js";
-
-import menuIcon from "./resources/menuicon.png";
-import audioCallIcon from "./resources/audio.png";
-import videoCallIcon from "./resources/video.png";
-import detailPaneIcon from "./resources/detailpane.png";
+  CometChatAvatar,
+  CometChatStatusIndicator,
+  localize,
+} from "../../Shared";
 
 import * as style from "./style";
+import { CometChatMessageReceiverType } from "../CometChatMessageConstants";
+import { CometChat } from "@cometchat-pro/chat";
+import passwordGroupIcon from "./resources/password-protected-group.svg";
+import privateGroupIcon from "./resources/private-group.svg";
 
 let messageHeaderManager;
 
@@ -95,64 +78,72 @@ let messageHeaderManager;
  */
 export default {
   name: "CometChatMessageHeader",
-  mixins: [tooltip, propertyCheck, cometChatCommon],
   components: {
     CometChatAvatar,
-    CometChatUserPresence,
+    CometChatStatusIndicator,
   },
   props: {
     /**
-     * The selected chat item object.
+     * image.
      */
-    item: { ...DEFAULT_OBJECT_PROP },
+    image: { ...DEFAULT_STRING_PROP, default: "" },
     /**
-     * Type of chat item.
+     * user.
      */
-    type: { ...DEFAULT_STRING_PROP },
+    user: { ...DEFAULT_OBJECT_PROP, default: {} },
     /**
-     * Theme of the UI.
+     * group.
      */
-
-    theme: { ...DEFAULT_OBJECT_PROP },
+    group: { ...DEFAULT_OBJECT_PROP, default: {} },
     /**
-     * Whether to show sidebar.
+     * background.
      */
-    sidebar: { ...DEFAULT_BOOLEAN_PROP },
+    background: { ...DEFAULT_STRING_PROP, default: "#fff" },
     /**
-     * Current logged in user.
+     * border.
      */
-    loggedInUser: { ...DEFAULT_OBJECT_PROP },
+    border: { ...DEFAULT_STRING_PROP, default: "1px solid rgb(234, 234, 234)" },
   },
   data() {
     return {
       status: "",
       presence: "offline",
+      chatWith: null,
+      chatWithType: null,
+      messageHeaderStatus: "",
+      userPresence: "offline",
+      callbackData: null,
+      handlers: {},
+      typingText: null,
+      groupIcon: "",
     };
   },
   watch: {
-    item: {
+    callbackData: {
       /**
        * Watches item to update status message for group.
        */
-      handler(newValue, oldValue) {
+      handler() {
         if (messageHeaderManager) {
           messageHeaderManager.removeListeners();
         }
         messageHeaderManager = new MessageHeaderManager();
-        messageHeaderManager.attachListeners(this.updateHeaderHandler);
+        messageHeaderManager.attachListeners(this.messageHeaderCallback);
 
-        if (this.type === "user" && oldValue.uid !== newValue.uid) {
-          this.setStatusForUser();
-        } else if (
-          this.type === "group" &&
-          (newValue.guid !== oldValue.guid ||
-            (newValue.guid === oldValue.guid &&
-              newValue.membersCount !== oldValue.membersCount))
-        ) {
-          this.setStatusForGroup();
+        const handlerCall = this.handlers[this.callbackData?.name];
+        if (!handlerCall) {
+          return false;
         }
+
+        return handlerCall(...this.callbackData?.args);
       },
       deep: true,
+    },
+    user: function () {
+      this.refreshData()
+    },
+    group: function () {
+      this.refreshData();
     },
   },
   computed: {
@@ -161,188 +152,276 @@ export default {
      */
     styles() {
       return {
-        name: style.chatNameStyle(),
-        user: style.chatUserStyle(),
-        detail: style.chatDetailStyle(),
-        thumbnail: style.chatThumbnailStyle(),
-        root: style.chatHeaderStyle(this.theme),
-        optionWrapper: style.chatOptionWrapStyle(),
-        sidebarBtn: style.chatSideBarBtnStyle(menuIcon, this.sidebar),
-        audioCallOption: style.chatOptionStyle(audioCallIcon, "audio"),
-        videoCallOption: style.chatOptionStyle(videoCallIcon, "video"),
-        detailPaneOption: style.chatOptionStyle(detailPaneIcon, "detail"),
-        status: style.chatStatusStyle(
-          this.theme,
-          this.presence,
-          this.status,
-          this.type
+        chatHeaderStyle: style.chatHeaderStyle(this),
+        chatDetailStyle: style.chatDetailStyle(),
+        chatThumbnailStyle: style.chatThumbnailStyle(),
+        chatUserStyle: style.chatUserStyle(),
+        chatNameStyle: style.chatNameStyle(),
+        chatStatusStyle: style.chatStatusStyle(
+          this.userPresence,
+          this.chatWithType,
+          this.typingText
         ),
+        chatOptionWrapStyle: style.chatOptionWrapStyle(),
       };
-    },
-    /**
-     * Computed avatar image
-     */
-    avatarImage() {
-      const isUser = this.type === "user";
-      let avatar = isUser ? this.item.avatar : this.item.icon;
-      if (!avatar) {
-        if (isUser) {
-          avatar = SvgAvatar.getAvatar(
-            this.item.uid,
-            this.item.name.charAt(0).toUpperCase()
-          );
-        } else {
-          avatar = SvgAvatar.getAvatar(
-            this.item.guid,
-            this.item.name.charAt(0).toUpperCase()
-          );
-        }
-      }
-      return avatar;
-    },
-    /**
-     * Returns if item is blocked by current user.
-     */
-    isBlockedByMe() {
-      return this.item.blockedByMe;
-    },
-    /**
-     * Returns if audio call icon can be shown.
-     */
-    canShowAudioCall() {
-      return this.isBlockedByMe ? false : true;
-    },
-    /**
-     * Returns if video call icon can be shown.
-     */
-    canShowVideoCall() {
-      return this.isBlockedByMe ? false : true;
     },
   },
   methods: {
     /**
-     * Sets status message for user
+     * Toggle tooltip utility
+     * @param {*} event
+     * @param {*} flag
      */
-    setStatusForUser() {
-      let status = this.item.status;
-      const presence = this.item.status === "online" ? "online" : "offline";
+    toggleTooltip(event, flag) {
+      try {
+        const elem = event.target;
 
-      if (this.item.status === "offline" && this.item.lastActiveAt) {
-        status =
-          COMETCHAT_CONSTANTS.LAST_ACTIVE_AT +
-          dateFormat(this.item.lastActiveAt * 1000, "d mmmm yyyy, h:MM TT");
-      } else if (this.item.status === "offline") {
-        status = "offline";
+        const scrollWidth = elem.scrollWidth;
+        const clientWidth = elem.clientWidth;
+
+        if (scrollWidth <= clientWidth) {
+          return false;
+        }
+
+        if (flag) {
+          elem.setAttribute("title", elem.textContent);
+        } else {
+          elem.removeAttribute("title");
+        }
+      } catch (error) {
+        console.log("Tooltip toggle failed with exception:", error);
+      }
+    },
+    getAvatar() {
+      let avatar = "";
+      if (this.image) {
+        avatar = this.image;
+      } else if (this.user && this.user.avatar) {
+        avatar = this.user.avatar;
+      } else if (this.group && this.group.icon) {
+        avatar = this.group.icon;
       }
 
-      this.status = status;
-      this.presence = presence;
+      return avatar;
     },
-    /**
-     * Sets status message for group
-     */
-    setStatusForGroup() {
-      this.status = `${this.item.membersCount} members`;
+    getName() {
+      let name = "";
+      if (this.user && this.user.name) {
+        name = this.user.name;
+      } else if (this.group && this.group.name) {
+        name = this.group.name;
+      }
+
+      return name;
     },
-    /**
-     * Handles listener events
-     */
-    updateHeaderHandler(key, item, groupUser) {
-      this.logInfo("CometChatMessageHeader: updateHeaderHandler", {
-        key,
-        item,
-        groupUser,
+    chatStatusClassName() {
+      return this.chatWithType === CometChatMessageReceiverType.user
+        ? "user__status"
+        : "group__members";
+    },
+    chatWithClassName() {
+      return this.chatWithType === CometChatMessageReceiverType.user
+        ? "chat__user"
+        : "chat__group";
+    },
+    chatNameClassName() {
+      return this.chatWithType === CometChatMessageReceiverType.user
+        ? "user__name"
+        : "group__name";
+    },
+    setHandlers() {
+      this.handlers = {
+        onUserOnline: this.handleUsers,
+        onUserOffline: this.handleUsers,
+        onMemberAddedToGroup: this.handleGroups,
+        onGroupMemberJoined: this.handleGroups,
+        onGroupMemberKicked: this.handleGroups,
+        onGroupMemberLeft: this.handleGroups,
+        onGroupMemberBanned: this.handleGroups,
+        onTypingStarted: this.handleStartTyping,
+        onTypingEnded: this.handleEndTyping,
+      };
+    },
+    updateMessageHeaderStatusForUser() {
+      if (
+        this.user.status === CometChat.USER_STATUS.OFFLINE &&
+        this.user.lastActiveAt
+      ) {
+        this.messageHeaderStatus = localize("OFFLINE");
+        this.userPresence = CometChat.USER_STATUS.OFFLINE;
+      } else if (this.user.status === CometChat.USER_STATUS.OFFLINE) {
+        this.messageHeaderStatus = localize("OFFLINE");
+        this.userPresence = CometChat.USER_STATUS.OFFLINE;
+      } else if (this.user.status === CometChat.USER_STATUS.ONLINE) {
+        this.messageHeaderStatus = localize("ONLINE");
+        this.userPresence = CometChat.USER_STATUS.ONLINE;
+      }
+    },
+    updateMessageHeaderStatusForGroup() {
+      const status = `${this.group.membersCount} ${localize("MEMBERS")}`;
+      this.messageHeaderStatus = status;
+    },
+    getUser(uid) {
+      return new Promise((resolve, reject) => {
+        CometChat.getUser(uid)
+          .then((user) => resolve(user))
+          .catch((error) => reject(error));
       });
-      switch (key) {
-        case enums.USER_ONLINE:
-        case enums.USER_OFFLINE: {
-          if (this.type === "user" && this.item.uid === item.uid) {
-            this.status = item.status;
-            this.presence = item.status;
-          }
-          break;
+    },
+    getGroup(guid) {
+      return new Promise((resolve, reject) => {
+        CometChat.getGroup(guid)
+          .then((group) => resolve(group))
+          .catch((error) => reject(error));
+      });
+    },
+    getChatWithType() {
+      if (this.user && this.user.uid) {
+        if (this.user.name) {
+          this.chatWithType = CometChatMessageReceiverType.user;
+          this.chatWith = this.user;
+          this.updateMessageHeaderStatusForUser(this.user);
+        } else {
+          this.getUser(this.user.uid).then((user) => {
+            this.chatWithType = CometChatMessageReceiverType.user;
+            this.chatWith = user;
+            this.updateMessageHeaderStatusForUser(user);
+          });
         }
-        case enums.GROUP_MEMBER_KICKED:
-        case enums.GROUP_MEMBER_BANNED:
-        case enums.GROUP_MEMBER_LEFT:
-          if (
-            this.type === "group" &&
-            this.item.guid === item.guid &&
-            this.loggedInUser.uid !== groupUser.uid
-          ) {
-            let membersCount = parseInt(item.membersCount);
-            const status = `${membersCount} members`;
-
-            this.status = status;
-          }
-          break;
-        case enums.GROUP_MEMBER_JOINED:
-          if (this.type === "group" && this.item.guid === item.guid) {
-            let membersCount = parseInt(item.membersCount);
-            const status = `${membersCount} members`;
-
-            this.status = status;
-          }
-          break;
-        case enums.GROUP_MEMBER_ADDED:
-          if (this.type === "group" && this.item.guid === item.guid) {
-            let membersCount = parseInt(item.membersCount);
-            const status = `${membersCount} members`;
-
-            this.status = status;
-          }
-          break;
-        case enums.TYPING_STARTED: {
-          if (
-            this.type === "group" &&
-            this.type === item.receiverType &&
-            this.item.guid === item.receiverId
-          ) {
-            this.status = `${item.sender.name} ${COMETCHAT_CONSTANTS.IS_TYPING}`;
-          } else if (
-            this.type === "user" &&
-            this.type === item.receiverType &&
-            this.item.uid === item.sender.uid
-          ) {
-            this.status = COMETCHAT_CONSTANTS.TYPING;
-          }
-          break;
+      } else if (this.group && this.group.guid) {
+        if (this.group.name) {
+          this.chatWithType = CometChatMessageReceiverType.group;
+          this.chatWith = this.group;
+          this.updateMessageHeaderStatusForGroup(this.group);
+        } else {
+          this.getGroup(this.group.guid).then((group) => {
+            this.chatWithType = CometChatMessageReceiverType.group;
+            this.chatWith = group;
+            this.updateMessageHeaderStatusForGroup(group);
+          });
         }
-        case enums.TYPING_ENDED: {          
-          if (
-            this.type === "group" &&
-            this.type === item.receiverType &&
-            this.item.guid === item.receiverId
-          ) {
-            this.setStatusForGroup();
-          } else if (
-            this.type === "user" &&
-            this.type === item.receiverType &&
-            this.item.uid === item.sender.uid
-          ) {
-            if (this.presence === "online") {
-              this.status = "online";
-              this.presence = "online";
-            } else {
-              this.setStatusForUser();
-            }
-          }
-          break;
-        }
-        default:
-          break;
       }
+
+      /**Sets the group icon */
+      if(this.group?.type == "public") {
+        this.groupIcon = "";
+      } else if(this.group?.type === "private") {
+        this.groupIcon = privateGroupIcon;
+      } else if(this.group?.type === "password-protected") {
+        this.groupIcon = passwordGroupIcon;
+      }
+    },
+    /**
+     *
+     * When a user goes online/ offline
+     */
+    handleUsers(user) {
+      if (
+        this.chatWithType === CometChatMessageReceiverType.user &&
+        this.chatWith?.uid === user.uid
+      ) {
+        if (user.status === CometChat.USER_STATUS.OFFLINE) {
+          this.messageHeaderStatus = localize("OFFLINE");
+          this.userPresence = user.status;
+        } else if (user.status === CometChat.USER_STATUS.ONLINE) {
+          this.messageHeaderStatus = localize("ONLINE");
+          this.userPresence = user.status;
+        }
+      }
+    },
+    handleGroups(group) {
+      if (
+        this.chatWithType === CometChatMessageReceiverType.group &&
+        this.chatWith?.guid === group.guid
+      ) {
+        const membersCount = parseInt(group.membersCount);
+        const status = `${membersCount} ${localize("MEMBERS")}`;
+        this.messageHeaderStatus = status;
+      }
+    },
+    handleStartTyping(userOrGroup) {
+      if (
+        this.chatWithType === CometChatMessageReceiverType.group &&
+        this.chatWithType === userOrGroup.receiverType &&
+        this.chatWith?.guid === userOrGroup.receiverId
+      ) {
+        const typingText = `${userOrGroup.sender.name} ${localize(
+          "IS_TYPING"
+        )}`;
+        this.typingText = typingText;
+      } else if (
+        this.chatWithType === CometChatMessageReceiverType.user &&
+        this.chatWithType === userOrGroup.receiverType &&
+        this.chatWith?.uid === userOrGroup.sender.uid
+      ) {
+        const typingText = localize("TYPING");
+        this.typingText = typingText;
+      }
+    },
+    handleEndTyping(userOrGroup) {
+      if (
+        this.chatWithType === CometChatMessageReceiverType.group &&
+        this.chatWithType === userOrGroup.receiverType &&
+        this.chatWith?.guid === userOrGroup.receiverId
+      ) {
+        const status = `${this.chatWith?.membersCount} ${localize("MEMBERS")}`;
+        this.messageHeaderStatus = status;
+        this.typingText = null;
+      } else if (
+        this.chatWithType === CometChatMessageReceiverType.user &&
+        this.chatWithType === userOrGroup.receiverType &&
+        this.chatWith?.uid === userOrGroup.sender.uid
+      ) {
+        if (this.userPresence === CometChat.USER_STATUS.ONLINE) {
+          this.messageHeaderStatus = localize("ONLINE");
+          this.userPresence = CometChat.USER_STATUS.ONLINE;
+          this.typingText = null;
+        } else {
+          this.messageHeaderStatus = localize("OFFLINE");
+          this.userPresence = CometChat.USER_STATUS.OFFLINE;
+          this.typingText = null;
+        }
+      }
+    },
+    showTooltip(event) {
+      const elem = event.target;
+      const scrollWidth = elem.scrollWidth;
+      const clientWidth = elem.clientWidth;
+
+      if (scrollWidth <= clientWidth) {
+        return false;
+      }
+
+      elem.setAttribute("title", elem.textContent);
+    },
+    hideTooltip(event) {
+      const elem = event.target;
+      const scrollWidth = elem.scrollWidth;
+      const clientWidth = elem.clientWidth;
+
+      if (scrollWidth <= clientWidth) {
+        return false;
+      }
+
+      elem.removeAttribute("title");
+    },
+    messageHeaderCallback(listenerName, ...args) {
+      this.callbackData = { name: listenerName, args: [...args] };
+    },
+    refreshData() {
+      CometChat.getLoggedinUser()
+        .then((user) => {
+          messageHeaderManager = new MessageHeaderManager();
+          messageHeaderManager.attachListeners(this.messageHeaderCallback);
+        })
+        .catch((error) => {});
+
+      this.setHandlers();
+      this.getChatWithType();
     },
   },
   beforeMount() {
-    messageHeaderManager = new MessageHeaderManager();
-    messageHeaderManager.attachListeners(this.updateHeaderHandler);
-
-    if (this.type === "user") {
-      this.setStatusForUser();
-    } else {
-      this.setStatusForGroup();
-    }
+    this.refreshData();
   },
   beforeDestroy() {
     if (this.messageHeaderManager) {
@@ -358,19 +437,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-.cometchat_chat_option:first-of-type {
-  margin-left: 0 !important;
-}
-.cometchat_chat_option:last-of-type {
-  margin-right: 0 !important;
-}
-@media (min-width: 320px) and (max-width: 767px) {
-  .cometchat_sidebar_btn {
-    display: block !important;
-  }
-  .cometchat__message__header__user {
-    width: calc(100% - 80px) !important;
-  }
-}
-</style>

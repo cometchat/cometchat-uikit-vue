@@ -1,6 +1,7 @@
 import { CometChat } from "@cometchat-pro/chat";
 
 import * as enums from "../../../util/enums.js";
+import { CometChatConversationConstants } from "../CometChatConversationConstants.js";
 
 /**
  * ConversationListManager class encapsulates the following functionality:
@@ -18,10 +19,33 @@ export class ConversationListManager {
   groupListenerId = "chatlist_group_" + new Date().getTime();
   callListenerId = "chatlist_call_" + new Date().getTime();
 
-  constructor() {
-    this.conversationRequest = new CometChat.ConversationsRequestBuilder()
-      .setLimit(30)
-      .build();
+  constructor(props) {
+
+    switch (props.conversationType) {
+      case CometChatConversationConstants.conversationType["users"]:
+        this.conversationRequest = new CometChat.ConversationsRequestBuilder()
+          .setConversationType(props.conversationType)
+          .setLimit(props.limit)
+          .withTags(props.tags.length === 0 ? false : true)
+          .setTags(props.tags)
+          .withUserAndGroupTags(true)
+          .build();
+        break;
+      case CometChatConversationConstants.conversationType["groups"]:
+        this.conversationRequest = new CometChat.ConversationsRequestBuilder()
+          .setConversationType(props.conversationType)
+          .setLimit(props.limit)
+          .withTags(props.tags.length === 0 ? false : true)
+          .setTags(props.tags)
+          .withUserAndGroupTags(true)
+          .build();
+        break;
+      default:
+        this.conversationRequest = new CometChat.ConversationsRequestBuilder()
+          .setLimit(props.limit)
+          .build();
+        break;
+    }
   }
 
   fetchNextConversation() {
@@ -107,19 +131,19 @@ export class ConversationListManager {
       this.conversationListenerId,
       new CometChat.MessageListener({
         onTextMessageReceived: (textMessage) => {
-          callback(enums.TEXT_MESSAGE_RECEIVED, null, textMessage);
+          callback(enums.TEXT_MESSAGE_RECEIVED, textMessage);
         },
         onMediaMessageReceived: (mediaMessage) => {
-          callback(enums.MEDIA_MESSAGE_RECEIVED, null, mediaMessage);
+          callback(enums.MEDIA_MESSAGE_RECEIVED, mediaMessage);
         },
         onCustomMessageReceived: (customMessage) => {
-          callback(enums.CUSTOM_MESSAGE_RECEIVED, null, customMessage);
+          callback(enums.CUSTOM_MESSAGE_RECEIVED, customMessage);
         },
         onMessageDeleted: (deletedMessage) => {
-          callback(enums.MESSAGE_DELETED, null, deletedMessage);
+          callback(enums.MESSAGE_DELETED, deletedMessage);
         },
         onMessageEdited: (editedMessage) => {
-          callback(enums.MESSAGE_EDITED, null, editedMessage);
+          callback(enums.MESSAGE_EDITED, editedMessage);
         },
       })
     );
@@ -128,10 +152,10 @@ export class ConversationListManager {
       this.callListenerId,
       new CometChat.CallListener({
         onIncomingCallReceived: (call) => {
-          callback(enums.INCOMING_CALL_RECEIVED, null, call);
+          callback(enums.INCOMING_CALL_RECEIVED, call);
         },
         onIncomingCallCancelled: (call) => {
-          callback(enums.INCOMING_CALL_CANCELLED, null, call);
+          callback(enums.INCOMING_CALL_CANCELLED, call);
         },
       })
     );

@@ -10,6 +10,10 @@ export default {
      */
     async setImage() {
       try {
+        if(this.imageURL) {
+          this.imageUrl = this.imageURL;
+          return;
+        }
         const thumbnailGenerationData = checkMessageForExtensionsData(this.parsedMessage, "thumbnail-generation");
 		
         if(thumbnailGenerationData) {

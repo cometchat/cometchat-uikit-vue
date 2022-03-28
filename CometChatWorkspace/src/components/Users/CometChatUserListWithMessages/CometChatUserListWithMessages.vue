@@ -10,9 +10,9 @@
       />
     </div>
     <div v-if="isItemPresent" :style="styles.main" class="contacts__main">
-      <comet-chat-messages
+      <CometChatMessages
         :tab="tab"
-        :item="item"
+        :user="item"
         :type="type"
         :theme="themeValue"
         :call-message="callMessage"

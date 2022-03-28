@@ -16,7 +16,7 @@
       />
     </div>
     <div v-if="isItemPresent" class="unified__main" :style="styles.main">
-      <comet-chat-messages
+      <CometChatMessages
         :tab="tab"
         :item="item"
         :type="type"

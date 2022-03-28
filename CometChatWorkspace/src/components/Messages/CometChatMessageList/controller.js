@@ -1,202 +1,173 @@
 import { CometChat } from "@cometchat-pro/chat";
 
-import * as enums from "../../../util/enums.js";
-import MessageFilter from "./MessageFilter";
+import { CometChatMessageCategories, CometChatMessageTypes } from "../";
 
 export class MessageListManager {
-  item = {};
-  type = "";
-  parentMessageId = null;
-  messageRequest = null;
-  limit = enums.MESSAGE_REQUEST_LIMIT;
-  categories = [
-    enums.CATEGORY_MESSAGE,
-    enums.CATEGORY_CUSTOM,
-    enums.CATEGORY_ACTION,
-    enums.CATEGORY_CALL,
-  ];
-  types = [
-    enums.MESSAGE_TYPE_TEXT,
-    enums.MESSAGE_TYPE_IMAGE,
-    enums.MESSAGE_TYPE_VIDEO,
-    enums.MESSAGE_TYPE_AUDIO,
-    enums.MESSAGE_TYPE_FILE,
-    enums.CUSTOM_TYPE_POLL,
-    enums.CUSTOM_TYPE_STICKER,
-    enums.ACTION_TYPE_GROUPMEMBER,
-    enums.CALL_TYPE_AUDIO,
-    enums.CALL_TYPE_VIDEO,
-  ];
 
-  msgListenerId = "message_" + new Date().getTime();
-  groupListenerId = "group_" + new Date().getTime();
-  callListenerId = "call_" + new Date().getTime();
+	limit = 30;
+	parentMessageId = null;
+	messageRequest = null;
 
-  constructor(item, type, parentMessageId) {
-    this.item = item;
-    this.type = type;
-    this.parentMessageId = parentMessageId;
+	messageListenerId = "message_" + new Date().getTime();
+	groupListenerId = "group_" + new Date().getTime();
+	callListenerId = "call_" + new Date().getTime();
 
-    const messageFilterManager = new MessageFilter();
-    const categories = messageFilterManager.getCategories();
-    const types = messageFilterManager.getTypes();
+	constructor(props) {
 
-    if (type === "user") {
-      if (this.parentMessageId) {
-        this.messageRequest = new CometChat.MessagesRequestBuilder()
-          .setUID(item.uid)
-          .setParentMessageId(this.parentMessageId)
-          .setCategories(categories)
-          .setTypes(types)
-          .setLimit(this.limit)
-          .build();
-      } else {
-        this.messageRequest = new CometChat.MessagesRequestBuilder()
-          .setUID(item.uid)
-          .setCategories(categories)
-          .setTypes(types)
-          .hideReplies(true)
-          .setLimit(this.limit)
-          .build();
-      }
-    } else if (type === "group") {
-      if (this.parentMessageId) {
-        this.messageRequest = new CometChat.MessagesRequestBuilder()
-          .setGUID(item.guid)
-          .setParentMessageId(this.parentMessageId)
-          .setCategories(categories)
-          .setTypes(types)
-          .setLimit(this.limit)
-          .build();
-      } else {
-        this.messageRequest = new CometChat.MessagesRequestBuilder()
-          .setGUID(item.guid)
-          .setCategories(categories)
-          .setTypes(types)
-          .hideReplies(true)
-          .setLimit(this.limit)
-          .build();
-      }
-    }
-  }
+		const messageCategories = new Set();
+		const messageTypes = new Set();
 
-  fetchPreviousMessages() {
-    return this.messageRequest.fetchPrevious();
-  }
+		//if there is no message filtering set, show just text messages
+		if (props.messageFilterList.length === 0) {
+			messageCategories.add(CometChatMessageCategories.message);
+			messageTypes.add(CometChatMessageTypes.text);
+		} 
 
-  attachListeners(callback) {
-    CometChat.addMessageListener(
-      this.msgListenerId,
-      new CometChat.MessageListener({
-        onTextMessageReceived: (textMessage) => {
-          callback(enums.TEXT_MESSAGE_RECEIVED, textMessage);
-        },
-        onMediaMessageReceived: (mediaMessage) => {
-          callback(enums.MEDIA_MESSAGE_RECEIVED, mediaMessage);
-        },
-        onCustomMessageReceived: (customMessage) => {
-          callback(enums.CUSTOM_MESSAGE_RECEIVED, customMessage);
-        },
-        onMessagesDelivered: (messageReceipt) => {
-          callback(enums.MESSAGE_DELIVERED, messageReceipt);
-        },
-        onMessagesRead: (messageReceipt) => {
-          callback(enums.MESSAGE_READ, messageReceipt);
-        },
-        onMessageDeleted: (deletedMessage) => {
-          callback(enums.MESSAGE_DELETED, deletedMessage);
-        },
-        onMessageEdited: (editedMessage) => {
-          callback(enums.MESSAGE_EDITED, editedMessage);
-        },
-        onTransientMessageReceived: transientMessage => {
-          callback(enums.TRANSIENT_MESSAGE_RECEIVED, transientMessage);
-        },
-      })
-    );
+		//message filter applied
+		props.messageFilterList.forEach(eachMessageTemplate => {
+			messageCategories.add(eachMessageTemplate.category);
+			messageTypes.add(eachMessageTemplate.type);
+		});
 
-    CometChat.addGroupListener(
-      this.groupListenerId,
-      new CometChat.GroupListener({
-        onGroupMemberScopeChanged: (
-          message,
-          changedUser,
-          newScope,
-          oldScope,
-          changedGroup
-        ) => {
-          callback(enums.GROUP_MEMBER_SCOPE_CHANGED, message, changedGroup, {
-            user: changedUser,
-            scope: newScope,
-          });
-        },
-        onGroupMemberKicked: (message, kickedUser, kickedBy, kickedFrom) => {
-          callback(enums.GROUP_MEMBER_KICKED, message, kickedFrom, {
-            user: kickedUser,
-            hasJoined: false,
-          });
-        },
-        onGroupMemberBanned: (message, bannedUser, bannedBy, bannedFrom) => {
-          callback(enums.GROUP_MEMBER_BANNED, message, bannedFrom, {
-            user: bannedUser,
-          });
-        },
-        onGroupMemberUnbanned: (
-          message,
-          unbannedUser,
-          unbannedBy,
-          unbannedFrom
-        ) => {
-          callback(enums.GROUP_MEMBER_UNBANNED, message, unbannedFrom, {
-            user: unbannedUser,
-          });
-        },
-        onMemberAddedToGroup: (
-          message,
-          userAdded,
-          userAddedBy,
-          userAddedIn
-        ) => {
-          callback(enums.GROUP_MEMBER_ADDED, message, userAddedIn, {
-            user: userAdded,
-            hasJoined: true,
-          });
-        },
-        onGroupMemberLeft: (message, leavingUser, group) => {
-          callback(enums.GROUP_MEMBER_LEFT, message, group, {
-            user: leavingUser,
-          });
-        },
-        onGroupMemberJoined: (message, joinedUser, joinedGroup) => {
-          callback(enums.GROUP_MEMBER_JOINED, message, joinedGroup, {
-            user: joinedUser,
-          });
-        },
-      })
-    );
+		const categories = Array.from(messageCategories);
+		const types = Array.from(messageTypes);
 
-    CometChat.addCallListener(
-      this.callListenerId,
-      new CometChat.CallListener({
-        onIncomingCallReceived: (call) => {
-          callback(enums.INCOMING_CALL_RECEIVED, call);
-        },
-        onIncomingCallCancelled: (call) => {
-          callback(enums.INCOMING_CALL_CANCELLED, call);
-        },
-        onOutgoingCallAccepted: (call) => {
-          callback(enums.OUTGOING_CALL_ACCEPTED, call);
-        },
-        onOutgoingCallRejected: (call) => {
-          callback(enums.OUTGOING_CALL_REJECTED, call);
-        },
-      })
-    );
-  }
+		if(props.user && props.user.uid) {
 
-  removeListeners() {
-    CometChat.removeMessageListener(this.msgListenerId);
-    CometChat.removeGroupListener(this.groupListenerId);
-    CometChat.removeCallListener(this.callListenerId);
-  }
+			if (props.parentMessage && props.parentMessage.id) {
+
+                this.messageRequest = new CometChat.MessagesRequestBuilder()
+										.setUID(props.user.uid)
+										.setParentMessageId(props.parentMessage.id)
+										.setCategories(categories)
+										.setTypes(types)
+										.hideDeletedMessages(props.hideDeletedMessages)
+										.setLimit(this.limit)
+										.build();
+
+            } else {
+
+                this.messageRequest = new CometChat.MessagesRequestBuilder()
+                                        .setUID(props.user.uid)
+                                        .setCategories(categories)
+                                        .setTypes(types)
+                                        .hideReplies(true)
+                                        .hideDeletedMessages(props.hideDeletedMessages)
+                                        .setLimit(this.limit)
+                                        .build();
+
+            }
+
+		} else if(props.group && props.group.guid) {
+
+			if (props.parentMessage && props.parentMessage.id) {
+
+                this.messageRequest = new CometChat.MessagesRequestBuilder()
+										.setGUID(props.group.guid)
+										.setParentMessageId(props.parentMessage.id)
+										.setCategories(categories)
+										.setTypes(types)
+										.hideDeletedMessages(props.hideDeletedMessages)
+										.setLimit(this.limit)
+										.build();
+
+            } else {
+
+                this.messageRequest = new CometChat.MessagesRequestBuilder()
+                                        .setGUID(props.group.guid)
+                                        .setCategories(categories)
+                                        .setTypes(types)
+                                        .hideReplies(true)
+                                        .hideDeletedMessages(props.hideDeletedMessages)
+                                        .setLimit(this.limit)
+                                        .build();
+
+            }
+		}
+
+	}
+
+	fetchPreviousMessages() {
+		return this.messageRequest.fetchPrevious();
+	}
+
+	attachListeners(callback) {
+		CometChat.addMessageListener(
+			this.messageListenerId,
+			new CometChat.MessageListener({
+				onTextMessageReceived: textMessage => {
+					callback("onTextMessageReceived", textMessage);
+				},
+				onMediaMessageReceived: mediaMessage => {
+					callback("onMediaMessageReceived", mediaMessage);
+				},
+				onCustomMessageReceived: customMessage => {
+					callback("onCustomMessageReceived", customMessage);
+				},
+				onMessagesDelivered: messageReceipt => {
+					callback("onMessagesDelivered", messageReceipt);
+				},
+				onMessagesRead: messageReceipt => {
+					callback("onMessagesRead", messageReceipt);
+				},
+				onMessageDeleted: deletedMessage => {
+					callback("onMessageDeleted", deletedMessage);
+				},
+				onMessageEdited: editedMessage => {
+					callback("onMessageEdited", editedMessage);
+				},
+			}),
+		);
+
+		CometChat.addGroupListener(
+			this.groupListenerId,
+			new CometChat.GroupListener({
+				onGroupMemberScopeChanged: (message, changedUser, newScope, oldScope, changedGroup) => {
+					callback("onGroupMemberScopeChanged", message, changedUser, newScope, oldScope, changedGroup);
+				},
+				onGroupMemberLeft: (message, leavingUser, group) => {
+					callback("onGroupMemberLeft", message, leavingUser, group);
+				},
+				onGroupMemberKicked: (message, kickedUser, kickedBy, kickedFrom) => {
+					callback("onGroupMemberKicked", message, kickedUser, kickedBy, kickedFrom);
+				},
+				onGroupMemberBanned: (message, bannedUser, bannedBy, bannedFrom) => {
+					callback("onGroupMemberBanned", message, bannedUser, bannedBy, bannedFrom);
+				},
+				onGroupMemberUnbanned: (message, unbannedUser, unbannedBy, unbannedFrom) => {
+					callback("onGroupMemberUnbanned", message, unbannedUser, unbannedBy, unbannedFrom);
+				},
+				onMemberAddedToGroup: (message, userAdded, userAddedBy, userAddedIn) => {
+					callback("onMemberAddedToGroup", message, userAdded, userAddedBy, userAddedIn);
+				},
+				onGroupMemberJoined: (message, joinedUser, joinedGroup) => {
+					callback("onGroupMemberJoined", message, joinedUser, null, joinedGroup);
+				},
+			}),
+		);
+
+		CometChat.addCallListener(
+			this.callListenerId,
+			new CometChat.CallListener({
+				onIncomingCallReceived: call => {
+					callback("onIncomingCallReceived", call);
+				},
+				onIncomingCallCancelled: call => {
+					callback("onIncomingCallCancelled", call);
+				},
+				onOutgoingCallAccepted: call => {
+					callback("onOutgoingCallAccepted", call);
+				},
+				onOutgoingCallRejected: call => {
+					callback("onOutgoingCallAccepted", call);
+				},
+			}),
+		);
+	}
+
+	removeListeners() {
+		CometChat.removeMessageListener(this.messageListenerId);
+		CometChat.removeGroupListener(this.groupListenerId);
+		CometChat.removeCallListener(this.callListenerId);
+	}
 }

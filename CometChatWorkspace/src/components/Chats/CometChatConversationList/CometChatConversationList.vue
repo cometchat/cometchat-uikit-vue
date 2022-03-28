@@ -1,43 +1,87 @@
 <template>
-  <div :style="styles.wrapper" class="chats__wrapper">
-    <div :style="styles.header">
-      <div
-        class="header__close"
-        v-if="enableCloseMenu"
-        :style="styles.headerClose"
-        @click="menuCloseHandler"
-      />
-      <h4 :style="styles.headerTitle">{{ STRINGS.CHATS }}</h4>
-    </div>
-    <div v-if="conversationList.length === 0" :style="styles.msg">
-      <p :style="styles.msgText">
-        {{ decoratorMessage }}
-      </p>
-    </div>
+  <div :style="styles.wrapperStyle">
+
     <div
-      ref="conversationListRef"
-      :style="styles.list"
+      v-if="conversationList.length === 0 && message === localize('LOADING')"
+      :style="styles.messageContainerStyle"
+    >
+      <div v-if="customView?.loading" v-bind="$props">{{customView.loading}}</div>
+      <div v-else :style="styles.loadingStyle" class="loading__style"></div>
+    </div>
+
+    <div
+      v-else-if="conversationList.length === 0 && message === localize('NO_CHATS_FOUND')"
+      :style="styles.messageContainerStyle"
+    >
+      <div v-if="customView?.empty" v-bind="$props">{{customView.empty}}</div>
+      <div v-else :style="styles.messageTextStyle">
+        {{ message }}
+      </div>
+    </div>
+
+    <div
+      v-else-if="conversationList.length === 0 && message === localize('SOMETHING_WRONG')"
+      :style="styles.messageContainerStyle"
+    >
+      <div v-if="customView?.error" v-bind="$props">{{customView.error}}</div>
+      <div v-else :style="styles.messageTextStyle">
+        {{ message }}
+      </div>
+    </div>
+
+    <div
+      :style="styles.chatsListStyle"
+      class="chats__list"
       v-else-if="conversationList.length != 0"
-      @scroll="conversationScrollHandler($event)"
+      @scroll="handleScroll($event)"
     >
       <div v-for="(conversation, i) in conversationList" :key="i">
-        <comet-chat-conversation-list-item
-          :config="config"
-          :theme="themeValue"
-          :conversationKey="conversation.id"
+        <CometChatConversationListItem
+          :key="conversation.id"
+          :inputData="conversationListConfig(conversation).inputData"
+          :border="conversationListConfig(conversation).border"
           :conversation="conversation"
-          :loggedInUser="loggedInUser"
-          :selectedConversation="selectedConversation"
-          @click="conversationClickHandler"
+          :isActive="conversationListConfig(conversation).isActive"
+          :background="conversationListConfig(conversation).background"
+          :hideAvatar="conversationListConfig(conversation).hideAvatar"
+          :hideStatusIndicator="
+            conversationListConfig(conversation).hideStatusIndicator
+          "
+          :hideUnreadCount="
+            conversationListConfig(conversation).hideUnreadCount
+          "
+          :hideReceipt="conversationListConfig(conversation).hideReceipt"
+          :showTypingIndicator="
+            conversationListConfig(conversation).showTypingIndicator
+          "
+          :typingIndicatorText="
+            conversationListConfig(conversation).typingIndicatorText
+          "
+          :hideThreadIndicator="
+            conversationListConfig(conversation).hideThreadIndicator
+          "
+          :threadIndicatorText="localize('IN_A_THREAD')"
+          :hideGroupActionMessages="
+            conversationListConfig(conversation).hideGroupActionMessages
+          "
+          :hideDeletedMessages="
+            conversationListConfig(conversation).hideDeletedMessages
+          "
+          :showDeleteConversation="
+            conversationListConfig(conversation).showDeleteConversation
+          "
+          :configurations="this.configurations"
         />
       </div>
-      <div v-if="showConfirmDialog">
-        <cometchat-confirm-dialog
-          :theme="themeValue"
-          :message="STRINGS.DELETE_CONFIRMATION"
-          :confirmButtonText="STRINGS.DELETE"
-          :cancelButtonText="STRINGS.CANCEL"
-        />
+      <div v-if="isDelete">
+        <CometChatBackdrop :isOpen="isDelete" :onClick="cancelDelete">
+          <CometChatConfirmDialog
+            :isOpen="isDelete"
+            :onConfirm="deleteConversation"
+            :onCancel="cancelDelete"
+            :width="'50%'"
+          />
+        </CometChatBackdrop>
       </div>
     </div>
   </div>
@@ -47,33 +91,29 @@
 <script>
 import { CometChat } from "@cometchat-pro/chat";
 
-import { CometChatManager } from "../../../util/controller";
-import {CometChatEvent} from "../../../util/CometChatEvent"
 import { ConversationListManager } from "./controller";
 
-import { SvgAvatar } from "../../../util/svgavatar";
-
 import {
-  COMETCHAT_CONSTANTS,
   DEFAULT_OBJECT_PROP,
   DEFAULT_STRING_PROP,
   DEFAULT_BOOLEAN_PROP,
-} from "../../../resources/constants";
-
-import { propertyCheck, cometChatCommon, cometChatScreens } from "../../../mixins/";
-import { theme } from "../../../resources/theme";
-import * as enums from "../../../util/enums.js";
-
-import CometChatConversationListItem from "../CometChatConversationListItem/CometChatConversationListItem";
-import cometchatConfirmDialog from "../../Shared/CometChatConfirmDialog/index.vue";
-
-import { incomingOtherMessageAlert } from "../../../resources/audio/";
-
-import navigateIcon from "./resources/navigate.png";
+  DEFAULT_ARRAY_PROP,
+  DEFAULT_NUMBER_PROP,
+} from "../";
+import {
+  CometChatConversationListItem,
+  CometChatConfirmDialog,
+  CometChatBackdrop,
+  localize,
+  CometChatSoundManager,
+} from "../../Shared/";
 
 import * as style from "./style";
-
-let conversationListManager;
+import { CometChatConversationConstants } from "../CometChatConversationConstants";
+import { CometChatConversationEvents } from "../CometChatConversationEvents";
+import { CometChatMessageReceiverType, hasOwnProperty } from "../../Messages";
+import { conversationType } from "../conversationType";
+import reloadIcon from "./resources/spinner.svg";
 
 /**
  * Displays a list of conversation.
@@ -82,60 +122,64 @@ let conversationListManager;
  */
 export default {
   name: "CometChatConversationList",
-  mixins: [propertyCheck, cometChatCommon, cometChatScreens],
   components: {
     CometChatConversationListItem,
-    cometchatConfirmDialog,
+    CometChatConfirmDialog,
+    CometChatBackdrop,
   },
   props: {
-    /**
-     * The selected chat item object.
-     */
-    item: { ...DEFAULT_OBJECT_PROP },
-    /**
-     * Type of chat item.
-     */
-    type: { ...DEFAULT_STRING_PROP },
-    /**
-     * Theme of the UI.
-     */
-    theme: { ...DEFAULT_OBJECT_PROP },
-    /**
-     * @ignore
-     */
-    config: { ...DEFAULT_OBJECT_PROP },
-    /**
-     * The last message object in conversation.
-     */
-    lastMessage: { ...DEFAULT_OBJECT_PROP },
-    /**
-     * The group selected to leave.
-     */
-    groupToLeave: { ...DEFAULT_OBJECT_PROP },
-    /**
-     * The group selected to update.
-     */
-    groupToUpdate: { ...DEFAULT_OBJECT_PROP },
-    /**
-     * The group selected to delete.
-     */
-    groupToDelete: { ...DEFAULT_OBJECT_PROP },
-    /**
-     * Shows/hides the close menu button.
-     */
-    enableCloseMenu: { ...DEFAULT_BOOLEAN_PROP },
-    /**
-     * The message marked to be read.
-     */
-    messageToMarkRead: { ...DEFAULT_OBJECT_PROP },
+    /** Active conversation object */
+    activeConversation: { ...DEFAULT_OBJECT_PROP, default: {} },
+    /** Filter conversation list, fetch only user/group conversations */
+    conversationType: {
+      ...DEFAULT_STRING_PROP,
+      default: CometChatConversationConstants.conversationType["both"],
+    },
+    userAndGroupTags: { ...DEFAULT_BOOLEAN_PROP, default: true },
+    tags: { ...DEFAULT_ARRAY_PROP, default: [] },
+    limit: { ...DEFAULT_NUMBER_PROP, default: 30 },
+    style: {
+      ...DEFAULT_OBJECT_PROP,
+      default: {
+        width: "100%",
+        height: "100%",
+        background: "transparent",
+        border: "none",
+        cornerRadius: "0",
+        loadingIconTint: "",
+        emptyTextFont: "",
+        emptyTextColor: "",
+        errorTextFont: "",
+        errorTextColor: "",
+      },
+    },
+    customView: {
+      ...DEFAULT_OBJECT_PROP,
+      default: {
+        loading: "",
+        empty: "",
+        error: "",
+      },
+    },
+    loadingIconURL: {...DEFAULT_STRING_PROP, default: reloadIcon },
+    emptyText: {...DEFAULT_STRING_PROP, default: localize("NO_CHATS_FOUND") },
+    errorText: {...DEFAULT_STRING_PROP, default: localize("SOMETHING_WRONG") },
+    hideError: { ...DEFAULT_BOOLEAN_PROP, default: false },
+    onErrorCallback: { ...DEFAULT_STRING_PROP, default: "" },
+    configurations: { ...DEFAULT_OBJECT_PROP, default: {} },
   },
   data() {
     return {
+      loggedInUser: null,
+      incrementUnreadCount: true,
+      conversationListManager: new ConversationListManager(this),
       conversationList: [],
-      selectedConversation: null,
-      decoratorMessage: COMETCHAT_CONSTANTS.LOADING_MESSSAGE,
-      showConfirmDialog: false,
+      fetchStatus: false,
+      callbackData: null,
+      message: localize("LOADING"),
+      isDelete: false,
       conversationToBeDeleted: null,
+      handlers: {},
     };
   },
   watch: {
@@ -143,203 +187,15 @@ export default {
      * One true watcher that updates state on props update.
      */
     propsWatcher: {
-      handler(_, prevProps) {
-        const previousItem = JSON.stringify(prevProps.item);
-        const currentItem = JSON.stringify(this.item);
+      handler(_, { callbackData }) {
+        if (this.callbackData !== callbackData) {
+          const handler = this.handlers[this.callbackData?.name];
 
-        if (previousItem !== currentItem) {
-          if (Object.keys(this.item).length === 0) {
-            this.$nextTick(() => {
-              if (this.$refs.conversationListRef) {
-                this.$refs.conversationListRef.scrollTop = 0;
-              }
-
-              this.selectedConversation = {};
-            });
-          } else {
-            const conversationlist = [...this.conversationList];
-            const conversationObj = conversationlist.find((c) => {
-              if (
-                (c.conversationType === this.type &&
-                  this.type === "user" &&
-                  c.conversationWith.uid === this.item.uid) ||
-                (c.conversationType === this.type &&
-                  this.type === "group" &&
-                  c.conversationWith.guid === this.item.guid)
-              ) {
-                return c;
-              }
-
-              return false;
-            });
-
-            if (conversationObj) {
-              let conversationKey = conversationlist.indexOf(conversationObj);
-              let newConversationObj = {
-                ...conversationObj,
-                unreadMessageCount: 0,
-              };
-
-              conversationlist.splice(conversationKey, 1, newConversationObj);
-
-              this.conversationList = conversationlist;
-              this.selectedConversation = newConversationObj;
-            }
+          if (!handler) {
+            return false;
           }
-        }
 
-        if (
-          prevProps.item &&
-          Object.keys(prevProps.item).length &&
-          prevProps.item.uid === this.item.uid &&
-          prevProps.item.blockedByMe !== this.item.blockedByMe
-        ) {
-          let conversationlist = [...this.conversationList];
-
-          let convKey = conversationlist.findIndex(
-            (c) =>
-              c.conversationType === "user" &&
-              c.conversationWith.uid === this.item.uid
-          );
-          if (convKey > -1) {
-            conversationlist.splice(convKey, 1);
-
-            this.conversationList = conversationlist;
-          }
-        }
-
-        if (
-          prevProps.groupToUpdate &&
-          (prevProps.groupToUpdate.guid !== this.groupToUpdate.guid ||
-            (prevProps.groupToUpdate.guid === this.groupToUpdate.guid &&
-              (prevProps.groupToUpdate.membersCount !==
-                this.groupToUpdate.membersCount ||
-                prevProps.groupToUpdate.scope !== this.groupToUpdate.scope)))
-        ) {
-          const conversationlist = [...this.conversationList];
-          const groupToUpdate = this.groupToUpdate;
-
-          const convKey = conversationlist.findIndex(
-            (c) =>
-              c.conversationType === "group" &&
-              c.conversationWith.guid === groupToUpdate.guid
-          );
-          if (convKey > -1) {
-            const convObj = conversationlist[convKey];
-
-            let convWithObj = { ...convObj.conversationWith };
-
-            let newConvWithObj = {
-              ...convWithObj,
-              scope: groupToUpdate["scope"],
-              membersCount: groupToUpdate["membersCount"],
-            };
-            let newConvObj = { ...convObj, conversationWith: newConvWithObj };
-
-            conversationlist.splice(convKey, 1, newConvObj);
-
-            this.conversationList = conversationlist;
-          }
-        }
-
-        if (
-          prevProps.groupToLeave &&
-          prevProps.groupToLeave.guid !== this.groupToLeave.guid
-        ) {
-          const conversationlist = [...this.conversationList];
-          const groupToLeave = this.groupToLeave;
-
-          const convKey = conversationlist.findIndex(
-            (c) =>
-              c.conversationType === "group" &&
-              c.conversationWith.guid === groupToLeave.guid
-          );
-
-          if (convKey > -1) {
-            const groupObj = { ...conversationlist[convKey] };
-            const membersCount = parseInt(groupToLeave["membersCount"]) - 1;
-
-            let newgroupObj = Object.assign({}, groupObj, {
-              membersCount: membersCount,
-              hasJoined: false,
-            });
-
-            conversationlist.splice(convKey, 1, newgroupObj);
-            this.conversationList = conversationlist;
-          }
-        }
-
-        if (
-          prevProps.groupToDelete &&
-          prevProps.groupToDelete.guid !== this.groupToDelete.guid
-        ) {
-          const conversationlist = [...this.conversationList];
-          const groupToDelete = this.groupToDelete;
-
-          const convKey = conversationlist.findIndex(
-            (c) =>
-              c.conversationType === "group" &&
-              c.conversationWith.guid === groupToDelete.guid
-          );
-          if (convKey > -1) {
-            conversationlist.splice(convKey, 1);
-            this.conversationList = conversationlist;
-          }
-        }
-
-        if (prevProps.messageToMarkRead !== this.messageToMarkRead) {
-          const message = this.messageToMarkRead;
-          try {
-            const {
-              conversationKey,
-              conversationObj,
-              conversationList,
-            } = this.makeConversation(message);
-
-            if (conversationKey > -1) {
-              let unreadMessageCount = this.makeUnreadMessageCount(
-                conversationObj,
-                "decrement"
-              );
-              let lastMessageObj = this.makeLastMessage(
-                message,
-                conversationObj
-              );
-
-              let newConversationObj = {
-                ...conversationObj,
-                lastMessage: lastMessageObj,
-                unreadMessageCount: unreadMessageCount,
-              };
-              conversationList.splice(conversationKey, 1);
-              conversationList.unshift(newConversationObj);
-
-              this.conversationList = conversationList;
-            }
-          } catch (error) {
-            this.logError("Error in converting message to conversation", error);
-          }
-        }
-
-        if (prevProps.lastMessage !== this.lastMessage) {
-          const lastMessage = this.lastMessage;
-          const conversationList = [...this.conversationList];
-          const conversationKey = conversationList.findIndex(
-            (c) => c.conversationId === lastMessage.conversationId
-          );
-
-          if (conversationKey > -1) {
-            const conversationObj = conversationList[conversationKey];
-            let newConversationObj = {
-              ...conversationObj,
-              lastMessage: lastMessage,
-            };
-
-            conversationList.splice(conversationKey, 1);
-            conversationList.unshift(newConversationObj);
-
-            this.conversationList = conversationList;
-          }
+          return handler(...this.callbackData?.args);
         }
       },
       deep: true,
@@ -347,23 +203,17 @@ export default {
   },
   computed: {
     /**
-     * Theme computed using default theme and theme coming from prop.
-     */
-    themeValue() {
-      return Object.assign({}, theme, this.theme || {});
-    },
-    /**
      * Computed styles for the component.
      */
     styles() {
       return {
-        msg: style.chatsMsgStyle(),
-        list: style.chatsListStyle(),
-        wrapper: style.chatsWrapperStyle(),
-        header: style.chatsHeaderStyle(this.themeValue),
-        msgText: style.chatsMsgTxtStyle(this.themeValue),
-        headerClose: style.chatsHeaderCloseStyle(navigateIcon),
-        headerTitle: style.chatsHeaderTitleStyle(this.enableCloseMenu),
+        wrapperStyle: style.wrapperStyle(this),
+        chatsListStyle: style.chatsListStyle(
+          this.configurations?.background || this.style?.background
+        ),
+        messageContainerStyle: style.messageContainerStyle(),
+        messageTextStyle: style.messageTextStyle(),
+        loadingStyle: style.loadingStyle(this)
       };
     },
     /**
@@ -371,806 +221,848 @@ export default {
      */
     propsWatcher() {
       return {
-        item: this.item,
-        lastMessage: this.lastMessage,
-        groupToLeave: this.groupToLeave,
-        groupToUpdate: this.groupToUpdate,
-        groupToDelete: this.groupToDelete,
-        messageToMarkRead: this.messageToMarkRead,
+        callbackData: this.callbackData,
       };
     },
-    /**
-     * Local string constants.
-     */
-    STRINGS() {
-      return COMETCHAT_CONSTANTS;
+    localize() {
+      return localize;
     },
   },
   methods: {
-    /**
-     * Handles menu close click
-     */
-    menuCloseHandler() {
-      this.emitAction("closeMenuClicked");
-    },
-    /**
-     * Handles conversation item click
-     */
-    conversationClickHandler({ item, type }) {
-      this.emitAction("item-click", { item, type });
-    },
-    /**
-     * Handles conversation list scroll
-     */
-    conversationScrollHandler(elem) {
-      try {
-        if (
-          elem.target.offsetHeight + elem.target.scrollTop >=
-          elem.target.scrollHeight - 20
-        ) {
-          this.getConversations();
-        }
-      } catch (error) {
-        this.logError(
-          "[CometChatConversationList] conversations scroll error",
-          error
-        );
+    conversationListConfig(conversation) {
+      const inputData =
+        this.configurations?.conversationListItemConfiguration?.inputData ||
+        CometChatConversationConstants.inputData;
+      const style = this.configurations?.conversationListItemConfiguration
+        ?.style || {
+        width: "100%",
+        height: "auto",
+        background: "transparent",
+        border: "1px solid rgba(20, 20, 20, 10%)",
+        cornerRadius: "0px",
+        titleColor: "rgba(20,20,20)",
+        titleFont: "600 15px Inter",
+        subTitleColor: "rgba(20, 20, 20, 60%)",
+        subTitleFont: "400 13px Inter, sans-serif",
+        typingIndicatorTextColor: "rgba(20, 20, 20, 60%)",
+        typingIndicatorTextFont: "400 13px Inter, sans-serif",
+        threadIndicatorTextColor: "rgba(20, 20, 20, 60%)",
+        threadIndicatorTextFont: "400 13px Inter, sans-serif",
+      };
+
+      const hideStatusIndicator =
+        this.configurations?.conversationListItemConfiguration
+          ?.hideStatusIndicator || false;
+      const hideAvatar =
+        this.configurations?.conversationListItemConfiguration?.hideAvatar ||
+        false;
+      const hideUnreadCount =
+        this.configurations?.conversationListItemConfiguration
+          ?.hideUnreadCount || false;
+
+      let hideReceipt = false;
+      if (
+        this.configurations?.conversationListItemConfiguration?.hideReceipt !==
+        undefined
+      ) {
+        hideReceipt =
+          this.configurations?.ConversationListItemConfiguration?.hideReceipt;
+      } else if (conversation.showTypingIndicator) {
+        hideReceipt = true;
       }
-    },
-    /**
-     * Gets all conversations
-     */
-    async getConversations(clear = false) {
-      try {
-        const user = await new CometChatManager().getLoggedInUser();
-        this.loggedInUser = user;
 
-        if (!conversationListManager) {
-          this.createManager();
-          this.attachListeners();
-        }
+      const hideThreadIndicator =
+        this.configurations?.conversationListItemConfiguration
+          ?.hideThreadIndicator || false;
+      const hideGroupActionMessages =
+        this.configurations?.conversationListItemConfiguration
+          ?.hideGroupActionMessages || false;
+      const hideDeletedMessages =
+        this.configurations?.conversationListItemConfiguration
+          ?.hideDeletedMessages || false;
+      const showDeleteConversation =
+        this.configurations?.conversationListItemConfiguration
+          ?.showDeleteConversation || true;
 
-        const conversations = await conversationListManager.fetchNextConversation();
+      let isActive =
+        conversation?.conversationId ===
+        this?.activeConversation?.conversationId
+          ? true
+          : false;
 
-        if (conversations.length === 0) {
-          this.decoratorMessage = COMETCHAT_CONSTANTS.NO_CHATS_FOUND;
-        }
-
-        conversations.forEach((conversation) => {
-          if (
-            conversation.conversationType === "user" &&
-            !conversation.conversationWith.avatar
-          ) {
-            conversation.conversationWith.avatar = this.setAvatar(conversation);
-          } else if (
-            conversation.conversationType === "group" &&
-            !conversation.conversationWith.icon
-          ) {
-            conversation.conversationWith.icon = this.setAvatar(conversation);
-          }
-
-          if (
-            this.type &&
-            this.item &&
-            this.type === conversation.conversationType
-          ) {
-            if (
-              (conversation.conversationType === "user" &&
-                this.item.uid === conversation.conversationWith.uid) ||
-              (conversation.conversationType === "group" &&
-                this.item.guid === conversation.conversationWith.guid)
-            ) {
-              conversation.unreadMessageCount = 0;
-            }
-          }
-        });
-
-        if (clear) {
-          this.conversationList = conversations;
+      let showTypingIndicator;
+      if (
+        this.configurations?.conversationListItemConfiguration
+          ?.showTypingIndicator !== true
+      ) {
+        showTypingIndicator = false;
+      } else {
+        if (conversation.showTypingIndicator === undefined) {
+          showTypingIndicator = false;
         } else {
-          this.conversationList = [...this.conversationList, ...conversations];
+          showTypingIndicator = conversation.showTypingIndicator;
         }
-      } catch (error) {
-        this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR_LOADING_CHATS;
-        this.logError(
-          "[CometChatConversationList] getConversations error",
-          error
-        );
+      }
+
+      const typingIndicatorText = conversation.typingIndicatorText
+        ? conversation.typingIndicatorText
+        : "";
+
+      return {
+        typingIndicatorText: typingIndicatorText,
+        hideStatusIndicator: hideStatusIndicator,
+        hideAvatar: hideAvatar,
+        hideUnreadCount: hideUnreadCount,
+        hideReceipt: hideReceipt,
+        showTypingIndicator: showTypingIndicator,
+        hideThreadIndicator: hideThreadIndicator,
+        hideGroupActionMessages: hideGroupActionMessages,
+        hideDeletedMessages: hideDeletedMessages,
+        showDeleteConversation: showDeleteConversation,
+        style: style,
+        isActive: isActive,
+        inputData: inputData,
+      };
+    },
+    conversationCallback(listenerName, ...args) {
+      this.callbackData = { name: listenerName, args: [...args] };
+    },
+    /**
+     *
+     * Mark the incoming message as delivered
+     */
+    markMessageAsDelivered(message) {
+      if (hasOwnProperty(message, "deliveredAt") === false) {
+        CometChat.markAsDelivered(message);
       }
     },
     /**
-     * Creates a message for conversation
+     *
+     * If the incoming message is 1-1 conversation, and the conversation type filter is set to groups return false
+     * If the incoming message is group conversation, and the conversation type filter is set to users return false
+     * else return true
+     *
      */
-    makeConversation(message) {
+    filterByConversationType(message) {
+      if (this.conversationType !== conversationType["both"]) {
+        if (
+          (this.conversationType === conversationType["users"] &&
+            message.receiverType === CometChat.RECEIVER_TYPE.GROUP) ||
+          (this.conversationType === conversationType["groups"] &&
+            message.receiverType === CometChat.RECEIVER_TYPE.USER)
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+    /**
+     *
+     * Converting message object received in the listener callback to conversation object
+     */
+    getConversationFromMessage(message) {
       return new Promise((resolve, reject) => {
         CometChat.CometChatHelper.getConversationFromMessage(message)
           .then((conversation) => {
-            let conversations = [...this.conversationList];
-
-            let conversationKey = conversations.findIndex(
+            let conversationKey = this.conversationList.findIndex(
               (c) => c.conversationId === conversation.conversationId
             );
-
-            let conversationObj = { ...conversation };
             if (conversationKey > -1) {
-              conversationObj = { ...conversations[conversationKey] };
+              resolve({
+                conversationKey: conversationKey,
+                conversationId: conversation.conversationId,
+                conversationType: conversation.conversationType,
+                conversationWith: conversation.conversationWith,
+                conversation: this.conversationList[conversationKey],
+                conversations: [...this.conversationList],
+              });
             }
 
             resolve({
               conversationKey: conversationKey,
-              conversationObj: conversationObj,
-              conversations: conversations,
+              conversationId: conversation.conversationId,
+              conversationType: conversation.conversationType,
+              conversationWith: conversation.conversationWith,
+              conversation: conversation,
+              conversations: [...this.conversationList],
             });
           })
           .catch((error) => reject(error));
       });
     },
-    /**
-     * Makes unread message count
-     */
-    makeUnreadMessageCount(conversation = {}, operator) {
-      try {
-        if (Object.keys(conversation).length === 0) {
-          return 1;
-        }
+    getUnreadMessageCount(message, conversation = {}) {
+      // need to discuss w mayur
+      let unreadMessageCount = conversation.unreadMessageCount
+        ? Number(conversation.unreadMessageCount)
+        : 0;
 
-        let unreadMessageCount = parseInt(conversation.unreadMessageCount);
+      if (this.incrementUnreadCount === true) {
+        unreadMessageCount = this.shouldIncrementCount(message)
+          ? ++unreadMessageCount
+          : unreadMessageCount;
+      } else {
+        unreadMessageCount = 0;
+      }
+
+      return unreadMessageCount;
+    },
+    /**
+     *
+     * If the message is sent by the logged in user, return false
+     * If the message has category message or has incrementUnreadCount key in the metadata with value set to true, return true else return false
+     *
+     */
+    shouldIncrementCount(message) {
+      if (message?.sender?.uid === this.loggedInUser?.uid) {
+        return false;
+      }
+
+      if (
+        message.category === CometChat.CATEGORY_MESSAGE ||
+        (message.metadata &&
+          message.metadata.incrementUnreadCount &&
+          message.metadata.incrementUnreadCount) === true
+      ) {
+        return true;
+      }
+
+      return false;
+    },
+    /**
+     * play notification sound for incoming messages
+     */
+    playNotificationSound(message) {
+      /**
+       * If unreadcount is not incremented, don't play notification sound
+       */
+      if (!this.shouldIncrementCount(message)) {
+        return false;
+      }
+
+      /**
+       * If group action messages are hidden, and the incoming message is of category `action` and type `groupMember`, don't play notification sound
+       */
+      const hideGroupActionMessages =
+        this.configurations?.ConversationListItemConfiguration
+          ?.hideGroupActionMessages;
+      if (
+        hideGroupActionMessages === true &&
+        message.category === CometChat.CATEGORY_ACTION &&
+        message.type === CometChat.ACTION_TYPE.TYPE_GROUP_MEMBER
+      ) {
+        return false;
+      }
+
+      if (
+        this.activeConversation &&
+        this.activeConversation.conversationType &&
+        this.activeConversation.conversationWith
+      ) {
+        const receiverType = message.getReceiverType();
+        const receiverId =
+          receiverType === CometChat.RECEIVER_TYPE.USER
+            ? message.getSender().getUid()
+            : message.getReceiverId();
 
         if (
-          this.selectedConversation &&
-          this.selectedConversation.conversationId ===
-            conversation.conversationId
+          receiverId !== this.activeConversation.conversationWith?.uid &&
+          receiverId !== this.activeConversation.conversationWith?.guid
         ) {
-          if (this.selectedConversation.unreadMessages && this.selectedConversation.unreadMessages.length) {
-            const firstUnreadMessage = this.selectedConversation.unreadMessages[0];
-            const selectedConversation = this.selectedConversation;
-
-            if (firstUnreadMessage.conversationId && firstUnreadMessage.conversationId === selectedConversation.conversationId) {
-              unreadMessageCount = 0;
-              this.selectedConversation.unreadMessages.forEach(message => {
-                unreadMessageCount = this.shouldIncrementCount(message) ? ++unreadMessageCount : unreadMessageCount;
-              });
-            }
-          } else {
-            unreadMessageCount = 0;
-          }
-        } else if (
-          (this.item &&
-            this.hasProperty(this.item, "guid") &&
-            this.hasProperty(conversation.conversationWith, "guid") &&
-            this.item.guid === conversation.conversationWith.guid) ||
-          (this.item &&
-            this.hasProperty(this.item, "uid") &&
-            this.hasProperty(conversation.conversationWith, "uid") &&
-            this.item.uid === conversation.conversationWith.uid)
-        ) {
-          unreadMessageCount = 0;
-        } else {
-          if (operator && operator === "decrement") {
-            unreadMessageCount = unreadMessageCount
-              ? unreadMessageCount - 1
-              : 0;
-          } else {
-            unreadMessageCount = unreadMessageCount + 1;
-          }
+          CometChatSoundManager.play(
+            CometChatSoundManager.Sound.incomingMessageFromOther
+          );
         }
-
-        return unreadMessageCount;
-      } catch (error) {
-        this.logError(
-          "[CometChatConversationList] unreadMessageCount error",
-          error
+      } else {
+        CometChatSoundManager.play(
+          CometChatSoundManager.Sound.incomingMessageFromOther
         );
       }
+
+      // CometChatSoundManager.play(CometChatSoundManager.Sound["incomingmessage"],
+      // "https://proxy.notificationsounds.com/message-tones/pristine-609/download/file-sounds-1150-pristine.mp3");
     },
     /**
-     * 
+     *
+     * When a user goes online/ offline
      */
-    shouldIncrementCount(incomingMessage) {
-      let output = false;
-      if (
-        incomingMessage.sender.uid !== this.loggedInUser?.uid
-      ) {
-        output = true;
-      }
+    handleUsers(user) {
+      const conversationKey = this.conversationList.findIndex(
+        (eachConversation) =>
+          eachConversation.conversationType &&
+          eachConversation.conversationType === CometChat.RECEIVER_TYPE.USER &&
+          eachConversation.conversationWith &&
+          eachConversation.conversationWith.uid &&
+          eachConversation.conversationWith.uid === user.uid
+      );
 
-      return output;
-    },
-    /**
-     * Makes last message
-     */
-    makeLastMessage(message) {
-      return Object.assign({}, message);
-    },
-    /**
-     * Sets SVG avatar
-     */
-    setAvatar(conversation) {
-      if (
-        conversation.conversationType === "user" &&
-        !conversation.conversationWith.avatar
-      ) {
-        const uid = conversation.conversationWith.uid;
-        const char = conversation.conversationWith.name.charAt(0).toUpperCase();
+      if (conversationKey > -1) {
+        let conversations = [...this.conversationList];
+        let conversation = conversations[conversationKey];
+        let conversationWith = {
+          ...conversation.conversationWith,
+          status: user.getStatus(),
+        };
 
-        return SvgAvatar.getAvatar(uid, char);
-      } else if (
-        conversation.conversationType === "group" &&
-        !conversation.conversationWith.icon
-      ) {
-        const guid = conversation.conversationWith.guid;
-        const char = conversation.conversationWith.name.charAt(0).toUpperCase();
-
-        return SvgAvatar.getAvatar(guid, char);
+        let newConversation = {
+          ...conversation,
+          conversationWith: conversationWith,
+        };
+        conversations.splice(conversationKey, 1, newConversation);
+        this.conversationList = conversations;
       }
     },
     /**
-     * Handles update of user online/offline
+     *
+     * When a text message / media message / custom message is received
      */
-    updateUser(user) {
-      try {
-        const conversations = [...this.conversationList];
+    handleMessages(...options) {
+      const message = options[0];
+      /**
+       * marking the incoming messages as read
+       */
+      this.markMessageAsDelivered(message);
 
-        const conversationKey = conversations.findIndex(
-          (conversation) =>
-            conversation.conversationType === "user" &&
-            conversation.conversationWith.uid === user.uid
-        );
+      /**
+       * If the incoming message is 1-1 and the conversation type filter is set to group, return false
+       * OR
+       * If the incoming message is group and the conversation type filter is set to "users", return false
+       * ELSE
+       * return true
+       */
+      if (this.filterByConversationType() === false) {
+        return false;
+      }
+
+      this.getConversationFromMessage(message).then((response) => {
+        const {
+          conversationKey,
+          conversationId,
+          conversationType,
+          conversationWith,
+          conversation,
+          conversations,
+        } = response;
+
+        const lastMessage = { ...conversation.lastMessage, ...message };
 
         if (conversationKey > -1) {
-          let conversation = { ...conversations[conversationKey] };
-          let conversationWith = {
-            ...conversation.conversationWith,
-            status: user.getStatus(),
-          };
+          const unreadMessageCount = this.getUnreadMessageCount(
+            message,
+            conversation
+          );
 
-          let newConversation = {
-            ...conversation,
-            conversationWith: conversationWith,
-          };
+          const newConversation = new CometChat.Conversation(
+            conversationId,
+            conversationType,
+            lastMessage,
+            conversationWith,
+            unreadMessageCount
+          );
+          conversations.splice(conversationKey, 1);
+          conversations.unshift(newConversation);
+          this.conversationList = conversations;
+
+          //play notification sound
+          this.playNotificationSound(message);
+        } else {
+          const unreadMessageCount = this.getUnreadMessageCount(message);
+          const newConversation = new CometChat.Conversation(
+            conversationId,
+            conversationType,
+            lastMessage,
+            conversationWith,
+            unreadMessageCount
+          );
+          conversations.unshift(newConversation);
+          this.conversationList = conversations;
+
+          //play notification sound
+          this.playNotificationSound(message);
+        }
+      });
+    },
+    /**
+     * Listener callback when a message is edited, deleted or updated
+     */
+    handleMessageActions(...options) {
+      const message = options[0];
+
+      this.getConversationFromMessage(message).then((response) => {
+        const {
+          conversationKey,
+          conversationId,
+          conversationType,
+          conversationWith,
+          conversation,
+          conversations,
+        } = response;
+
+        if (
+          conversationKey > -1 &&
+          conversation.lastMessage.id === message.id
+        ) {
+          const lastMessage = { ...conversation.lastMessage, ...message };
+          const unreadMessageCount = this.getUnreadMessageCount(
+            message,
+            conversation
+          );
+
+          const newConversation = new CometChat.Conversation(
+            conversationId,
+            conversationType,
+            lastMessage,
+            conversationWith,
+            unreadMessageCount
+          );
           conversations.splice(conversationKey, 1, newConversation);
           this.conversationList = conversations;
         }
-      } catch (error) {
-        this.logError("[CometChatConversationList] updateUser error", error);
-      }
+      });
     },
     /**
-     * Updates conversation on message/call receive
+     *
+     * Listener callback when a message is read
      */
-    async updateConversation(message, notification = true) {
-      try {
-        const {
-          conversations,
-          conversationKey,
-          conversationObj,
-        } = await this.makeConversation(message);
+    handleMessageReadActions(...options) {
+      const messageReceipt = options[0];
 
-        if (conversationKey > -1) {
-          let unreadMessageCount = this.makeUnreadMessageCount(conversationObj);
-          let lastMessageObj = this.makeLastMessage(message, conversationObj);
+      let conversationKey = this.conversationList.findIndex(
+        (conversation) =>
+          messageReceipt?.receiverType === conversation?.conversationType &&
+          (messageReceipt?.receiver === conversation?.conversationWith?.uid ||
+            messageReceipt?.receiver === conversation?.conversationWith?.guid)
+      );
 
-          let newConversationObj = {
-            ...conversationObj,
-            lastMessage: lastMessageObj,
-            unreadMessageCount: unreadMessageCount,
-          };
-          conversations.splice(conversationKey, 1);
-          conversations.unshift(newConversationObj);
-        } else {
-          let unreadMessageCount = this.makeUnreadMessageCount();
-          let lastMessageObj = this.makeLastMessage(message);
+      if (conversationKey > -1) {
+        const conversations = { ...this.conversationList };
+        const conversation = conversations[conversationKey];
+        let unreadMessageCount = conversation.unreadMessageCount;
 
-          let newConversationObj = {
-            ...conversationObj,
-            lastMessage: lastMessageObj,
-            unreadMessageCount: unreadMessageCount,
-          };
-          conversations.unshift(newConversationObj);
+        /**
+         * If the message id in the read receipt is greater than or equal to the lastmessage id, set unreadmessagecount to 0
+         */
+        if (messageReceipt?.messageId >= conversation?.lastMessage?.id) {
+          unreadMessageCount = 0;
         }
 
+        const newConversation = new CometChat.Conversation(
+          conversation.conversationId,
+          conversation.conversationType,
+          conversation.lastMessage,
+          conversation.conversationWith,
+          unreadMessageCount
+        );
+
+        conversations.splice(conversationKey, 1, newConversation);
         this.conversationList = conversations;
-
-        if (notification) {
-          this.playAudio(message);
-        }
-      } catch (error) {
-        this.logError("Error in converting message to conversation", error);
       }
     },
     /**
-     * Handles message edit/delete
+     *
+     * Listener callback when a user joins/added to the group
      */
-    async conversationEditedDeleted(message) {
-      try {
-        const {
-          conversations,
-          conversationKey,
-          conversationObj,
-        } = await this.makeConversation(message);
-        if (conversationKey > -1) {
-          let lastMessageObj = conversationObj.lastMessage;
+    handleGroupMemberAddition(...options) {
+      const message = options[0];
+      const newUser = options[1];
+      const group = options[3];
 
-          if (lastMessageObj.id === message.id) {
-            const newLastMessageObj = Object.assign(
-              {},
-              lastMessageObj,
-              message
-            );
-            let newConversationObj = Object.assign({}, conversationObj, {
-              lastMessage: newLastMessageObj,
-            });
-            conversations.splice(conversationKey, 1, newConversationObj);
-
-            this.conversationList = conversations;
-          }
-        }
-      } catch (error) {
-        this.logError("Error in converting message to conversation", error);
-      }
-    },
-    /**
-     * Handles group member add
-     */
-    async updateGroupMemberAdded(message, options) {
-      try {
+      this.getConversationFromMessage(message).then((response) => {
         const {
-          conversations,
           conversationKey,
-          conversationObj,
-        } = await this.makeConversation(message);
+          conversationId,
+          conversationType,
+          conversationWith,
+          conversation,
+          conversations,
+        } = response;
 
         if (conversationKey > -1) {
-          let unreadMessageCount = this.makeUnreadMessageCount(conversationObj);
-          let lastMessageObj = this.makeLastMessage(message, conversationObj);
+          const lastMessage = { ...conversation.lastMessage, ...message };
+          const newConversationWith = { ...conversationWith, ...group };
+          const unreadMessageCount = conversation.unreadMessageCount;
 
-          let conversationWithObj = { ...conversationObj.conversationWith };
-          let membersCount = parseInt(conversationWithObj.membersCount) + 1;
-
-          let newConversationWithObj = {
-            ...conversationWithObj,
-            membersCount: membersCount,
-          };
-
-          let newConversationObj = {
-            ...conversationObj,
-            lastMessage: lastMessageObj,
-            unreadMessageCount: unreadMessageCount,
-            conversationWith: newConversationWithObj,
-          };
-
-          conversations.splice(conversationKey, 1);
-          conversations.unshift(newConversationObj);
-
+          const newConversation = new CometChat.Conversation(
+            conversationId,
+            conversationType,
+            lastMessage,
+            newConversationWith,
+            unreadMessageCount
+          );
+          conversations.splice(conversationKey, 1, newConversation);
           this.conversationList = conversations;
-          this.playAudio(message);
-        } else if (options && this.loggedInUser.uid === options.user.uid) {
-          let avatar = this.setAvatar(conversationObj);
-
-          let unreadMessageCount = this.makeUnreadMessageCount();
-          let lastMessageObj = this.makeLastMessage(message);
-
-          let conversationWithObj = { ...conversationObj.conversationWith };
-          let membersCount = parseInt(conversationWithObj.membersCount) + 1;
-          let scope = CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT;
-          let hasJoined = options.hasJoined;
-
-          let newConversationWithObj = {
-            ...conversationWithObj,
-            icon: avatar,
-            scope: scope,
-            hasJoined: hasJoined,
-            membersCount: membersCount,
+        } else if (this.loggedInUser?.uid === newUser.uid) {
+          /**
+           * If the loggedin user is added to the group, add the conversation to the chats list
+           */
+          const lastMessage = { ...message };
+          const newConversationWith = {
+            ...conversationWith,
+            ...group,
+            hasJoined: true,
           };
-          let newConversationObj = {
-            ...conversationObj,
-            lastMessage: lastMessageObj,
-            unreadMessageCount: unreadMessageCount,
-            conversationWith: newConversationWithObj,
-          };
+          const unreadMessageCount = conversation.unreadMessageCount;
 
-          conversations.unshift(newConversationObj);
+          const newConversation = new CometChat.Conversation(
+            conversationId,
+            conversationType,
+            lastMessage,
+            newConversationWith,
+            unreadMessageCount
+          );
 
+          conversations.unshift(newConversation);
           this.conversationList = conversations;
-          this.playAudio(message);
         }
-      } catch (error) {
-        this.logError("Error in converting message to conversation", error);
-      }
+      });
     },
     /**
-     * Handles group member remove
+     *
+     * Listener callback when a member is kicked from / has left the group
      */
-    async updateGroupMemberRemoved(message, options) {
-      try {
+    handleGroupMemberRemoval(...options) {
+      const message = options[0];
+      const removedUser = options[1];
+      const group = options[3];
+
+      this.getConversationFromMessage(message).then((response) => {
         const {
-          conversations,
           conversationKey,
-          conversationObj,
-        } = await this.makeConversation(message);
+          conversationId,
+          conversationType,
+          conversationWith,
+          conversation,
+          conversations,
+        } = response;
 
         if (conversationKey > -1) {
-          if (options && this.loggedInUser.uid === options.user.uid) {
+          /**
+           * If the loggedin user is removed from the group, remove the conversation from the chats list
+           */
+          if (this.loggedInUser?.uid === removedUser.uid) {
             conversations.splice(conversationKey, 1);
-
             this.conversationList = conversations;
           } else {
-            let unreadMessageCount = this.makeUnreadMessageCount(
-              conversationObj
+            const lastMessage = { ...conversation.lastMessage, ...message };
+            const newConversationWith = { ...conversationWith, ...group };
+            const unreadMessageCount = conversation.unreadMessageCount;
+
+            const newConversation = new CometChat.Conversation(
+              conversationId,
+              conversationType,
+              lastMessage,
+              newConversationWith,
+              unreadMessageCount
             );
-            let lastMessageObj = this.makeLastMessage(message, conversationObj);
 
-            let conversationWithObj = { ...conversationObj.conversationWith };
-            let membersCount = parseInt(conversationWithObj.membersCount) - 1;
-            let newConversationWithObj = {
-              ...conversationWithObj,
-              membersCount: membersCount,
-            };
-
-            let newConversationObj = {
-              ...conversationObj,
-              conversationWith: newConversationWithObj,
-              lastMessage: lastMessageObj,
-              unreadMessageCount: unreadMessageCount,
-            };
-            conversations.splice(conversationKey, 1);
-            conversations.unshift(newConversationObj);
-
+            conversations.splice(conversationKey, 1, newConversation);
             this.conversationList = conversations;
-            this.playAudio(message);
           }
         }
-      } catch (error) {
-        this.logError("Error in converting message to conversation", error);
-      }
-    },
-    /**
-     * Handles group member scope change
-     */
-    async updateGroupMemberScopeChanged(message, options) {
-      try {
-        const {
-          conversations,
-          conversationKey,
-          conversationObj,
-        } = await this.makeConversation(message);
-
-        if (conversationKey > -1) {
-          let unreadMessageCount = this.makeUnreadMessageCount(conversationObj);
-          let lastMessageObj = this.makeLastMessage(message, conversationObj);
-
-          let conversationWithObj = { ...conversationObj.conversationWith };
-          let membersCount = parseInt(conversationWithObj.membersCount);
-          let scope = conversationWithObj.scope;
-
-          if (options && this.loggedInUser.uid === options.user.uid) {
-            scope = options.scope;
-          }
-
-          let newConversationWithObj = {
-            ...conversationWithObj,
-            membersCount: membersCount,
-            scope: scope,
-          };
-          let newConversationObj = {
-            ...conversationObj,
-            lastMessage: lastMessageObj,
-            conversationWith: newConversationWithObj,
-            unreadMessageCount: unreadMessageCount,
-          };
-
-          conversations.splice(conversationKey, 1);
-          conversations.unshift(newConversationObj);
-
-          this.conversationList = conversations;
-          this.playAudio(message);
-        }
-      } catch (error) {
-        this.logError("Error in converting message to conversation", error);
-      }
-    },
-    /**
-     * Handles group memer add/unban
-     */
-    async updateGroupMemberChanged(message, options, operator) {
-      try {
-        const {
-          conversations,
-          conversationKey,
-          conversationObj,
-        } = await this.makeConversation(message);
-
-        if (conversationKey > -1) {
-          if (options && this.loggedInUser.uid !== options.user.uid) {
-            let unreadMessageCount = this.makeUnreadMessageCount(
-              conversationObj
-            );
-            let lastMessageObj = this.makeLastMessage(message, conversationObj);
-
-            let conversationWithObj = { ...conversationObj.conversationWith };
-            let membersCount = parseInt(conversationWithObj.membersCount);
-            if (operator === "increment") {
-              membersCount += 1;
-            }
-
-            let newConversationWithObj = {
-              ...conversationWithObj,
-              membersCount: membersCount,
-            };
-            let newConversationObj = {
-              ...conversationObj,
-              lastMessage: lastMessageObj,
-              conversationWith: newConversationWithObj,
-              unreadMessageCount: unreadMessageCount,
-            };
-
-            conversations.splice(conversationKey, 1);
-            conversations.unshift(newConversationObj);
-
-            this.conversationList = conversations;
-            this.playAudio(message);
-          }
-        }
-      } catch (error) {
-        this.logError("Error in converting message to conversation", error);
-      }
-    },
-    /**
-     * Mark message as delivered
-     */
-    markMessageAsDelivered(message) {
-      //if chat window is not open, mark message as delivered
-      if ((this.type === "" || Object.keys(this.item).length === 0) 
-      && !message.getDeliveredAt()) {
-        CometChat.markAsDelivered(message);
-      }
-    },
-    /**
-     * Handles listeners for conversation
-     */
-    conversationsUpdateHandler(key, item, message, options) {
-      this.logInfo("CometChatConversationList: conversationsUpdateHandler", {
-        key,
-        item,
-        message,
-        options,
       });
-      switch (key) {
-        case enums.USER_ONLINE:
-        case enums.USER_OFFLINE:
-          this.updateUser(item);
-          break;
-        case enums.TEXT_MESSAGE_RECEIVED:
-        case enums.MEDIA_MESSAGE_RECEIVED:
-        case enums.CUSTOM_MESSAGE_RECEIVED:
-          this.markMessageAsDelivered(message);
-          this.updateConversation(message);
-          break;
-        case enums.MESSAGE_EDITED:
-        case enums.MESSAGE_DELETED:
-          this.conversationEditedDeleted(message);
-          break;
-        case enums.INCOMING_CALL_RECEIVED:
-        case enums.INCOMING_CALL_CANCELLED:
-          this.updateConversation(message, false);
-          break;
-        case enums.GROUP_MEMBER_ADDED:
-          this.updateGroupMemberAdded(message, options);
-          break;
-        case enums.GROUP_MEMBER_KICKED:
-        case enums.GROUP_MEMBER_BANNED:
-        case enums.GROUP_MEMBER_LEFT:
-          this.updateGroupMemberRemoved(message, options);
-          break;
-        case enums.GROUP_MEMBER_SCOPE_CHANGED:
-          this.updateGroupMemberScopeChanged(message, options);
-          break;
-        case enums.GROUP_MEMBER_JOINED:
-          this.updateGroupMemberChanged(message, options, "increment");
-          break;
-        case enums.GROUP_MEMBER_UNBANNED:
-          this.updateGroupMemberChanged(message, options, "");
-          break;
-        default:
-          break;
-      }
     },
     /**
-     * Plays incoming message alert
+     *
+     * Listener callback when a member is banned from the group
      */
-    playAudio(message) {
-      try {
-        if (
-          message.category === enums.CATEGORY_ACTION &&
-          message.type === enums.ACTION_TYPE_GROUPMEMBER
-        ) {
-          return false;
-        }
+    handleGroupMemberBan(...options) {
+      const message = options[0];
+      const removedUser = options[1];
+      const group = options[3];
 
-        this.audio.currentTime = 0;
-        this.audio.play();
-      } catch (error) {
-        this.logError("Error playing audio", error);
-      }
-    },
-    /**
-     * Update last message
-     */
-    updateLastMessage(lastMessage) {
-      const conversationList = [...this.conversationList];
-      const conversationKey = conversationList.findIndex(c => c.conversationId === lastMessage.conversationId);
-
-      if (conversationKey > -1) {
-        const conversationObj = conversationList[conversationKey];
-        let newConversationObj = { ...conversationObj, lastMessage: { ...lastMessage } };
-
-        if (conversationKey === 0) {
-          conversationList.splice(conversationKey, 1, newConversationObj);
-        } else {
-          conversationList.splice(conversationKey, 1);
-          conversationList.unshift(newConversationObj);
-        }
-
-        this.conversationList = conversationList;
-      }
-    },
-    /**
-     * Uupdate unread count
-     */
-    updateUnreadCount(params) {	
-      if (this.selectedConversation) {
-        this.selectedConversation["unreadMessages"] = params.unreadMessages;
-        return false;
-      }
-    },
-    /**
-     * clear unread count
-     */
-    clearUnreadCount() {
-      if (this.selectedConversation) {
-        
-        this.selectedConversation["unreadMessages"] = [];
-        let conversationList = [...this.conversationList];
-
-        let conversationKey = conversationList.findIndex(c => c.conversationId === this.selectedConversation.conversationId);
+      this.getConversationFromMessage(message).then((response) => {
+        const {
+          conversationKey,
+          conversationId,
+          conversationType,
+          conversationWith,
+          conversation,
+          conversations,
+        } = response;
 
         if (conversationKey > -1) {
-          let conversationObj = { ...conversationList[conversationKey] };
-          let newConversationObj = { ...conversationObj, unreadMessageCount: 0 };
+          /**
+           * If the loggedin user is banned from the group, remove the conversation from the chats list
+           */
+          if (this.loggedInUser?.uid === removedUser.uid) {
+            conversations.splice(conversationKey, 1);
+            this.conversationList = conversations;
+          } else {
+            const lastMessage = { ...conversation.lastMessage, ...message };
+            const newConversationWith = { ...conversationWith, ...group };
+            const unreadMessageCount = conversation.unreadMessageCount;
 
-          conversationList.splice(conversationKey, 1);
-          conversationList.unshift(newConversationObj);
-          this.conversationList = conversationList
+            const newConversation = new CometChat.Conversation(
+              conversationId,
+              conversationType,
+              lastMessage,
+              newConversationWith,
+              unreadMessageCount
+            );
+
+            conversations.splice(conversationKey, 1, newConversation);
+            this.conversationList = conversations;
+          }
         }
-      }
+      });
     },
-    deleteConversation(conversation) {
-      if (!this.showConfirmDialog) {
-        this.showConfirmDialog = true;
-        this.conversationToBeDeleted = conversation;
-      }
-    },
-    onDeleteConfirm(e) {
-      const optionSelected = e.target.value;
-      this.showConfirmDialog = false;
-      if (optionSelected === "yes") {
-        const conversation = this.conversationToBeDeleted;
-        const conversationWith = conversation.conversationType === CometChat.RECEIVER_TYPE.GROUP ? conversation?.conversationWith?.guid : conversation?.conversationWith?.uid;
-        CometChat.deleteConversation(conversationWith, conversation.conversationType)
-          .then(() => {
-            this.conversationDeleted(conversation);
-          })
-          .catch(error => console.log(error));
+    /**
+     *
+     * Listener callback when a group member scope is updated
+     */
+    handleGroupMemberScopeChange(...options) {
+      const message = options[0];
+      const user = options[1];
+      const newScope = options[2];
+      const group = options[4];
 
-      } else {
-        this.showConfirmDialog = false; 
-        this.conversationToBeDeleted = null;
-      }
-    },
-    conversationDeleted(conversation) {
+      this.getConversationFromMessage(message).then((response) => {
+        const {
+          conversationKey,
+          conversationId,
+          conversationType,
+          conversationWith,
+          conversation,
+          conversations,
+        } = response;
 
-      const conversationList = [...this.conversationList];
-      const conversationKey = conversationList.findIndex(c => c.conversationId === conversation.conversationId);
+        if (conversationKey > -1) {
+          const lastMessage = { ...conversation.lastMessage, ...message };
+          const unreadMessageCount = conversation.unreadMessageCount;
+
+          if (this.loggedInUser?.uid === user.uid) {
+            const newConversationWith = {
+              ...conversationWith,
+              ...group,
+              scope: newScope,
+            };
+
+            const newConversation = new CometChat.Conversation(
+              conversationId,
+              conversationType,
+              lastMessage,
+              newConversationWith,
+              unreadMessageCount
+            );
+
+            conversations.splice(conversationKey, 1);
+            conversations.unshift(newConversation);
+            this.conversationList = conversations;
+          } else {
+            let newConversationWith = { ...conversationWith, ...group };
+
+            const newConversation = new CometChat.Conversation(
+              conversationId,
+              conversationType,
+              lastMessage,
+              newConversationWith,
+              unreadMessageCount
+            );
+
+            conversations.splice(conversationKey, 1, newConversation);
+            this.conversationList = conversations;
+          }
+        }
+      });
+    },
+    /**
+     *
+     * Listener callback for typing events
+     */
+    handleTyping(...options) {
+      const typingData = options[0];
+      const typingStarted = options[1];
+      const conversations = [...this.conversationList];
+
+      let conversationKey = conversations.findIndex(
+        (conversation) =>
+          conversation?.conversationType === typingData?.receiverType &&
+          ((conversation?.conversationType === CometChat.RECEIVER_TYPE.USER &&
+            conversation.conversationWith?.uid === typingData?.sender?.uid) ||
+            (conversation.conversationType === CometChat.RECEIVER_TYPE.GROUP &&
+              conversation.conversationWith?.guid === typingData?.receiverId))
+      );
 
       if (conversationKey > -1) {
-        if (this.selectedConversation && this.selectedConversation.conversationId === conversation.conversationId) {
-          this.selectedConversation = null;
-          this.emitAction("item-click", { item:{}, type: "" });
+        let typingIndicatorText = "";
+        if (typingStarted) {
+          typingIndicatorText =
+            typingData?.receiverType === CometChat.RECEIVER_TYPE.GROUP
+              ? `${typingData?.sender?.name} ${localize("IS_TYPING")}`
+              : localize("IS_TYPING");
         }
 
-        conversationList.splice(conversationKey, 1);
-        this.conversationList = [...conversationList]; 
-        this.conversationToBeDeleted = null;
-        if (this.conversationList.length === 0) {
-          this.decoratorMessage = COMETCHAT_CONSTANTS.NO_CHATS_FOUND;
-        }
+        const conversation = this.conversationList[conversationKey];
+        const newConversation = {
+          ...conversation,
+          showTypingIndicator: typingStarted,
+          typingIndicatorText,
+        };
+
+        conversations.splice(conversationKey, 1, newConversation);
+        this.conversationList = conversations;
       }
     },
-    createManager() {
-      conversationListManager = new ConversationListManager();
-    },
-    attachListeners() {
-      if (conversationListManager) {
-        conversationListManager.attachListeners(
-          this.conversationsUpdateHandler
+    handleScroll(event) {
+      const bottom =
+        Math.round(
+          event.currentTarget.scrollHeight - event.currentTarget.scrollTop
+        ) === Math.round(event.currentTarget.clientHeight);
+      if (bottom) {
+        this.getConversationsList(this.conversationListManager).then(
+          (conversations) => {
+            this.conversationList = [
+              ...conversations,
+              ...this.conversationList,
+            ];
+          }
         );
       }
     },
-    removeListeners() {
-      if (conversationListManager) {
-        conversationListManager.removeListeners();
-        conversationListManager = null;
+    clickHandler() {
+      // CometChatConversationList.listeners.(element => {
+      // });;
+    },
+    /**
+     * Remove conversation from the conversationlist upon delete
+     */
+    removeConversation(conversation) {
+      const conversationKey = this.conversationList.findIndex(
+        (c) => c.conversationId === conversation.conversationId
+      );
+
+      if (conversationKey > -1) {
+        const newConversationList = [...this.conversationList];
+        newConversationList.splice(conversationKey, 1);
+        this.conversationList = newConversationList;
       }
     },
-    cometChatEventListeners() {
-      /** updating last message whenever a message is composed and sent */
-      CometChatEvent.on(enums.EVENTS["UPDATED_LAST_MESSAGES"], args => this.updateLastMessage(args));
-
-      /**Listen for the new messages if user is already in the chat window and has scrolled up*/
-      CometChatEvent.on(enums.EVENTS["NEW_MESSAGES_TRIGGERED"], args => this.updateUnreadCount(args));
-
-      /** clearing unreadcount whenever scrolled to the bottom.*/
-      CometChatEvent.on(enums.EVENTS["CLEAR_UNREAD_MESSAGES_TRIGGERED"], args => this.clearUnreadCount(args));
-
-      /**Delete conversation */
-      CometChatEvent.on(enums.EVENTS["DELETE_CONVERSATION"], args => {
-        this.deleteConversation(args)
-      })
-
-      /**Confirm delete */
-      CometChatEvent.on(enums.EVENTS["CONFIRM_RESPONSE"], (e) => {
-        this.onDeleteConfirm(e)
-      })
+    deleteConversation() {
+      return new Promise((resolve, reject) => {
+        const conversationWith =
+          this.conversationToBeDeleted.conversationType ===
+          CometChatMessageReceiverType.group
+            ? this.conversationToBeDeleted?.conversationWith?.guid
+            : this.conversationToBeDeleted?.conversationWith?.uid;
+        CometChat.deleteConversation(
+          conversationWith,
+          this.conversationToBeDeleted.conversationType
+        )
+          .then((deletedConversation) => {
+            CometChatConversationEvents.emit(
+              "onDeleteConversationSuccess",
+              this.conversationToBeDeleted
+            );
+            this.removeConversation(this.conversationToBeDeleted);
+            resolve(deletedConversation);
+          })
+          .catch((error) => {
+            CometChatConversationEvents.emit(
+              "onError",
+              this.conversationToBeDeleted
+            );
+            reject(error);
+          });
+      });
     },
-    cometChatRemoveEventListeners() {
-      CometChatEvent.remove(enums.EVENTS["UPDATED_LAST_MESSAGES"]);
-      CometChatEvent.remove(enums.EVENTS["NEW_MESSAGES_TRIGGERED"]);
-      CometChatEvent.remove(enums.EVENTS["CLEAR_UNREAD_MESSAGES_TRIGGERED"]);
-      CometChatEvent.remove(enums.EVENTS["DELETE_CONVERSATION"])
-      CometChatEvent.remove(enums.EVENTS["CONFIRM_RESPONSE"])
-    }
+    confirmDelete(conversation) {
+      this.conversationToBeDeleted = conversation;
+      this.isDelete = true;
+    },
+    cancelDelete() {
+      this.isDelete = false;
+    },
+    getConversationsList(conversationListManager) {
+      return new Promise((resolve, reject) => {
+        this.loading = true;
+        conversationListManager
+          .fetchNextConversation()
+          .then((conversations) => {
+            this.loading = false;
+            resolve(conversations)
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.onErrorCallback(error);
+            reject(error);
+          });
+      });
+    },
+    loginUser() {
+      CometChat.getLoggedinUser().then(
+        (user) => {
+          this.loggedInUser = user;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    setInitialData() {
+      this.loginUser();
+      this.handlers = {
+        onUserOnline: this.handleUsers,
+        onUserOffline: this.handleUsers,
+        onTextMessageReceived: this.handleMessages,
+        onMediaMessageReceived: this.handleMessages,
+        onCustomMessageReceived: this.handleMessages,
+        onIncomingCallReceived: this.handleMessages,
+        onIncomingCallCancelled: this.handleMessages,
+        messageEdited: this.handleMessageActions,
+        onMessageDeleted: this.handleMessageActions,
+        messageRead: this.handleMessageReadActions,
+        onMemberAddedToGroup: this.handleGroupMemberAddition,
+        onGroupMemberJoined: this.handleGroupMemberAddition,
+        onGroupMemberKicked: this.handleGroupMemberRemoval,
+        onGroupMemberLeft: this.handleGroupMemberRemoval,
+        onGroupMemberBanned: this.handleGroupMemberBan,
+        onGroupMemberScopeChanged: this.handleGroupMemberScopeChange,
+        onTypingStarted: this.handleTyping,
+        onTypingEnded: this.handleTyping,
+      };
+
+      this.conversationListManager.attachListeners(this.conversationCallback);
+
+      this.getConversationsList(this.conversationListManager)
+        .then((conversations) => {
+          if (
+            this.conversationList.length === 0 &&
+            conversations.length === 0
+          ) {
+            this.message = localize("NO_CHATS_FOUND");
+          } else {
+            this.message = "";
+          }
+
+          this.conversationList = [...this.conversationList, ...conversations];
+        })
+        .catch((error) => {
+          this.message = localize("SOMETHING_WRONG");
+        });
+    },
+    addCometChatListeners() {
+      CometChatConversationEvents.addListener(
+        CometChatConversationEvents.onDeleteConversation,
+        "onDeleteConversation",
+        this.confirmDelete
+      );
+    },
+    removeCometChatListeners() {
+      CometChatConversationEvents.removeListener(
+        CometChatConversationEvents.onDeleteConversation,
+        "onDeleteConversation"
+      );
+    },
   },
   beforeMount() {
-    this.audio = new Audio(incomingOtherMessageAlert);
-
-    this.createManager();
-
-    this.getConversations();
-    this.attachListeners();
-
-    this.cometChatEventListeners();
-    
+    this.setInitialData();
+    this.addCometChatListeners();
   },
   beforeDestroy() {
-    this.removeListeners();
-    this.cometChatRemoveEventListeners();
+    this.removeCometChatListeners();
   },
   beforeUnmount() {
-    this.removeListeners();
-    this.cometChatRemoveEventListeners();
+    this.removeCometChatListeners();
   },
 };
 </script>
-<style scoped>
-.chats__wrapper * {
-  box-sizing: border-box;
-}
-.chats__wrapper * ::-webkit-scrollbar {
-  width: 8px;
-  height: 4px;
-}
-.chats__wrapper * ::-webkit-scrollbar-track {
-  background: #ffffff00;
-}
-.chats__wrapper * ::-webkit-scrollbar-thumb {
-  background: #ccc;
-}
-.chats__wrapper * ::-webkit-scrollbar-thumb:hover {
-  background: #aaa;
-}
-@media (min-width: 320px) and (max-width: 767px) {
-  .header__close {
-    display: block !important;
-  }
-}
-</style>

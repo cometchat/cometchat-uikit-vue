@@ -10,18 +10,7 @@
       />
     </template>
     <template v-else-if="tab === 'conversations'">
-      <comet-chat-conversation-list
-        :item="item"
-        :type="type"
-        :theme="theme"
-        :last-message="lastMessage"
-        :group-to-leave="groupToLeave"
-        :group-to-delete="groupToDelete"
-        :group-to-update="groupToUpdate"
-        :enable-close-menu="enableCloseMenu"
-        :message-to-mark-read="messageToMarkRead"
-        @action="actionHandler"
-      />
+      <comet-chat-conversations v-bind="$props" :title="'Chats'" />
     </template>
     <template v-else-if="tab === 'groups'">
       <comet-chat-group-list
@@ -65,7 +54,7 @@ import {
 
 import { cometChatCommon } from "../../../mixins/";
 
-import { CometChatConversationList } from "../../Chats/";
+import { CometChatConversations } from "../../Chats/";
 import { CometChatUserProfile } from "../../UserProfile/";
 import { CometChatGroupList } from "../../Groups";
 import { CometChatUserList } from "../../Users";
@@ -90,7 +79,7 @@ export default {
   name: "CometChatNavBar",
   mixins: [cometChatCommon],
   components: {
-    CometChatConversationList,
+    CometChatConversations,
     CometChatUserProfile,
     CometChatGroupList,
     CometChatUserList,
@@ -215,6 +204,8 @@ export default {
 .cometchat__unified__navbar {
   height: 100%;
   width: 280px;
+  display: flex;
+  flex-direction: column;
 }
 .cometchat__unified__navbar .chats__wrapper,
 .cometchat__unified__navbar .groups__wrapper,

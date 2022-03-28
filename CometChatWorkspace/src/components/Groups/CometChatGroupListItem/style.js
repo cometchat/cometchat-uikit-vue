@@ -1,8 +1,8 @@
-export const listItemStyle = (theme, group, selectedGroup) => {
+export const listItemStyle = (props) => {
   const selectedState =
-    selectedGroup && selectedGroup.guid === group.guid
+    props.selectedGroup && props.selectedGroup.guid === props.group.guid
       ? {
-          backgroundColor: `${theme.backgroundColor.primary}`,
+          backgroundColor: `${props.theme.backgroundColor.primary}`,
         }
       : {};
 
@@ -12,19 +12,23 @@ export const listItemStyle = (theme, group, selectedGroup) => {
     justifyContent: "left",
     alignItems: "center",
     cursor: "pointer",
-    width: "100%",
-    padding: "10px 20px",
+    width: props.width,
+    height: props.height,
+    padding: "8px 16px",
     ...selectedState,
-    "--group-item-bg-color-hover": `${theme.backgroundColor.primary}`,
+    "--group-item-bg-color-hover": `${props.theme.backgroundColor.primary}`,
   };
 };
 
-export const listItemIconStyle = () => {
+export const listItemIconStyle = (img, props) => {
   return {
-    width: "auto",
-    height: "13px",
-    margin: "0 6px",
-    marginTop: "-1px",
+    display: "inline-block",
+    width: "24px",
+    height: "24px",
+    maskImage: `url(${img})`,
+    maskRepeat: "no-repeat",
+    maskPosition: "center",
+    backgroundColor: `${props.theme.secondaryTextColor}`,
   };
 };
 
@@ -55,22 +59,25 @@ export const itemNameStyle = () => {
   };
 };
 
-export const itemNameWrapperStyle = () => {
+export const itemNameWrapperStyle = (props) => {
   return {
-    fontSize: "15px",
-    fontWeight: "600",
+    lineHeight: "22px",
+    font: props.titleFont,
+    color: props.titleColor,
     display: "flex",
     alignItems: "center",
     width: "100%",
     margin: "0",
-  };
+  }
 };
 
-export const itemDescriptionStyle = (theme) => {
+export const itemDescriptionStyle = (props) => {
   return {
-    borderBottom: `1px solid ${theme.borderColor.primary}`,
-    color: `${theme.color.helpText}`,
-    padding: "0 0 5px 0",
-    fontSize: "12px",
-  };
+		borderWidth: `0 0 ${props.borderWidth} 0`,
+		borderStyle: `${props.borderStyle}`,
+		borderColor: props.borderColor,
+		padding: "0 0 8px 0",
+		font: `${props.subTitleFont}`,
+		color: `${props.subTitleColor}`,
+	};
 };

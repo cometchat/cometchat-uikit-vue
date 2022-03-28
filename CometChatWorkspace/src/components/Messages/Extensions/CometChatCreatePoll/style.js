@@ -1,4 +1,4 @@
-export const modalWrapperStyle = (theme, open) => {
+export const modalWrapperStyle = (open = true) => {
   const show = open
     ? {
         display: "block",
@@ -11,7 +11,7 @@ export const modalWrapperStyle = (theme, open) => {
     width: "50%",
     height: "40%",
     overflow: "hidden",
-    backgroundColor: `${theme.backgroundColor.white}`,
+    backgroundColor: `#fff`,
     position: "fixed",
     left: "50%",
     top: "50%",
@@ -66,9 +66,9 @@ export const modalTableStyle = () => {
   };
 };
 
-export const modalTableRowStyle = (theme) => {
+export const modalTableRowStyle = () => {
   return {
-    borderBottom: `1px solid ${theme.borderColor.primary}`,
+    borderBottom: `1px solid #eaeaea`,
     display: "table",
     width: "100%",
     tableLayout: "fixed",
@@ -109,13 +109,13 @@ export const tableFootStyle = () => {
   };
 };
 
-export const buttonStyle = (theme, loading) => {
+export const buttonStyle = (loading) => {
   return {
     cursor: loading ? "default" : "pointer",
     padding: "10px 20px",
-    backgroundColor: `${theme.backgroundColor.blue}`,
+    backgroundColor: `#39f`,
     borderRadius: "5px",
-    color: `${theme.color.white}`,
+    color: `white`,
     fontSize: "14px",
     outline: "0",
     border: "0",

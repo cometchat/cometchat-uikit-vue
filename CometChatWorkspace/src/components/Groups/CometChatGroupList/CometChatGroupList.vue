@@ -64,6 +64,7 @@ import {
   COMETCHAT_CONSTANTS,
   DEFAULT_OBJECT_PROP,
   DEFAULT_BOOLEAN_PROP,
+  DEFAULT_STRING_PROP,
 } from "../../../resources/constants";
 import * as enums from "../../../util/enums.js";
 
@@ -127,6 +128,70 @@ export default {
      * Shows/hides the close menu button.
      */
     enableCloseMenu: { ...DEFAULT_BOOLEAN_PROP },
+    /**
+     * width.
+     */
+    width: { ...DEFAULT_STRING_PROP, default: "100%" },
+    /**
+     * height.
+     */
+    height: { ...DEFAULT_STRING_PROP, default: "100%" },
+    /**
+     * title.
+     */
+    title: { ...DEFAULT_STRING_PROP, default: "Groups" },
+    /**
+     * titleFont.
+     */
+    titleFont: { ...DEFAULT_STRING_PROP, default: "bold 22px Inter" },
+    /**
+     * titleColor.
+     */
+    titleColor: { ...DEFAULT_STRING_PROP, default: "#141414" },
+    /**
+     * searchBarPlaceholder.
+     */
+    searchBarPlaceholder: { ...DEFAULT_STRING_PROP, default: "Search" },
+    /**
+     * searchBarTextFont.
+     */
+    searchBarTextFont: { ...DEFAULT_STRING_PROP, default: "15px Inter" },
+    /**
+     * searchBarTextColor.
+     */
+    searchBarTextColor: { ...DEFAULT_STRING_PROP, default: "#f1f1f1" },
+    /**
+     * searchBarBackgroundColor.
+     */
+    searchBarBackgroundColor: { ...DEFAULT_STRING_PROP, default: "rgba(20, 20, 20, 0.04)" },
+    /**
+     * searchBarCornerRadius.
+     */
+    searchBarCornerRadius: { ...DEFAULT_STRING_PROP, default: "8px" },
+    /**
+     * borderWidth.
+     */
+    borderWidth: { ...DEFAULT_STRING_PROP, default: "1px" },
+    /**
+     * borderStyle.
+     */
+    borderStyle: { ...DEFAULT_STRING_PROP, default: "solid" },
+    /**
+     * borderColor.
+     */
+    borderColor: { ...DEFAULT_STRING_PROP, default: "#eaeaea" },
+    /**
+     * backgroundColor.
+     */
+    backgroundColor: { ...DEFAULT_STRING_PROP, default: "#ffffff" },
+    /**
+     * createGroup.
+     */
+    createGroup: { ...DEFAULT_BOOLEAN_PROP, default: true },
+    /**
+     * groupType.
+     */
+    groupType: { ...DEFAULT_STRING_PROP, default: "" },
   },
   data() {
     return {
@@ -152,13 +217,13 @@ export default {
       return {
         msg: style.groupMsgStyle(),
         list: style.groupListStyle(),
-        search: style.groupSearchStyle(),
-        add: style.groupAddStyle(addIcon),
-        wrapper: style.groupWrapperStyle(),
+        search: style.groupSearchStyle(this),
+        add: style.groupAddStyle(addIcon, this.themeValue),
+        wrapper: style.groupWrapperStyle(this),
         header: style.groupHeaderStyle(this.themeValue),
-        msgText: style.groupMsgTxtStyle(this.themeValue),
-        headerClose: style.groupHeaderCloseStyle(navigateIcon),
-        headerTitle: style.groupHeaderTitleStyle(this.enableCloseMenu),
+        msgText: style.groupMsgTxtStyle(this),
+        headerClose: style.groupHeaderCloseStyle(navigateIcon, this.themeValue),
+        headerTitle: style.groupHeaderTitleStyle(this),
         searchInput: style.groupSearchInputStyle(this.themeValue, searchIcon),
       };
     },

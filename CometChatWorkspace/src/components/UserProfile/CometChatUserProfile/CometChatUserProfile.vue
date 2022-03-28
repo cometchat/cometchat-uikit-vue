@@ -10,7 +10,7 @@
           border-width="1px"
           corner-radius="50%"
           border-color="#CCC"
-          :image="user.avatar"
+          :user="user"
         />
       </div>
       <div :style="styles.userDetail">

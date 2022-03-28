@@ -23,7 +23,8 @@ export const avatarStyle = (participantView) => {
     : {};
 
   return {
-    display: "inline-block",
+    display: "flex",
+    position: "relative",
     float: "left",
     width: "36px",
     height: "36px",

@@ -1,3 +1,11 @@
+export const DEFAULT_FUNCTION_PROP = {
+  type: Function,
+  required: false,
+  default: function () {
+    return {};
+  },
+};
+
 export const DEFAULT_STRING_PROP = {
   type: String,
   default: "",

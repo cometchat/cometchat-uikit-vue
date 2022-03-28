@@ -1,42 +1,6 @@
 /*eslint no-prototype-builtins: "error"*/
 import dateFormat from "dateformat";
 
-const emailPattern = new RegExp(
-  "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}",
-  "gi"
-); ///([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
-const urlPattern = new RegExp(
-  "(^|[\\s.:;?\\-\\]<\\(])" +
-    "((https?://|www\\.|pic\\.)[-\\w;/?:@&=+$\\|\\_.!~*\\|'()\\[\\]%#,☺]+[\\w/#](\\(\\))?)" +
-    "(?=$|[\\s',\\|\\(\\).:;?\\-\\[\\]>\\)])",
-  "gi"
-); ///(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
-const phoneNumPattern = new RegExp(
-  "\\s*(?:\\+?(\\d{1,3}))?([-. (]*(\\d{3})[-. )]*)?((\\d{3})[-. ]*(\\d{2,4})(?:[-.x ]*(\\d+))?)\\s*",
-  "g"
-);
-
-/**
- * Converts a string to its HTML equivalent
- * @param {*} message
- */
-export const linkify = (message) => {
-  let outputStr = message.replace(
-    phoneNumPattern,
-    "<a target='blank' rel='noopener noreferrer' href='tel:$&'>$&</a>"
-  );
-  outputStr = outputStr.replace(
-    emailPattern,
-    "<a target='blank' rel='noopener noreferrer' href='mailto:$&'>$&</a>"
-  );
-  outputStr = outputStr.replace(
-    urlPattern,
-    "<a target='blank' rel='noopener noreferrer' href='$&'>$&</a>"
-  );
-
-  return outputStr;
-};
-
 /**
  * Extracts extension data from message
  * @param {*} message
@@ -137,4 +101,25 @@ export const getMessageSentTime = (timestamp) => {
   oTimestamp = dateFormat(messageTimestamp, "shortTime");
 
   return oTimestamp;
+}
+
+export const hexToRGB = (h) => {
+	let r = 0,
+		g = 0,
+		b = 0;
+
+	// 3 digits
+	if (h && h.length === 4) {
+		r = "0x" + h[1] + h[1];
+		g = "0x" + h[2] + h[2];
+		b = "0x" + h[3] + h[3];
+
+		// 6 digits
+	} else if (h && h.length === 7) {
+		r = "0x" + h[1] + h[2];
+		g = "0x" + h[3] + h[4];
+		b = "0x" + h[5] + h[6];
+	}
+
+	return +r + "," + +g + "," + +b;
 }

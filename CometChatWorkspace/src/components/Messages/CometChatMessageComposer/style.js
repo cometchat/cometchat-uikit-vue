@@ -1,96 +1,66 @@
-export const chatComposerStyle = (theme) => {
+export const chatComposerStyle = props => {
   return {
-    padding: "14px 16px",
-    backgroundColor: `${theme.backgroundColor.white}`,
+    padding: "16px",
+    background: props.background,
     zIndex: "1",
     order: "3",
     position: "relative",
     flex: "none",
-    minHeight: "105px",
+    minHeight: "85px",
+    borderRadius: props.cornerRadius,
   };
 };
 
-export const editPreviewContainerStyle = (theme) => {
-  return {
-    padding: "6px 7px",
-    backgroundColor: `${theme.backgroundColor.white}`,
-    borderColor: `${theme.borderColor.primary}`,
-    borderWidth: "1px 1px 1px 5px",
-    borderStyle: "solid",
-    color: `${theme.color.helpText}`,
-    fontSize: "13px",
-    position: "relative",
-    borderRadius: "8px",
-    marginBottom: "-1px",
-  };
-};
-
-export const previewHeadingStyle = () => {
+export const composerInputStyle = props => {
   return {
     display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  };
-};
-
-export const previewTextStyle = () => {
-  return {
-    padding: "5px 0",
-  };
-};
-
-export const previewCloseStyle = (img) => {
-  return {
-    width: "24px",
-    height: "24px",
-    borderRadius: "50%",
-    background: `url(${img}) center center no-repeat`,
-    cursor: "pointer",
-  };
-};
-
-export const composerInputStyle = () => {
-  return {
-    display: "flex",
-    width: "100%",
+    width: props.width,
     flexDirection: "row",
     alignItems: "flex-end",
     position: "relative",
     zIndex: "2",
     padding: "0",
+    borderRadius: props.inputCornerRadius,
     minHeight: "85px",
   };
 };
 
-export const inputInnerStyle = (theme) => {
+export const inputInnerStyle = (props) => {
+
+  //const borderRadiusVal = state.emojiViewer || state.stickerViewer ? { borderRadius: "0 0 8px 8px", } : { borderRadius: "8px", };
+
   return {
     flex: "1 1 auto",
     position: "relative",
     outline: "none",
-    borderRadius: "8px",
-    border: `1px solid ${theme.borderColor.primary}`,
-    backgroundColor: `${theme.backgroundColor.white}`,
+    border: props.border,
+    background: "#fff",
     display: "flex",
     flexDirection: "column",
     width: "100%",
     minHeight: "85px",
+    //...borderRadiusVal,
+    borderRadius: "inherit",
+
   };
 };
 
-export const messageInputStyle = (disabled) => {
+export const messageInputStyle = (props, disabled) => {
   const disabledState = disabled
     ? {
-        pointerEvents: "none",
-        opacity: "0.4",
-      }
+      pointerEvents: "none",
+      opacity: "0.4",
+    }
     : {};
 
   return {
     width: "100%",
-    fontSize: "15px",
+    minHeight: "50px",
+    height: props.height,
+    font: props.placeholderFont,
+    color: props.placeholderColor,
     lineHeight: "20px",
-    fontWeight: "400",
-    padding: "15px 10px",
+    padding: "16px",
     outline: "none",
     overflowX: "hidden",
     overflowY: "auto",
@@ -98,167 +68,217 @@ export const messageInputStyle = (disabled) => {
     whiteSpace: "pre-wrap",
     wordWrap: "break-word",
     zIndex: "1",
-    minHeight: "50px",
-    maxHeight: "100px",
     userSelect: "text",
+    background: "#fff",
     ...disabledState,
+    "::before": {
+      content: "attr(placeholder)",
+      color: props.placeholderColor,
+      pointerEvents: "none",
+      display: "block" /* For Firefox */,
+    },
   };
 };
 
-export const inputStickyStyle = (theme) => {
+export const inputStickyStyle = (disabled, attachments) => {
+  const disabledState = disabled
+    ? { pointerEvents: "none", }
+    : {};
+
+  const flexDirectionProp =
+    attachments === false
+      ? { flexDirection: "row-reverse", }
+      : {};
+
   return {
-    padding: "7px 10px",
-    height: "35px",
-    borderTop: `1px solid ${theme.borderColor.primary}`,
-    backgroundColor: `${theme.backgroundColor.grey}`,
+    padding: "8px 16px",
+    // height: "40px",
+    //borderTop: `1px solid ${context.theme.borderColor.primary}`,
+    backgroundColor: "rgba(20, 20, 20, 0.04)",
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
+    ...flexDirectionProp,
+    ...disabledState,
+    "&:empty:before": {
+      pointerEvents: "none",
+    },
   };
 };
 
 export const stickyAttachmentStyle = () => {
   return {
     display: "flex",
-    width: "calc(100% - 50px)",
+    width: "auto",
   };
 };
 
-export const attachmentIconStyle = (img, showFilePicker, isBlockedByMe) => {
-  const active = !showFilePicker
-    ? { transform: "rotate(0deg)" }
-    : { transform: "rotate(45deg)" };
-
+export const attachmentIconStyle = () => {
   return {
-    display: "inline-block",
-    width: "20px",
+    margin: "auto 0",
+    width: "24px",
     height: "20px",
-    opacity: isBlockedByMe ? 0.4 : 1,
-    transition: "transform 0.25s linear",
-    background: `url(${img}) center center no-repeat`,
-    cursor: isBlockedByMe ? "default" : "pointer",
-    ...active,
+    cursor: "pointer",
   };
 };
 
-export const filePickerStyle = () => {
+export const filePickerStyle = state => {
+  const active = state.showFilePicker
+    ? { width: "calc(100% - 20px)", opacity: "1", }
+    : {};
+
   return {
-    left: "0",
-    bottom: "0",
-    position: "relative",
+    width: "0",
     borderRadius: "8px",
     overflow: "hidden",
     zIndex: "1",
-    margin: "0 8px",
-    textAlign: "center",
-  };
-};
-
-export const fileListStyle = (showFilePicker) => {
-  const active = showFilePicker
-    ? { transform: "translate(0%)" }
-    : { transform: "translate(-125%)" };
-
-  return {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    transition: "transform 0.4s linear",
+    opacity: "0",
+    transition: "width 0.5s linear",
     ...active,
   };
 };
 
-export const fileItemStyle = (type, img) => {
-  let width = "21px";
-  let pos = "0%";
-
-  const setPos = (w, p) => {
-    width = w;
-    pos = p;
-  };
-
-  if (type === "video") {
-    setPos("22px", "2px");
-  } else if (type === "audio") {
-    setPos("21px", "2px");
-  } else if (type === "image") {
-    setPos("21px", "1px");
-  } else if (type === "doc") {
-    setPos("14px", "1px");
-  } else if (type === "poll") {
-    setPos("19px", "2px");
-  }
-
+export const fileListStyle = () => {
   return {
-    width,
-    height: "21px",
-    margin: "0px 5px",
-    cursor: "pointer",
-    background: `url(${img}) 0% ${pos} / cover no-repeat`,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "0 0 0 16px",
   };
 };
 
-export const stickyButtonStyle = () => {
+export const fileItemStyle = () => {
+  return {
+    height: "24px",
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: "0 16px 0 0",
+    " > input": {
+      display: "none",
+    },
+  };
+};
+
+export const stickyAttachButtonStyle = () => {
   return {
     display: "flex",
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    cursor: "pointer",
+    width: "24px",
   };
 };
 
-export const emojiPickerStyle = () => {
+export const attchButtonIconStyle = props => {
   return {
+    width: "24px",
+    height: "24px",
+    display: "inline-block",
+    WebkitMask: `url(${props.attachmentIconURL}) center center no-repeat`,
+    backgroundColor: props.attachmentIconTint,
+  };
+}
+
+export const stickyButtonStyle = () => {
+
+  return {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    width: "auto",
+  };
+};
+
+export const emojiButtonStyle = () => {
+  return {
+    height: "24px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "0 0 0 16px",
+  };
+};
+
+export const emojiBtnIconStyle = props => {
+
+  return {
+    width: "24px",
+    height: "24px",
+    display: "inline-block",
+    WebkitMask: `url(${props.emojiIconURL}) center center no-repeat`,
+    backgroundColor: props.emojiIconTint,
+  };
+}
+
+export const sendButtonStyle = () => {
+  return {
+    height: "24px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "0 0 0 16px",
+  };
+};
+
+export const sendBtnIconStyle = props => {
+  return {
+    width: "24px",
+    height: "24px",
+    display: "inline-block",
+    WebkitMask: `url(${props.sendButtonIconURL}) center center no-repeat`,
+    backgroundColor: props.sendButtonIconTint,
+  };
+}
+
+export const reactionBtnStyle = () => {
+  return {
+    cursor: "pointer",
+    height: "24px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "0 0 0 16px",
+  };
+};
+
+export const reactionBtnIconStyle = props => {
+  return {
+    font: props.liveReactionFont,
+    color: props.liveReactionColor,
+  };
+}
+
+export const stickerBtnStyle = () => {
+  return {
+    cursor: "pointer",
+    height: "24px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "0 0 0 16px",
+  };
+};
+
+export const stickerBtnIconStyle = (props, stickerTemplate) => {
+  return {
+    width: "24px",
+    height: "24px",
+    display: "inline-block",
+    WebkitMask: `url(${stickerTemplate?.icon}) center center no-repeat`,
+    backgroundColor: props.emojiIconTint,
+  };
+};
+
+export const fileInputStyle = () => {
+
+  return {
+    visibility: "hidden",
     position: "absolute",
-    bottom: "24px",
-    right: "56px",
-    zIndex: "2",
-    width: "280px",
-  };
-};
-
-export const loaderStyle = (theme, isLoading) => {
-  return {
-    height: "1px",
-    "--loader-background-color-2": `${theme.backgroundColor.white}`,
-    "--loader-background-color-1": isLoading
-      ? `${theme.backgroundColor.blue}`
-      : `${theme.backgroundColor.white}`,
-  };
-};
-
-export const blockedBoxStyle = (theme) => {
-  return {
-    padding: "10px",
-    textAlign: "center",
-    borderRadius: "8px",
-    marginBottom: "8px",
-    background: "#85BAFF",
-    color: theme.color.white,
-    p: {
-      margin: "0px",
-      fontSize: "20px",
-      fontWeight: "bold",
-      paddingBottom: "4px",
-    },
-    span: {
-      opacity: 0.8,
-      fontSize: "13px",
-    },
-  };
-};
-
-export const composerIconStyle = (isBlockedByMe) => {
-  return {
-    width: "31px",
-    height: "20px",
-    paddingLeft: "10px",
-    opacity: isBlockedByMe ? 0.4 : 1,
-    img: {
-      width: "21px",
-      height: "20px",
-      display: "inline-block",
-      cursor: isBlockedByMe ? "default" : "pointer",
-    },
-  };
-};
+    width: "0"
+  }
+}

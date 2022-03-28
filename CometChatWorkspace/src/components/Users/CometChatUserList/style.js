@@ -1,11 +1,38 @@
-export const contactWrapperStyle = () => {
+import {hexToRGB} from '../../../util/common'
+
+export const contactWrapperStyle = (props) => {
+
+  const titleColorInRGB = hexToRGB(props.titleColor);
+  const borderStyle = (props._parent === "") ? {
+      border: `1px solid rgba(${titleColorInRGB}, 10%)`
+  } : {};
+
+
   return {
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-    boxSizing: "border-box",
-  };
-};
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+      boxSizing: "border-box",
+      backgroundColor: props.backgroundColor,
+      ...borderStyle,
+      "*": {
+          boxSizing: "border-box",
+          "::-webkit-scrollbar": {
+              width: "8px",
+              height: "4px",
+          },
+          "::-webkit-scrollbar-track": {
+              background: "#ffffff00"
+          },
+          "::-webkit-scrollbar-thumb": {
+              background: "#ccc",
+              "&:hover": {
+                  background: "#aaa"
+              }
+          }
+      }
+  }
+}
 
 export const contactHeaderStyle = ({ color }) => {
   return {
@@ -17,42 +44,58 @@ export const contactHeaderStyle = ({ color }) => {
   };
 };
 
-export const contactHeaderCloseStyle = (img) => {
+export const contactHeaderCloseStyle = (img, theme) => {
   return {
     cursor: "pointer",
     display: "none",
-    background: `url(${img}) left center no-repeat`,
+    mask: `url(${img}) left center no-repeat`,
+		backgroundColor: `${theme.secondaryTextColor}`,
     height: "24px",
     width: "33%",
   };
 };
 
-export const contactHeaderTitleStyle = (enableCloseMenu) => {
-  const alignment =
-    enableCloseMenu.length > 0
-      ? {
-          width: "33%",
-          textAlign: "center",
-        }
-      : {};
+export const contactHeaderTitleStyle = (props) => {
+
+  const alignment = (props.enableCloseMenu && props.enableCloseMenu.length > 0) ? {
+      width: "33%",
+      textAlign: "center"
+  } : {};
 
   return {
-    margin: "0",
-    fontWeight: "700",
-    display: "inline-block",
-    width: "66%",
-    textAlign: "left",
-    fontSize: "20px",
-    ...alignment,
-  };
-};
+      margin: "0",
+      display: "inline-block",
+      width: "100%",
+      textAlign: "center",
+      font: props.titleFont,
+      color: props.titleColor,
+      lineHeight: "26px",
+      ...alignment,
+      "&[dir=rtl]": {
+          textAlign: "right",
+      }
+  }
+}
 
-export const contactSearchStyle = () => {
+export const contactSearchStyle = (props) => {
+  
+  const searchBarColorInRGB = hexToRGB(props.searchBarTextColor);
+
   return {
-    padding: "16px 16px",
-    position: "relative",
-  };
-};
+      margin: "16px 16px",
+      position: "relative",
+      borderRadius: props.searchBarCornerRadius,
+      boxShadow: `rgba(${searchBarColorInRGB}, 4%) 0 0 0 1px inset`,
+      backgroundColor: props.searchBarBackgroundColor,
+      font: props.searchBarTextFont,
+      color: props.searchBarTextColor,
+      lineHeight: "20px",
+      height: "32px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+  }
+}
 
 export const contactSearchInputStyle = (theme, img) => {
   return {
@@ -81,14 +124,20 @@ export const contactMsgStyle = () => {
   };
 };
 
-export const contactMsgTxtStyle = (theme) => {
-  return {
-    margin: "0",
-    height: "30px",
-    color: `${theme.color.secondary}`,
-    fontSize: "24px!important",
-    fontWeight: "600",
-  };
+export const contactMsgTxtStyle = props => {
+    
+	const titleColorInRGB = hexToRGB(props.titleColor);
+
+	return {
+		margin: "0",
+		minHeight: "36px",
+		color: `rgba(${titleColorInRGB}, 20%)`,
+		fontSize: "20px!important",
+		fontWeight: "600",
+		lineHeight: "30px",
+		wordWrap: "break-word",
+		padding: "0 16px",
+	};
 };
 
 export const contactListStyle = () => {
@@ -100,13 +149,15 @@ export const contactListStyle = () => {
   };
 };
 
-export const contactAlphabetStyle = () => {
+export const contactAlphabetStyle = (props) => {
+
+  const titleColorInRGB = hexToRGB(props.titleColor);
+  
   return {
-    padding: "0 15px",
-    margin: "5px 0",
-    width: "100%",
-    fontSize: "12px",
-    fontWeight: "500",
-    opacity: "0.5",
+      padding: "0 16px",
+      margin: "8px 0",
+      width: "100%",
+      font: "500 12px Inter",
+      color: `rgba(${titleColorInRGB}, 50%)`,
   };
-};
+}

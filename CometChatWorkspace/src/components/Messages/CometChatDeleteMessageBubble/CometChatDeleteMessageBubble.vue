@@ -1,37 +1,38 @@
 <template>
   <div :style="styles.messageContainer">
     <div :style="styles.messageWrapper">
-      <template v-if="messageFrom === 'sender'">
+      <template v-if="messageObject?.sender?.uid === loggedInUser?.uid">
         <div :style="styles.messageTextWrapper">
           <p :style="styles.messageText">
-            {{ STRINGS.SENDER_DELETED_MESSAGE }}
+            {{ localize("YOU_DELETED_THIS_MESSAGE") }}
           </p>
         </div>
         <div :style="styles.messageInfoWrapper">
-          <span :style="styles.messageTimeStamp">{{ messageTime }}</span>
+          <span :style="styles.messageTimeStamp">
+            <CometChatDate :timeStamp="messageObject?.sentAt * 1000" :timeFormat="'hh:mm am/pm'" />
+          </span>
         </div>
       </template>
-      <template v-else-if="messageFrom === 'receiver'">
-        <div :style="styles.messageThumbnail" v-if="isGroup">
-          <comet-chat-avatar
+      <template v-else>
+        <div :style="styles.messageThumbnail" v-if="messageObject.receiverType === CometChatMessageReceiverType.group">
+          <CometChatAvatar
             border-width="1px"
             corner-radius="50%"
             :image="message.sender.avatar"
-            :border-color="theme.borderColor.primary"
           />
         </div>
         <div :style="styles.messageDetail">
-          <div :style="styles.nameWrapper" v-if="isGroup">
+          <div :style="styles.nameWrapper" v-if="messageObject.receiverType === CometChatMessageReceiverType.group">
             <span :style="styles.name">{{ message.sender.name }}</span>
           </div>
           <div :style="styles.messageTextWrapper">
             <p :style="styles.messageText">
-              {{ STRINGS.RECEIVER_DELETED_MESSAGE }}
+              {{ localize("THIS_MESSAGE_DELETED") }}
             </p>
           </div>
           <div :style="styles.messageInfoWrapper">
             <span :style="styles.messageTimeStamp">
-              {{ messageTime }}
+              <CometChatDate :timeStamp="messageObject?.sentAt * 1000" :timeFormat="'hh:mm am/pm'" />
             </span>
           </div>
         </div>
@@ -42,12 +43,9 @@
 <script>
 import {
   DEFAULT_OBJECT_PROP,
-  DEFAULT_STRING_PROP,
-} from "../../../resources/constants";
-
-import { cometChatBubbles } from "../../../mixins/";
-
-import { CometChatAvatar } from "../../Shared";
+  CometChatMessageReceiverType,
+} from "../";
+import { CometChatAvatar, CometChatDate, localize } from "../../Shared";
 
 import * as style from "./style";
 
@@ -58,28 +56,16 @@ import * as style from "./style";
  */
 export default {
   name: "CometChatDeleteMessageBubble",
-  mixins: [cometChatBubbles],
   components: {
     CometChatAvatar,
+    CometChatDate,
   },
   props: {
     /**
-     * The selected chat item object.
-     */
-    item: { ...DEFAULT_OBJECT_PROP },
-    /**
-     * Type of chat item.
-     */
-    type: { ...DEFAULT_STRING_PROP },
-    /**
-     * Theme of the UI.
-     */
-    theme: { ...DEFAULT_OBJECT_PROP },
-    /**
      *
      */
-    message: { ...DEFAULT_OBJECT_PROP },
-    messageFrom: { ...DEFAULT_STRING_PROP },
+    messageObject: { ...DEFAULT_OBJECT_PROP },
+    loggedInUser: { ...DEFAULT_OBJECT_PROP },
   },
   computed: {
     /**
@@ -87,21 +73,24 @@ export default {
      */
     styles() {
       return {
-        messageTextWrapper: style.messageTextWrapperStyle(
-          this.theme,
-          this.messageFrom
-        ),
-        name: style.nameStyle(this.theme),
-        messageText: style.messageTextStyle(this.theme),
+        messageTextWrapper: style.messageTextWrapperStyle(this),
+        name: style.nameStyle(),
+        messageText: style.messageTextStyle(),
         messageThumbnail: style.messageThumbnailStyle(),
-        messageTimeStamp: style.messageTimeStampStyle(this.theme),
-        messageWrapper: style.messageWrapperStyle(this.messageFrom),
-        messageContainer: style.messageContainerStyle(this.messageFrom),
-        nameWrapper: style.nameWrapperStyle(this.message, this.messageFrom),
-        messageInfoWrapper: style.messageInfoWrapperStyle(this.messageFrom),
-        messageDetail: style.messageDetailStyle(this.message, this.messageFrom),
+        messageTimeStamp: style.messageTimeStampStyle(),
+        messageWrapper: style.messageWrapperStyle(this),
+        messageContainer: style.messageContainerStyle(this),
+        nameWrapper: style.nameWrapperStyle(this),
+        messageInfoWrapper: style.messageInfoWrapperStyle(this),
+        messageDetail: style.messageDetailStyle(this),
       };
     },
+    CometChatMessageReceiverType() {
+      return CometChatMessageReceiverType;
+    },
+    localize() {
+      return localize;
+    }
   },
 };
 </script>

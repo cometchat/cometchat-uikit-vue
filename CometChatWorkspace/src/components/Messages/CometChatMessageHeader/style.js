@@ -1,151 +1,119 @@
-export const chatHeaderStyle = (theme) => {
-  return {
-    padding: "13px 16px",
-    width: "100%",
-    backgroundColor: `${theme.backgroundColor.white}`,
-    zIndex: "1",
-    borderBottom: `1px solid ${theme.borderColor.primary}`,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  };
+import { CometChat } from "@cometchat-pro/chat";
+
+export const chatHeaderStyle = props => {
+
+	return {
+		padding: "16px",
+		width: "100%",
+		background: props.background,
+		zIndex: "1",
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		border: props.border,
+	};
 };
 
 export const chatDetailStyle = () => {
-  return {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    width: "calc(100% - 100px)",
-  };
-};
 
-export const chatSideBarBtnStyle = (img, sidebar) => {
-  const displayValue =
-    sidebar && sidebar === 0 ? { display: "none!important" } : {};
-
-  return {
-    cursor: "pointer",
-    display: "none",
-    background: `url(${img}) 4px no-repeat`,
-    padding: "20px",
-    width: "24px",
-    height: "24px",
-    float: "left",
-    ...displayValue,
-  };
-};
+    return {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        width: "calc(100% - 116px)",
+    }
+}
 
 export const chatThumbnailStyle = () => {
-  return {
-    display: "inline-block",
-    width: "36px",
-    height: "36px",
-    flexShrink: "0",
-  };
-};
+
+    return {
+        display: "inline-block",
+        flexShrink: "0",
+        marginRight: "16px",
+        position: "relative"
+    }
+}
 
 export const chatUserStyle = () => {
-  return {
-    width: "calc(100% - 50px)",
-    padding: "0 14px",
-    flexGrow: "1",
-    display: "flex",
-    flexDirection: "column",
-  };
+
+	return {
+		width: "calc(100% - 50px)",
+		padding: "0",
+		flexGrow: "1",
+		display: "flex",
+		flexDirection: "column",
+		[`@media (minWidth: 320px) and (maxWidth: 768px)`]: {
+			width: "calc(100% - 80px)!important",
+		},
+	};
 };
 
 export const chatNameStyle = () => {
-  return {
-    margin: "0",
-    fontSize: "15px",
-    fontWeight: "600",
-    width: "100%",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  };
-};
 
-export const chatStatusStyle = (
-  theme,
-  presence = "",
-  statusProp = "",
-  type = ""
-) => {
-  let status = {};
-  if (type === "user") {
-    status = {
-      color: `${theme.color.blue}`,
-      textTransform: "capitalize",
-    };
+    return {
+        margin: "0",
+        fontSize: "15px",
+        fontWeight: "600",
+        width: "100%",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+    }
+}
 
-    if (presence === "offline") {
-      status = {
-        color: `${theme.color.helpText}`,
-        textTransform: "capitalize",
-      };
+export const chatStatusStyle = (userPresence, type, typingText) => {
+
+    let status = {};
+    if (type === CometChat.ACTION_TYPE.TYPE_USER) {
+
+        status = {
+            color: `#39f`,
+            textTransform: "capitalize",
+        };
+
+        if (userPresence === "offline") {
+            status = {
+                color: `rgba(20, 20, 20, 0.6)`,
+                textTransform: "capitalize",
+            }
+        } 
+
+        if (typingText && typingText.length) {
+            status = {
+                color: `rgba(20, 20, 20, 0.6)`,
+                textTransform: "none",
+                fontStyle: "italic",
+            };
+        }
+        
+    } else if (type === CometChat.ACTION_TYPE.TYPE_GROUP) {
+
+        status = {
+            color: `rgba(20, 20, 20, 0.6)`,
+        }
+
+        if (typingText && typingText.length) {
+            status = {
+                color: `rgba(20, 20, 20, 0.6)`,
+                fontStyle: "italic",
+            };
+        }
     }
 
-    if (statusProp.includes("typing")) {
-      status = {
-        color: `${theme.color.helpText}`,
-        textTransform: "none",
-        fontStyle: "italic",
-      };
+    return {
+        fontSize: "13px",
+        width: "100%",
+        ...status
     }
-  } else if (type === "group") {
-    status = {
-      color: `${theme.color.helpText}`,
-    };
-
-    if (statusProp.includes("typing")) {
-      status = {
-        color: `${theme.color.helpText}`,
-        fontStyle: "italic",
-      };
-    }
-  }
-
-  return {
-    fontSize: "13px",
-    lineHeight: "20px",
-    width: "100%",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    ...status,
-  };
-};
+}
 
 export const chatOptionWrapStyle = () => {
-  return {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    width: "100px",
-  };
-};
 
-export const chatOptionStyle = (img, type) => {
-  let width = "21px";
-  let pos = "2px";
-
-  if (type === "video") {
-    width = "27px";
-    pos = "4px";
-  } else if (type === "detail") {
-    width = "24px";
-    pos = "3px";
-  }
-
-  return {
-    width,
-    height: "22px",
-    margin: "0 8px",
-    cursor: "pointer",
-    display: "inline-block",
-    background: `url(${img}) 0% ${pos} / contain no-repeat`,
-  };
-};
+    return {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "auto",
+    }
+}

@@ -1,13 +1,12 @@
 <template>
   <div>
-    <comet-chat-backdrop :show="open" @click="closeModal" />
     <div :style="styles.modalWrapper" class="modal__createpoll__wrapper">
       <span :style="styles.modalClose" @click="closeModal"></span>
       <div :style="styles.modalBody">
         <table :style="styles.modalTable" class="modal__createpoll__table">
           <caption :style="styles.tableCaption">
             {{
-              STRINGS.CREATE_POLL
+              localize("CREATE_POLL")
             }}
           </caption>
           <tbody
@@ -21,7 +20,7 @@
             </tr>
             <tr :style="styles.modalTableRow">
               <td>
-                <label>{{ STRINGS.QUESTION }}</label>
+                <label>{{ localize("QUESTION") }}</label>
               </td>
               <td colSpan="2">
                 <input
@@ -30,13 +29,13 @@
                   tabIndex="1"
                   v-model="question"
                   :style="styles.input"
-                  :placeholder="STRINGS.ENTER_YOUR_QUESTION"
+                  :placeholder="localize('ENTER_YOUR_QUESTION')"
                 />
               </td>
             </tr>
             <tr :style="styles.modalTableRow">
               <td>
-                <label>{{ STRINGS.OPTIONS }}</label>
+                <label>{{ localize("OPTIONS") }}</label>
               </td>
               <td colSpan="2">
                 <input
@@ -44,7 +43,7 @@
                   tabIndex="1"
                   :style="styles.input"
                   v-model="firstOption"
-                  :placeholder="STRINGS.ENTER_YOUR_OPTION"
+                  :placeholder="localize('ENTER_YOUR_OPTION')"
                 />
               </td>
             </tr>
@@ -56,7 +55,7 @@
                   tabIndex="1"
                   :style="styles.input"
                   v-model="secondOption"
-                  :placeholder="STRINGS.ENTER_YOUR_OPTION"
+                  :placeholder="localize('ENTER_YOUR_OPTION')"
                 />
               </td>
             </tr>
@@ -72,7 +71,7 @@
             <tr :style="styles.modalTableRow" s>
               <td>&nbsp;</td>
               <td>
-                <label>{{ STRINGS.ADD_NEW_OPTION }}</label>
+                <label>{{ localize("ADD_NEW_OPTION") }}</label>
               </td>
               <td :style="styles.iconWrapper">
                 <span
@@ -105,23 +104,19 @@
 import { CometChat } from "@cometchat-pro/chat";
 
 import {
-  COMETCHAT_CONSTANTS,
   DEFAULT_OBJECT_PROP,
-  DEFAULT_STRING_PROP,
   DEFAULT_BOOLEAN_PROP,
-} from "../../../../resources/constants";
+} from "../../";
 
-import { cometChatCommon } from "../../../../mixins/";
-
-import { CometChatManager } from "../../../../util/controller";
-
-import { CometChatBackdrop } from "../../../Shared";
 import CometChatCreatePollOptions from "../CometChatCreatePollOptions/CometChatCreatePollOptions";
 
 import * as style from "./style";
 
-import addIcon from "./resources/add.png";
-import clearIcon from "./resources/close.png";
+import addIcon from "./resources/add-circle-filled.svg";
+import clearIcon from "./resources/close.svg";
+import { localize } from "../../../Shared";
+import { DEFAULT_FUNCTION_PROP } from "../../../../resources/constants";
+import { CometChatMessageReceiverType } from "../../CometChatMessageConstants";
 
 /**
  * Displays dialog to create a new poll.
@@ -130,28 +125,15 @@ import clearIcon from "./resources/close.png";
  */
 export default {
   name: "CometChatCreatePoll",
-  mixins: [cometChatCommon],
   components: {
-    CometChatBackdrop,
     CometChatCreatePollOptions,
   },
   props: {
-    /**
-     * The selected chat item object.
-     */
-    item: { ...DEFAULT_OBJECT_PROP },
-    /**
-     * Type of chat item.
-     */
-    type: { ...DEFAULT_STRING_PROP },
-    /**
-     * Opens the modal.
-     */
+    user: { ...DEFAULT_OBJECT_PROP },
+    group: { ...DEFAULT_OBJECT_PROP },
     open: { ...DEFAULT_BOOLEAN_PROP },
-    /**
-     * Theme of the UI.
-     */
-    theme: { ...DEFAULT_OBJECT_PROP },
+    onClose: { ...DEFAULT_FUNCTION_PROP },
+    onSubmit: { ...DEFAULT_FUNCTION_PROP },
   },
   data() {
     return {
@@ -181,24 +163,19 @@ export default {
         tableCaption: style.tableCaptionStyle(),
         modalClose: style.modalCloseStyle(clearIcon),
         addOptionIcon: style.addOptionIconStyle(addIcon),
-        modalTableRow: style.modalTableRowStyle(this.theme),
-        button: style.buttonStyle(this.theme, this.creatingPoll),
-        modalWrapper: style.modalWrapperStyle(this.theme, this.open),
+        modalTableRow: style.modalTableRowStyle(),
+        button: style.buttonStyle(this.creatingPoll),
+        modalWrapper: style.modalWrapperStyle(),
       };
     },
     /**
      * Button text depending on component state.
      */
     actionButtonText() {
-      return this.creatingPoll
-        ? COMETCHAT_CONSTANTS.CREATING_MESSSAGE
-        : COMETCHAT_CONSTANTS.CREATE;
+      return this.creatingPoll ? localize("CREATING") : localize("CREATE");
     },
-    /**
-     * Local string constants.
-     */
-    STRINGS() {
-      return COMETCHAT_CONSTANTS;
+    localize() {
+      return localize;
     },
   },
   methods: {
@@ -212,7 +189,7 @@ export default {
       this.firstOption = "";
       this.secondOption = "";
 
-      this.emitEvent("close");
+      this.onClose();
     },
     /**
      * Handles change in options
@@ -244,7 +221,7 @@ export default {
         let invalid = false;
 
         if (question.length === 0) {
-          this.error = COMETCHAT_CONSTANTS.POLL_QUESTION_BLANK;
+          this.error = localize("INVALID_POLL_QUESTION");
           this.creatingPoll = false;
           return false;
         }
@@ -264,18 +241,20 @@ export default {
         });
 
         if (invalid) {
-          this.error = COMETCHAT_CONSTANTS.POLL_OPTION_BLANK;
+          this.error = localize("INVALID_POLL_OPTION");
           this.creatingPoll = false;
           return false;
         }
 
         let receiverId;
-        let receiverType = this.type;
+        let receiverType;
 
-        if (this.type === "user") {
-          receiverId = this.item.uid;
-        } else if (this.type === "group") {
-          receiverId = this.item.guid;
+        if (this.user) {
+          receiverId = this.user.uid;
+          receiverType = CometChatMessageReceiverType.user;
+        } else if (this.group) {
+          receiverId = this.group.guid;
+          receiverType = CometChatMessageReceiverType.group;
         }
 
         const response = await CometChat.callExtension(
@@ -302,32 +281,32 @@ export default {
           };
         }
 
-        const polls = {
-          id: data.id,
-          options: options,
-          results: {
-            total: 0,
-            options: resultOptions,
-            question: customData.question,
-          },
-          question: customData.question,
-        };
+        // const polls = {
+        //   id: data.id,
+        //   options: options,
+        //   results: {
+        //     total: 0,
+        //     options: resultOptions,
+        //     question: customData.question,
+        //   },
+        //   question: customData.question,
+        // };
 
-        const message = {
-          ...data,
-          sender: { uid: data.sender },
-          metadata: { "@injected": { extensions: { polls: polls } } },
-        };
+        // const message = {
+        //   ...data,
+        //   sender: { uid: data.sender },
+        //   metadata: { "@injected": { extensions: { polls: polls } } },
+        // };
 
         this.error = "";
-        this.emitAction("pollCreated", { message });
+        this.onSubmit()
       } catch (error) {
         this.logError("[CometChatCreatePoll] error", error);
         const errorMessage = (error || {}).message;
         this.error =
           Object.prototype.toString.call(errorMessage) === "[object String]"
             ? errorMessage
-            : COMETCHAT_CONSTANTS.POLL_CREATE_ERROR;
+            : localize("SOMETHING_WRONG");
       } finally {
         this.creatingPoll = false;
       }
@@ -355,13 +334,7 @@ export default {
     },
   },
   beforeMount() {
-    (async () => {
-      try {
-        this.loggedInUser = await new CometChatManager().getLoggedInUser();
-      } catch (error) {
-        console.error("[CometChatCreatePoll] getLoggedInUser error", error);
-      }
-    })();
+    CometChat.getLoggedinUser().then((user) => this.loggedInUser = user);
   },
 };
 </script>

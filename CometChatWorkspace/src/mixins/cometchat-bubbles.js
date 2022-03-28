@@ -9,7 +9,6 @@ export default {
   computed: {
     commonProps() {
       return {
-        theme: this.theme,
         message: this.parsedMessage,
       };
     },
@@ -32,6 +31,13 @@ export default {
     messageTime() {
       return dateFormat(this.parsedMessage.sentAt * 1000, "shortTime");
     },
+    getMessageTime() {
+      if(this.message) {
+        return this.message._composedAt || this.message.sentAt
+      } else {
+        return 0
+      }
+    },
     isGroup() {
       return this.message.receiverType === "group";
     },
@@ -41,7 +47,7 @@ export default {
   },
   methods: {
     async getFileData() {
-      
+
       const metadataKey = FILE_METADATA;
       const fileMetadata = getMessageFileMetadata(this.message, metadataKey);
 		
@@ -55,6 +61,18 @@ export default {
           
         this.fileName = this.message.data.attachments[0]?.name;
         this.fileUrl = this.message.data.attachments[0]?.url;
+      }
+
+      if(this.fileURL) {
+        this.fileUrl = this.fileURL;
+      }
+
+      if(this.title) {
+        this.fileName = this.title
+      }
+
+      if(this.subTitle) {
+        this.fileSubTitle = this.subTitle
       }
     },
     /**

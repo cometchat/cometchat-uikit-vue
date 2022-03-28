@@ -7,8 +7,16 @@
     <div :style="styles.thumbnail">
       <comet-chat-avatar
         border-width="1px"
-        corner-radius="18px"
-        :image="group.icon"
+        corner-radius="50%"
+        :group="group"
+        v-if="group"
+        :border-color="theme.borderColor.primary"
+      />
+      <comet-chat-avatar
+        border-width="1px"
+        corner-radius="50%"
+        :image="avatar"
+        v-if="avatar"
         :border-color="theme.borderColor.primary"
       />
     </div>
@@ -19,22 +27,14 @@
         @mouseleave="toggleTooltip($event, false)"
       >
         <div :style="styles.name">
-          {{ group.name }}
+          {{ getTitle.title }}
         </div>
-        <img
-          :alt="STRINGS.SHIELD"
+        <i
           :style="styles.icon"
-          v-if="group.type === 'private'"
-          :src="groupTypeIcons.shieldIcon"
-        />
-        <img
-          :alt="STRINGS.LOCK"
-          :style="styles.icon"
-          :src="groupTypeIcons.lockIcon"
-          v-else-if="group.type === 'password'"
+          :title="this.getTitle.groupTypeText"
         />
       </div>
-      <div :style="styles.description">{{ groupDescription }}</div>
+      <div :style="styles.description">{{ getSubTitle }}</div>
     </div>
   </div>
 </template>
@@ -42,16 +42,19 @@
 import {
   COMETCHAT_CONSTANTS,
   DEFAULT_OBJECT_PROP,
+  DEFAULT_STRING_PROP,
 } from "../../../resources/constants";
 
 import { tooltip, cometChatCommon } from "../../../mixins";
 
 import { CometChatAvatar } from "../../Shared";
 
-import shieldIcon from "./resources/shield.png";
-import lockIcon from "./resources/lock.png";
+import shieldIcon from "./resources/password-protected-group.svg";
+import lockIcon from "./resources/private-group.svg";
+
 
 import * as style from "./style";
+import { CometChat } from '@cometchat-pro/chat';
 
 /**
  * List item for group list.
@@ -68,7 +71,7 @@ export default {
     /**
      * Group item.
      */
-    group: { ...DEFAULT_OBJECT_PROP },
+    group: { ...DEFAULT_OBJECT_PROP, default: {} },
     /**
      * Theme of the UI.
      */
@@ -76,7 +79,59 @@ export default {
     /**
      * Selected group item.
      */
-    selectedGroup: { ...DEFAULT_OBJECT_PROP },
+    selectedGroup: { ...DEFAULT_OBJECT_PROP, default: {} },
+    /**
+     * title.
+     */
+    title: { ...DEFAULT_STRING_PROP, default: "" },
+    /**
+     * titleColor.
+     */
+    titleColor: { ...DEFAULT_STRING_PROP, default: "#141414" },
+    /**
+     * titleFont.
+     */
+    titleFont: { ...DEFAULT_STRING_PROP, default: "600 15px Inter" },
+    /**
+     * subTitle.
+     */
+    subTitle: { ...DEFAULT_STRING_PROP, default: "" },
+    /**
+     * subTitleColor.
+     */
+    subTitleColor: { ...DEFAULT_STRING_PROP, default: "rgba(20, 20, 20, 0.6)" },
+    /**
+     * subTitleFont.
+     */
+    subTitleFont: { ...DEFAULT_STRING_PROP, default: "400 13px Inter" },
+    /**
+     * backgroundColor.
+     */
+    backgroundColor: { ...DEFAULT_STRING_PROP, default: "#ffffff" },
+    /**
+     * avatar.
+     */
+    avatar: { ...DEFAULT_STRING_PROP, default: "" },
+    /**
+     * width.
+     */
+    width: { ...DEFAULT_STRING_PROP, default: "100%" },
+    /**
+     * height.
+     */
+    height: { ...DEFAULT_STRING_PROP, default: "auto" },
+    /**
+     * borderWidth.
+     */
+    borderWidth: { ...DEFAULT_STRING_PROP, default: "1px" },
+    /**
+     * borderStyle.
+     */
+    borderStyle: { ...DEFAULT_STRING_PROP, default: "solid" },
+    /**
+     * borderColor.
+     */
+    borderColor: { ...DEFAULT_STRING_PROP, default: "rgba(20, 20, 20, 10%)" },
   },
   computed: {
     /**
@@ -86,11 +141,11 @@ export default {
       return {
         name: style.itemNameStyle(),
         detail: style.itemDetailStyle(),
-        icon: style.listItemIconStyle(),
+        icon: style.listItemIconStyle(this.getTitle.groupTypeIcon, this),
         thumbnail: style.itemThumbnailStyle(),
-        nameWrapper: style.itemNameWrapperStyle(),
-        description: style.itemDescriptionStyle(this.theme),
-        list: style.listItemStyle(this.theme, this.group, this.selectedGroup),
+        nameWrapper: style.itemNameWrapperStyle(this),
+        description: style.itemDescriptionStyle(this),
+        list: style.listItemStyle(this),
       };
     },
     /**
@@ -111,7 +166,65 @@ export default {
     STRINGS() {
       return COMETCHAT_CONSTANTS;
     },
-  },
+    getSubTitle() {
+
+      let subTitle = null;
+      if(this.subTitle && this.subTitle.length) {
+        subTitle = this.subTitle; 
+      } else {
+        if (!this.group) {
+          return null;
+        }
+
+        if (!this.group.membersCount) {
+          return null;
+        }
+
+        subTitle = this.group.membersCount; 
+      }
+
+      if(subTitle) {
+        subTitle = `${subTitle} members`;
+      }
+
+      return subTitle;
+    },
+    getTitle() {
+      let title = null;
+      let groupTypeIcon = null;
+      let groupTypeText = null;
+        
+      if (this.title && this.title.length) {
+        title = this.title;
+      } else {
+        if (!this.group) {
+          return null;
+        }
+
+        if (!this.group.name) {
+          return null;
+        }
+
+        title = this.group.name;
+      }
+
+      if (title) {
+        if (this.group.type === CometChat.GROUP_TYPE.PRIVATE) {
+          groupTypeIcon = shieldIcon;
+          groupTypeText = this.STRINGS.PRIVATE_GROUP;
+        } else if (this.group.type === CometChat.GROUP_TYPE.PASSWORD) {
+          groupTypeIcon = lockIcon;
+          groupTypeText = this.STRINGS.PROTECTED_GROUP;
+        }
+      }
+
+      return {
+        title: title,
+        groupTypeIcon: groupTypeIcon,
+        groupTypeText: groupTypeText
+      };
+    },
+  }
 };
 </script>
 <style scoped>

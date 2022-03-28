@@ -17,7 +17,8 @@ export const tableColumnStyle = () => {
 
 export const avatarStyle = () => {
   return {
-    display: "inline-block",
+    display: "flex",
+    position: "relative",
     float: "left",
     width: "36px",
     height: "36px",
