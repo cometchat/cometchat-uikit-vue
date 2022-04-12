@@ -151,9 +151,28 @@ git clone https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit.git
 Please install respective library depending on your Vue version
     - For Vue2 : `npm install emoji-mart-vue-fast@7.0.7`
     - For Vue3 : `npm install emoji-mart-vue-fast@8.0.3`
+    - For Vite users:`npm install emoji-mart-fast-vue@9.1.2`
 <img align="center" width="500" height="auto"  src="./Screenshots/package-dependencies.png" />
 
 <br/>
+
+**Support for Vite**
+
+If you are using Vite, update your vite.config.js
+
+    
+```
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
+  },
+})
+```
 
 ## 4. Launch CometChat
 
