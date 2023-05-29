@@ -1,7 +1,7 @@
 <div style="width:100%">
     <div style="width:50%;">
         <div align="center">
-        <img align="center" width="180" height="180" alt="CometChat" src="./Screenshots/logo.png">    
+        <a href="#"><img align="center" width="180" height="180" alt="CometChat" src="./Screenshots/logo.png"> </a>   
         </div>    
     </div>    
 </div>
@@ -10,20 +10,10 @@
 
 # CometChat Vue UI Kit
 
-<p align="left">
-  <a href="https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit/releases/" alt="Releases">
-    <img src="https://img.shields.io/github/v/release/cometchat-pro/cometchat-pro-vue-ui-kit" />
-  </a>
-  <a href="https://img.shields.io/github/languages/top/cometchat-pro/cometchat-pro-vue-ui-kit">
-    <img src="https://img.shields.io/github/languages/top/cometchat-pro/cometchat-pro-vue-ui-kit" />
-  </a>
-  <a href="https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit/stargazers">
-    <img src="https://img.shields.io/github/stars/cometchat-pro/cometchat-pro-vue-ui-kit?style=social" />
-  </a>
-  <a href="https://twitter.com/CometChat">
-    <img src="https://img.shields.io/twitter/follow/CometChat?label=CometChat&style=social" />
-  </a>
-</p>
+![GitHub repo size](https://img.shields.io/github/repo-size/cometchat-pro/cometchat-pro-vue-ui-kit)
+![GitHub contributors](https://img.shields.io/github/contributors/cometchat-pro/cometchat-pro-vue-ui-kit)
+![GitHub stars](https://img.shields.io/github/stars/cometchat-pro/cometchat-pro-vue-ui-kit?style=social)
+![Twitter Follow](https://img.shields.io/twitter/follow/cometchat?style=social)
 
 </br></br>
 
@@ -36,18 +26,35 @@
 </div>
 
 </br></br>
-
-CometChat Vue UI Kit is a collection of custom UI Components designed to build text chat and voice/video callings features in your application.
+CometChat Vue UI Kit is a collection of custom UI Components designed to build text chat and voice/video calling features in your application.
 
 The UI Kit is developed to keep developers in mind and aims to reduce development efforts significantly.
 
 ---
 
+## Features
+
+- Private(1-1) & Group Conversations
+- Voice & video calling & conferencing
+- Typing Indicators
+- Text, Media and Custom messages
+- Read receipts
+- Online Presence Indicators
+- Message History
+- Users & Friends List
+- Search by users and groups
+- Groups List
+- Conversations List
+
+## Extensions
+
+[Thumbnail Generation](https://www.cometchat.com/docs/extensions/thumbnail-generation) | [Link Preview](https://www.cometchat.com/docs/extensions/link-preview) | [Smart Replies](https://www.cometchat.com/docs/extensions/smart-replies) | [Polls](https://www.cometchat.com/docs/extensions/polls) | [Reactions](https://www.cometchat.com/docs/extensions/reactions) | [Stickers](https://www.cometchat.com/docs/extensions/stickers)
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
-- A text editor. (e.g. [Visual Studio Code](https://code.visualstudio.com/), [Notepad++](https://notepad-plus-plus.org/), [Sublime Text](https://www.sublimetext.com/), [Atom](https://atom.io/), or [VIM](https://www.vim.org/))
+- A text editor, to write code in. This could be a text editor (e.g. [Visual Studio Code](https://code.visualstudio.com/), [Notepad++](https://notepad-plus-plus.org/), [Sublime Text](https://www.sublimetext.com/), [Atom](https://atom.io/), or [VIM](https://www.vim.org/))
 
 - [Node](https://nodejs.org/)
 
@@ -55,24 +62,20 @@ Before you begin, ensure you have met the following requirements:
 
 - [Vue](https://vuejs.org/)
 
+---
+
 ## Installing Vue UI Kit
 
 ## 1. Setup
 
 ### i. Register on CometChat 🔧
 
-- To install Vue UI Kit, you need to first register on CometChat Dashboard. <a href="https://app.cometchat.com/signup" target="_blank">Click here to Sign Up.</a>
+To install Vue UI Kit, you need to first register on CometChat Dashboard. <a href="https://app.cometchat.com/signup" target="_blank">Click here to sign up</a>
 
-### ii. Get your application keys 🔑
+### ii. Get your Application Keys :key:
 
-- Create a new app.
+- Create a new app
 - Head over to the Quick Start or API & Auth Keys section and note the `App ID`, `Auth Key`, and `Region`.
-
-### iii. Add the CometChat dependency 📦
-
-```javascript
-  npm install @cometchat-pro/chat@3.0.2-beta1 --save
-```
 
 <br/>
 
@@ -80,30 +83,32 @@ Before you begin, ensure you have met the following requirements:
 
 ### i. Import CometChat SDK
 
-```
+```javascript
 import { CometChat } from "@cometchat-pro/chat";
 ```
 
 ### ii. Initialize CometChat 🌟
 
-The `init()` method initializes the settings required for CometChat.  
-We suggest calling the `init()` method on app startup, preferably in the `created()` method of the Application class.
+The `init()` method initializes the settings required for CometChat.
+We suggest calling the `init()` method on app startup, preferably in the `main.ts`, wrapping the `platformBrowserDynamic().bootstrapModule(AppModule)` as shown below.
 
 ```javascript
-const appID = 'APP_ID';
-const region = 'REGION';
+const appID = "APP_ID";
+const region = "REGION";
 const appSetting = new CometChat.AppSettingsBuilder()
   .subscribePresenceForAllUsers()
   .setRegion(region)
   .build();
-
 CometChat.init(appID, appSetting).then(
   () => {
-    console.log('Initialization completed successfully');
+    console.log("Initialization completed successfully");
     // You can now call login function.
+    platformBrowserDynamic()
+      .bootstrapModule(AppModule)
+      .catch((err) => console.error(err));
   },
   (error) => {
-    console.log('Initialization failed with error:', error);
+    console.log("Initialization failed with error:", error);
     // Check the reason for error and take appropriate action.
   }
 );
@@ -111,103 +116,58 @@ CometChat.init(appID, appSetting).then(
 
 **Note:**</br>
 
-- Replace `APP_ID` and `REGION` with your CometChat `App ID` and `Region` in the above code.
-
-### iii. Login your user 👤
-
-This method takes `UID` and `Auth Key` as input parameters and returns the User object containing all the information of the logged-in user.
-
-```javascript
-const authKey = 'AUTH_KEY';
-const uid = 'SUPERHERO1';
-
-CometChat.login(uid, authKey).then(
-  (user) => {
-    console.log('Login Successful:', { user });
-  },
-  (error) => {
-    console.log('Login failed with exception:', { error });
-  }
-);
-```
-
-**Note:** </br>
-
-- Replace `AUTH_KEY` with your CometChat `Auth Key` in the above code.
-
-- We have setup 5 users for testing having UIDs: `SUPERHERO1`, `SUPERHERO2`, `SUPERHERO3`,`SUPERHERO4` and `SUPERHERO5`.
-
-- We have used uid `SUPERHERO1` as an example here. You can create User from CometChat Dashboard as well.
-
-<br/>
+- Replace APP_ID and REGION with your CometChat `App ID` and `Region` in the above code.
+  <br/>
 
 ## 3. Add UI Kit to your project
 
-- Clone this repository
+- Install UIKit package from npm - `npm install @cometchat-pro/vue-ui-kit`
 
-```
-git clone https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit.git
-```
+<div style="width:100%">
+    <img width="200px" height="400px" src="./Screenshots/add-ui-kit.png">
+</div>
 
-- Copy the folder to your source folder.
-
-<img align="center" width="300" height="auto" src="./Screenshots/add-ui-kit.png">
-
-- Copy all the dependencies from package.json of `cometchat-pro-vue-ui-kit` into your project's package.json and install them.
-
-- We are using [emoji-mart-vue-fast](https://www.npmjs.com/package/emoji-mart-vue-fast)
-Please install respective library depending on your Vue version
-    - For Vue2 : `npm install emoji-mart-vue-fast@7.0.7`
-    - For Vue3 : `npm install emoji-mart-vue-fast@8.0.3`
-<img align="center" width="500" height="auto"  src="./Screenshots/package-dependencies.png" />
+- Import the Components in the respective module where the component will be used.
 
 <br/>
 
-## 4. Launch CometChat
+## 4. Launch Cometchat
 
-Using the `CometChatUI` component from the UI Kit, you can launch a fully functional chat application.  
-In this component all the UI Screens and UI Components are interlinked and work together to launch a fully functional chat on your website/application.
+Using the `CometChatConversationsWithMessages` component from the UI Kit, you can launch a fully functional chat application.
+In this component Chats and Messages are interlinked and work together to launch a fully functional chat on your website/application.
 
-Usage of application in project:
+**Import the CometChat in the required module**
 
 ```html
-<template>
-  <div id="app">
-    <CometChatUI />
-  </div>
-</template>
+import { CometChatConversationsWithMessages } from '@cometchat-pro/vue-ui-kit'
 
-<script>
-  import { CometChatUI } from './cometchat-pro-vue-ui-kit/CometChatWorkspace/src';
-  export default {
-    name: 'App',
-    components: {
-      CometChatUI,
-    },
-  };
-</script>
+<CometChatConversationsWithMessages> </CometChatConversationsWithMessages>
 ```
 
 ---
 
 # Checkout our sample app
 
-Visit our [Vue sample app](https://github.com/cometchat-pro/javascript-vue-chat-app/) repo to run the Vue sample app.
-
-- For Vue2 sample app, navigate to vue2 folder
-- For Vue3 sample app, navigate to vue3 folder
+Visit our [Vue sample app](https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit/tree/pluto/examples/cometchat-vue-sample-app) repo to run the Vue sample app.
 
 ---
 
 # Troubleshooting
 
-- To read the full documentation on UI Kit integration visit our [Documentation](https://www.cometchat.com/docs/vue-chat-ui-kit/overview).
+- To read the full documentation on UI Kit integration visit our [Documentation](https://www.cometchat.com/docs/vue-uikit-beta/overview).
 
 - Facing any issues while integrating or installing the UI Kit please connect with us via real time support present in <a href="https://app.cometchat.com/" target="_blank">CometChat Dashboard.</a>
 
 ---
 
-# Contact 📪
+# Contributors
+
+Thanks to the following people who have contributed to this project:
+
+[👨‍💻 @priyadarshininadar](https://github.com/priyadarshininadar) <br>
+[👨‍💻 @ajaygajra](https://github.com/ajaygajra) <br>
+
+# Contact :mailbox:
 
 Contact us via real time support present in [CometChat Dashboard](https://app.cometchat.com/).
 
@@ -215,6 +175,4 @@ Contact us via real time support present in [CometChat Dashboard](https://app.co
 
 # License
 
----
-
-This project uses the following [license](https://github.com/cometchat-pro/cometchat-pro-vue-ui-kit/blob/master/LICENSE).
+This project uses the following [license](./LICENSE).
