@@ -1,0 +1,44 @@
+{
+  "name": "vue-project",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check build-only",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "@rollup/plugin-alias": "^5.0.0",
+    "core-js": "^3.8.3",
+    "vite-plugin-dts": "^2.3.0",
+    "vue": "^3.3.2"
+  },
+  "peerDependencies": {
+    "@cometchat-pro/chat": "^3.0.12",
+    "my-cstom-package-lit": "^3.4.38",
+    "uikit-resources-lerna": "^3.4.42",
+    "uikit-utils-lerna": "^3.4.42"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@tsconfig/node18": "^2.0.1",
+    "@types/node": "^18.16.8",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.0.1",
+    "@vue/eslint-config-prettier": "^7.1.0",
+    "@vue/eslint-config-typescript": "^11.0.3",
+    "@vue/tsconfig": "^0.4.0",
+    "eslint": "^8.39.0",
+    "eslint-plugin-vue": "^9.11.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.8",
+    "typescript": "~5.0.4",
+    "vite": "^4.3.5",
+    "vite-aliases": "^0.11.1",
+    "vue-tsc": "^1.6.4"
+  }
+}
