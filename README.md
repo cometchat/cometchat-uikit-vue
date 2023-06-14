@@ -7,6 +7,8 @@
 </div>
 
 <br/><br/>
+> We’ve introduced a major update to our UI kits. Version 4 features a modular architecture that give you enhanced flexibility to build and customize your web and mobile apps. Please switch to version 4 by visiting the [@cometchat/chat-uikit-vue](https://www.npmjs.com/package/@cometchat/chat-uikit-vue), or [check out our documentation](https://www.cometchat.com/docs/vue-uikit-beta/overview).
+<br/><br/>
 
 # CometChat Vue UI Kit
 
