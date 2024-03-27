@@ -1,0 +1,43 @@
+import { AIAssistBotConfiguration, AIAssistBotStyle } from "@cometchat/uikit-shared";
+import { AvatarStyle, ReceiptStyle, TextInputStyle } from "@cometchat/uikit-elements";
+import { CometChatTheme } from "@cometchat/uikit-resources";
+import { CSSProperties } from "vue";
+export declare const getContainerStyle: (style?: AIAssistBotStyle, theme?: CometChatTheme) => {
+    display: string;
+    overflow: string;
+    width: string;
+    height: string;
+    justifyContent: string;
+    alignItems: string;
+    minHeight: string;
+    background: string;
+    borderRadius: string;
+};
+export declare const contentContainerStyle: CSSProperties;
+export declare function getBackButtonStyle(style?: AIAssistBotStyle, theme?: CometChatTheme): any;
+export declare function getBotsContainerStyle(): any;
+export declare function getBotTitleStyle(style?: AIAssistBotStyle, theme?: CometChatTheme): any;
+export declare const optionsContainerStyle: CSSProperties;
+export declare function getOptionStyle(style?: AIAssistBotStyle, theme?: CometChatTheme): any;
+export declare function getBotChatContainerStyle(style?: AIAssistBotStyle, theme?: CometChatTheme): any;
+export declare function getBotChatHeaderStyle(theme?: CometChatTheme): any;
+export declare function getCloseButtonStyle(style?: AIAssistBotStyle, theme?: CometChatTheme): any;
+export declare function getSendButtonStyle(style?: AIAssistBotStyle, theme?: CometChatTheme): any;
+export declare function getChatBotMessageContainerStyle(): any;
+export declare function getMessageBubbleStyle(message: CometChat.TextMessage, theme: CometChatTheme, sender: CometChat.User, configuration: AIAssistBotConfiguration): any;
+export declare function getAvatarStyle(style: AvatarStyle): AvatarStyle;
+export declare function textInputStyle(style: TextInputStyle, theme: CometChatTheme): TextInputStyle;
+export declare function getMessageBubbleDateStyle(theme: CometChatTheme): {
+    textColor: string;
+    textFont: string;
+    padding: string;
+};
+export declare function getMessageReceiptStyle(style: AIAssistBotStyle, theme: CometChatTheme): ReceiptStyle;
+export declare function getBotBackgroundStyle(theme: CometChatTheme): {
+    display: string;
+    justifyContent: string;
+    height: string;
+    width: string;
+    background: string;
+};
+export declare function getMessageListFooterStyle(): CSSProperties;
