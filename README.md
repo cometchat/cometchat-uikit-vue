@@ -22,7 +22,7 @@ To set up CometChat Vue UI Kit and utilize CometChat for your chat functionality
 Install the required peer dependencies by running the following command:
 
 ```bash
-npm  install @cometchat/chat-sdk-javascript@latest @cometchat/uikit-elements@latest @cometchat/uikit-resources@latest @cometchat/uikit-shared@latest 
+npm  install @cometchat/chat-sdk-javascript@latest @cometchat/uikit-elements@latest @cometchat/uikit-resources@latest @cometchat/uikit-shared@latest
 ```
 
 ## Help and Support

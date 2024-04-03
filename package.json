@@ -1,11 +1,11 @@
 {
   "name": "@cometchat/chat-uikit-vue",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "private": false,
   "description": "CometChat UI Kit for VueJS",
   "main": "dist/index.umd.js",
   "module": "dist/index.js",
-  "license": "SEE LICENSE IN LICENSE.md",
+  "license": "https://www.cometchat.com/legal-terms-of-service",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
@@ -34,10 +34,10 @@
   },
   "peerDependencies": {
     "@cometchat/chat-sdk-javascript": "^4.0.4",
-    "@cometchat/uikit-elements": "^4.3.2",
-    "@cometchat/uikit-resources": "^4.3.1",
-    "@cometchat/uikit-shared": "^4.3.2"
-  },
+    "@cometchat/uikit-elements": "^4.3.3",
+    "@cometchat/uikit-resources": "^4.3.2",
+    "@cometchat/uikit-shared": "^4.3.3"
+    },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
     "@tsconfig/node18": "^2.0.1",
