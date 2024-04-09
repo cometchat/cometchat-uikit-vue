@@ -46,17 +46,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getSmartRepliesTitleStyle: typeof getSmartRepliesTitleStyle;
     theme: Ref<CometChatTheme>;
     States: typeof States;
-    getContainerStyle: (style?: import("@cometchat/uikit-shared").AISmartRepliesStyle, theme?: CometChatTheme) => {
-        display: string;
-        overflow: string;
-        width: string;
-        height: string;
-        justifyContent: string;
-        alignItems: string;
-        minHeight: string;
-        background: string;
-        borderRadius: string;
-    };
+    getContainerStyle: (style?: import("@cometchat/uikit-shared").AISmartRepliesStyle, theme?: CometChatTheme) => import("vue").CSSProperties;
     localize: (str: string) => any;
     messageListState: Ref<States>;
     loadingIconURL: string;

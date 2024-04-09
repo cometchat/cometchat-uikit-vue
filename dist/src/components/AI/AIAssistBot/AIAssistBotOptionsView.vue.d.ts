@@ -23,7 +23,6 @@ declare const _sfc_main: import("vue").DefineComponent<{
 }, {
     getContainerStyle: (style?: import("@cometchat/uikit-shared").AIAssistBotStyle, theme?: CometChatTheme) => {
         display: string;
-        overflow: string;
         width: string;
         height: string;
         justifyContent: string;

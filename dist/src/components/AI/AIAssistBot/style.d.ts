@@ -4,7 +4,6 @@ import { CometChatTheme } from "@cometchat/uikit-resources";
 import { CSSProperties } from "vue";
 export declare const getContainerStyle: (style?: AIAssistBotStyle, theme?: CometChatTheme) => {
     display: string;
-    overflow: string;
     width: string;
     height: string;
     justifyContent: string;

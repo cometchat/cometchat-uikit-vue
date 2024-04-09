@@ -34,6 +34,7 @@ export default defineConfig({
     vueJsx(),
     dts({
       insertTypesEntry: true,
+      exclude: ["**/node_modules/**/*", "**/examples/**/*"],
     }),
   ],
   base: './',

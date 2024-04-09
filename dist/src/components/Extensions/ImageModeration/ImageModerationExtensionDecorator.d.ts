@@ -19,6 +19,7 @@ export declare class ImageModerationExtensionDecorator extends DataSourceDecorat
                 height: string;
                 width: string;
                 border: string;
+                borderRadius: string;
                 warningTextColor: string;
                 warningTextFont: string;
             };
@@ -72,6 +73,7 @@ export declare class ImageModerationExtensionDecorator extends DataSourceDecorat
         height: string;
         width: string;
         border: string;
+        borderRadius: string;
         warningTextColor: string;
         warningTextFont: string;
     };
