@@ -7,7 +7,7 @@ export declare class AIAssistBotDecorator extends DataSourceDecorator {
     configuration?: AIAssistBotConfiguration;
     newDataSource: DataSource;
     loggedInUser: CometChat.User | null;
-    bots: CometChat.User[];
+    bots: CometChat.User[] | [];
     user: CometChat.User;
     group: CometChat.Group;
     theme: CometChatTheme;

@@ -31,7 +31,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<MessageComposerConfiguration>;
         default: () => MessageComposerConfiguration;
     };
-    threadedMessageConfiguration: {
+    threadedMessagesConfiguration: {
         type: PropType<ThreadedMessagesConfiguration>;
         default: () => ThreadedMessagesConfiguration;
     };
@@ -1693,7 +1693,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<MessageComposerConfiguration>;
         default: () => MessageComposerConfiguration;
     };
-    threadedMessageConfiguration: {
+    threadedMessagesConfiguration: {
         type: PropType<ThreadedMessagesConfiguration>;
         default: () => ThreadedMessagesConfiguration;
     };
@@ -1747,10 +1747,10 @@ declare const _sfc_main: import("vue").DefineComponent<{
     messageHeaderConfiguration: MessageHeaderConfiguration;
     messageListConfiguration: MessageListConfiguration;
     messageComposerConfiguration: MessageComposerConfiguration;
-    threadedMessageConfiguration: ThreadedMessagesConfiguration;
     detailsConfiguration: DetailsConfiguration;
     messagesStyle: MessagesStyle;
     hideMessageHeader: boolean;
     hideDetails: boolean;
+    threadedMessagesConfiguration: ThreadedMessagesConfiguration;
 }, {}>;
 export default _sfc_main;
