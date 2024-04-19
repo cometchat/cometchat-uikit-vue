@@ -16,7 +16,7 @@ To set up CometChat Vue UI Kit and utilize CometChat for your chat functionality
 
 1. Register at the [CometChat Dashboard](https://app.cometchat.com/) to create an account.
 
-2. After registering, log into your CometChat account and create a new app. Once created, CometChat will generate an Auth Key and App ID for you. Keep these credentials secure as you'll need them later.
+2. After registering, log into your CometChat account and create a new app.
 
 3. Check the [Key Concepts](https://www.cometchat.com/docs/vue-uikit/key-concepts) to understand the basic components of CometChat.
 
