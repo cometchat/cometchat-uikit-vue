@@ -39,6 +39,16 @@ declare const _sfc_main: import("vue").DefineComponent<{
     bubbleView: {
         type: PropType<(message: CometChat.BaseMessage) => ViewType>;
     };
+    messageComposerView: {
+        type: PropType<(user: CometChat.User, group: CometChat.Group, message: CometChat.BaseMessage) => ViewType>;
+    };
+    messageListView: {
+        type: PropType<(user: CometChat.User, group: CometChat.Group, message: CometChat.BaseMessage) => ViewType>;
+    };
+    hideMessageComposer: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
 }, {
     getMessageListStyle: () => {
         emptyStateView: any;
@@ -94,6 +104,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
         borderRadius: string;
     };
     componentDefinition: any;
+    messageListViewComputed: import("vue").ComputedRef<ViewType>;
+    messageComposerViewComputed: import("vue").ComputedRef<ViewType>;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     onClose: {
         type: PropType<() => void>;
@@ -132,11 +144,22 @@ declare const _sfc_main: import("vue").DefineComponent<{
     bubbleView: {
         type: PropType<(message: CometChat.BaseMessage) => ViewType>;
     };
+    messageComposerView: {
+        type: PropType<(user: CometChat.User, group: CometChat.Group, message: CometChat.BaseMessage) => ViewType>;
+    };
+    messageListView: {
+        type: PropType<(user: CometChat.User, group: CometChat.Group, message: CometChat.BaseMessage) => ViewType>;
+    };
+    hideMessageComposer: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
 }>>, {
     title: string;
     onError: (error: CometChat.CometChatException) => void;
     onClose: () => void;
     closeIconURL: string;
+    hideMessageComposer: boolean;
     messageListConfiguration: MessageListConfiguration;
     messageComposerConfiguration: MessageComposerConfiguration;
     threadedMessagesStyle: ThreadedMessagesStyle;
