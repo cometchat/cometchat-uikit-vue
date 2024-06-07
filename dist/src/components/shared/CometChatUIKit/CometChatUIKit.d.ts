@@ -1,12 +1,14 @@
 import { CardMessage, CometChatLocalize, CustomInteractiveMessage, FormMessage, SchedulerMessage } from "@cometchat/uikit-resources";
 import { CometChatSoundManager, UIKitSettings } from "@cometchat/uikit-shared";
 import { AIExtensionDataSource } from "../Framework/AIExtensionDataSource";
+import { ConversationUpdateSettings } from "@cometchat/chat-sdk-javascript";
 import { ExtensionsDataSource } from "../Framework/ExtensionsDatasource";
 export { DataSource } from "../Framework/DataSource";
 export declare class CometChatUIKit {
     static uiKitSettings: UIKitSettings | null;
     static SoundManager: typeof CometChatSoundManager;
     static Localize: typeof CometChatLocalize;
+    static conversationUpdateSettings: ConversationUpdateSettings;
     static init(uiKitSettings: UIKitSettings | null): Promise<Object> | undefined;
     static defaultExtensions: ExtensionsDataSource[];
     static defaultAIFeatures: AIExtensionDataSource[];
@@ -37,4 +39,5 @@ export declare class CometChatUIKit {
     static sendTextMessage(message: CometChat.TextMessage): void;
     static sendMediaMessage(message: CometChat.MediaMessage): void;
     static getDataSource(): import("../Framework/DataSource").DataSource;
+    static getConversationSettings(): ConversationUpdateSettings;
 }
