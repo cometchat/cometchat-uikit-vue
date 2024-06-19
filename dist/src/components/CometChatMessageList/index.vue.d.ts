@@ -7,7 +7,7 @@ export declare const MessageListFooterStyle: () => {
     height: string;
 };
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-import { AvatarStyle, DateStyle, EmojiKeyboardStyle } from "@cometchat/uikit-elements";
+import { AvatarStyle, BackdropStyle, DateStyle, EmojiKeyboardStyle } from "@cometchat/uikit-elements";
 import { States, MessageListAlignment, DatePatterns, TimestampAlignment, CometChatMessageTemplate, CometChatTheme, MessageBubbleAlignment, CometChatActionsView, CometChatActionsIcon, TitleAlignment } from "@cometchat/uikit-resources";
 import { MessageListStyle, ListStyle, MessageInformationConfiguration, ReactionsConfiguration, CometChatTextFormatter } from "@cometchat/uikit-shared";
 export declare const defaultDateSeparatorStyle: DateStyle;
@@ -184,6 +184,10 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<CometChatTextFormatter[]>;
         default: () => any[];
     };
+    backdropStyle: {
+        type: PropType<BackdropStyle>;
+        default: () => BackdropStyle;
+    };
 }, {
     setScrollListToBottom: Ref<boolean>;
     componentState: Ref<States>;
@@ -326,6 +330,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getMessageTemplate: (selectedMessage: CometChat.BaseMessage) => any;
     onBottom: Ref<boolean>;
     getStatusInfoView: (message: CometChat.BaseMessage) => any;
+    computedBackdropStyle: import("vue").ComputedRef<BackdropStyle>;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     hideError: {
         type: BooleanConstructor;
@@ -488,6 +493,10 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<CometChatTextFormatter[]>;
         default: () => any[];
     };
+    backdropStyle: {
+        type: PropType<BackdropStyle>;
+        default: () => BackdropStyle;
+    };
 }>>, {
     hideError: boolean;
     errorStateText: string;
@@ -504,6 +513,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     waitIcon: string;
     sentIcon: string;
     errorIcon: string;
+    backdropStyle: BackdropStyle;
     disableMentions: boolean;
     textFormatters: CometChatTextFormatter[];
     alignment: MessageListAlignment;

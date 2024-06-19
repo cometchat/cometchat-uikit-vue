@@ -140,6 +140,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: ObjectConstructor;
         default: () => void;
     };
+    sendButtonIconURL: {
+        type: StringConstructor;
+        default: string;
+    };
+    emojiIconURL: {
+        type: StringConstructor;
+        default: string;
+    };
 }, {
     inputElementRef: any;
     sendReaction: () => void;
@@ -162,12 +170,10 @@ declare const _sfc_main: import("vue").DefineComponent<{
     sendButton: any;
     showEmojiKeyboard: Ref<boolean>;
     showVoiceRecorder: Ref<boolean>;
-    sendButtonIconURL: string;
     sendButtonStyle: any;
     enableStickerKeyboard: boolean;
     sendMessageOnEnter: (event: any) => void;
     liveReactionStyle: any;
-    emojiButtonIconURL: string;
     closeIconURL: string;
     stickerButtonIconURL: string;
     showActionSheetItem: Ref<boolean>;
@@ -885,6 +891,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: ObjectConstructor;
         default: () => void;
     };
+    sendButtonIconURL: {
+        type: StringConstructor;
+        default: string;
+    };
+    emojiIconURL: {
+        type: StringConstructor;
+        default: string;
+    };
 }>>, {
     text: string;
     onError: (error: CometChat.CometChatException) => void;
@@ -911,5 +925,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     voiceRecordingStopIconURL: string;
     voiceRecordingSubmitIconURL: string;
     mentionsWarningStyle: Record<string, any>;
+    sendButtonIconURL: string;
+    emojiIconURL: string;
 }, {}>;
 export default _sfc_main;
