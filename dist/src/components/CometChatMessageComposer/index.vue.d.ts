@@ -725,6 +725,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
                 [Symbol.iterator]: () => IterableIterator<string>;
                 at: (index: number) => string;
             }[];
+            setGuid: (guid: string) => import("@cometchat/chat-sdk-javascript").GroupMembersRequestBuilder;
             setLimit: (limit: number) => import("@cometchat/chat-sdk-javascript").GroupMembersRequestBuilder;
             setSearchKeyword: (searchKeyword: string) => import("@cometchat/chat-sdk-javascript").GroupMembersRequestBuilder;
             setScopes: (scopes: String[]) => import("@cometchat/chat-sdk-javascript").GroupMembersRequestBuilder;

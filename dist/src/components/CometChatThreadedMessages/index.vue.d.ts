@@ -67,6 +67,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         DateSeparatorPattern: import("@cometchat/uikit-resources").DatePatterns;
         hideDateSeparator: boolean;
         templates: import("@cometchat/uikit-resources/dist/Models/CometChatMessageTemplate").CometChatMessageTemplate[];
+        hideError: boolean;
         messagesRequestBuilder: import("@cometchat/chat-sdk-javascript").MessagesRequestBuilder;
         messageInformationConfiguration: import("@cometchat/uikit-shared").MessageInformationConfiguration;
         thresholdValue: number;
