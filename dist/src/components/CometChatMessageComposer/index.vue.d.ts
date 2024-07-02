@@ -1,6 +1,6 @@
 import { Ref, PropType, CSSProperties } from "vue";
 import { MessageComposerStyle, StickersStyle, AIOptionsStyle, CometChatTextFormatter, UserMemberWrapperConfiguration } from "@cometchat/uikit-shared";
-import { AuxiliaryButtonAlignment, CometChatMessageComposerAction, Placement, RecordingType, UserMemberListType } from "@cometchat/uikit-resources";
+import { AuxiliaryButtonAlignment, CometChatMessageComposerAction, Placement, RecordingType, UserMemberListType, PreviewMessageMode } from "@cometchat/uikit-resources";
 import { ActionSheetStyle, EmojiKeyboardStyle, PopoverStyle, PreviewStyle, MediaRecorderStyle } from "@cometchat/uikit-elements";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 declare const _sfc_main: import("vue").DefineComponent<{
@@ -29,7 +29,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<ViewType>;
     };
     onSendButtonClick: {
-        type: PropType<(message: CometChat.BaseMessage) => void>;
+        type: PropType<(message: CometChat.BaseMessage, previewMessageMode?: PreviewMessageMode) => void>;
     };
     secondaryButtonView: {
         type: PropType<ViewType>;
@@ -781,7 +781,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<ViewType>;
     };
     onSendButtonClick: {
-        type: PropType<(message: CometChat.BaseMessage) => void>;
+        type: PropType<(message: CometChat.BaseMessage, previewMessageMode?: PreviewMessageMode) => void>;
     };
     secondaryButtonView: {
         type: PropType<ViewType>;
