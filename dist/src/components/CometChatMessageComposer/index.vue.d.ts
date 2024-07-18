@@ -173,7 +173,6 @@ declare const _sfc_main: import("vue").DefineComponent<{
     sendButtonStyle: any;
     enableStickerKeyboard: boolean;
     sendMessageOnEnter: (event: any) => void;
-    liveReactionStyle: any;
     closeIconURL: string;
     stickerButtonIconURL: string;
     showActionSheetItem: Ref<boolean>;
@@ -195,7 +194,17 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getAuxiliaryButtonAlignment: () => AuxiliaryButtonAlignment;
     getAttachmentButtonStyle: () => any;
     getEmojiPopover: () => PopoverStyle;
-    getLiveReactionStyle: () => any;
+    getLiveReactionStyle: () => {
+        height: string;
+        width: string;
+        border: string;
+        borderRadius: string;
+        buttonIconTint: any;
+        background: string;
+        display: string;
+        justifyContent: string;
+        alignItems: string;
+    };
     getEmojiButtonStyle: () => any;
     getEmojiKeyboardStyle: () => EmojiKeyboardStyle;
     getActionsheetStyle: () => ActionSheetStyle;

@@ -1666,6 +1666,11 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "vector-effect"?: import("csstype").Property.VectorEffect;
     }>;
     getDetailsTemplate: () => import("@cometchat/uikit-resources").CometChatDetailsTemplate[];
+    getLiveReactionStyle: () => {
+        height: string;
+        width: string;
+        background: string;
+    };
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     user: {
         type: PropType<import("@cometchat/chat-sdk-javascript").User>;

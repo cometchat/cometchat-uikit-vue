@@ -67,7 +67,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
         default: () => void;
     };
 }, {
-    getBackButtonStyle: () => any;
+    getBackButtonStyle: () => {
+        height: string;
+        width: string;
+        border: string;
+        borderRadius: string;
+        background: string;
+        buttonIconTint: string;
+    };
     checkStatusType: () => any;
     checkGroupType: () => string;
     headerStyle: () => CSSProperties;
