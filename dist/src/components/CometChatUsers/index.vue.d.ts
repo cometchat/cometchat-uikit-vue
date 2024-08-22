@@ -1732,7 +1732,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     myUsersStyle: any;
     fetchNextUsersList: () => Promise<void>;
     addMembersToList: (event: CustomEvent, user: CometChat.User) => void;
-    isUserSelected: (user: CometChat.User) => boolean;
+    isUserSelected: (user: CometChat.User) => true | import("@cometchat/chat-sdk-javascript").User;
     SelectionMode: typeof SelectionMode;
     state: Ref<States>;
     listStyle: Ref<{

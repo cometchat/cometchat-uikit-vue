@@ -55,6 +55,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         errorStateView: any;
         loadingStateView: any;
         disableReceipt: boolean;
+        hideReceipt: boolean;
         readIcon: string;
         deliveredIcon: string;
         sentIcon: string;

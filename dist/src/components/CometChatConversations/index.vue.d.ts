@@ -62,7 +62,16 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: StringConstructor;
         default: string;
     };
+    /**
+     * @deprecated
+     *
+     * This property is deprecated as of version 4.3.16 due to newer property 'hideReceipt'. It will be removed in subsequent versions.
+     */
     disableReceipt: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    hideReceipt: {
         type: BooleanConstructor;
         default: boolean;
     };
@@ -325,7 +334,16 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: StringConstructor;
         default: string;
     };
+    /**
+     * @deprecated
+     *
+     * This property is deprecated as of version 4.3.16 due to newer property 'hideReceipt'. It will be removed in subsequent versions.
+     */
     disableReceipt: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    hideReceipt: {
         type: BooleanConstructor;
         default: boolean;
     };
@@ -462,6 +480,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     disableSoundForMessages: boolean;
     customSoundForMessages: string;
     disableReceipt: boolean;
+    hideReceipt: boolean;
     disableTyping: boolean;
     deliveredIcon: string;
     readIcon: string;
