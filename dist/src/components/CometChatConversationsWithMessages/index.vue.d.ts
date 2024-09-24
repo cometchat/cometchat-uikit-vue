@@ -94,6 +94,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     localize: (str: string) => any;
     getUsersConfiguration: () => UsersConfiguration;
     getGroupsConfiguration: () => GroupsConfiguration;
+    shouldShowSidebar: import("vue").ComputedRef<boolean>;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     user: {
         type: PropType<import("@cometchat/chat-sdk-javascript").User>;
