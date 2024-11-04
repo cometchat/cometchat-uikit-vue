@@ -131,7 +131,19 @@ declare const _sfc_main: import("vue").DefineComponent<{
         outerViewBorderRadius?: string;
         outerViewBorderColor?: string;
     };
-    getListItemStyle: () => any;
+    listItemStyleRef: Ref<{
+        activeBackground?: string;
+        hoverBackground?: string;
+        separatorColor?: string;
+        titleFont?: string;
+        titleColor?: string;
+        padding?: string;
+        height?: string;
+        width?: string;
+        border?: string;
+        borderRadius?: string;
+        background?: string;
+    }>;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     avatarStyle: {
         type: PropType<AvatarStyle>;

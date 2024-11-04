@@ -17,6 +17,11 @@ declare const _sfc_main: import("vue").DefineComponent<{
     groupsConfiguration: {
         type: PropType<GroupsConfiguration>;
     };
+    /**
+ * @deprecated
+ *
+ * This property is deprecated as of version 4.3.18 due to newer property 'onSubmitButtonClick'. It will be removed in subsequent versions.
+ */
     onSubmitIconClick: {
         type: PropType<(usersList?: Array<CometChat.User>, groupsList?: Array<CometChat.Group>) => void>;
     };
@@ -40,6 +45,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     selectionLimit: {
         type: NumberConstructor;
+        default: number;
     };
     hideSubmitButton: {
         type: BooleanConstructor;
@@ -52,6 +58,10 @@ declare const _sfc_main: import("vue").DefineComponent<{
     selectionMode: {
         type: PropType<SelectionMode>;
         default: () => SelectionMode;
+    };
+    onSubmitButtonClick: {
+        type: PropType<(usersList?: Array<CometChat.User>, groupsList?: Array<CometChat.Group>) => void>;
+        default: any;
     };
 }, {
     TabAlignment: typeof TabAlignment;
@@ -96,6 +106,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         userArray: any[];
         groupArray: any[];
     };
+    submitClicked: () => void;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
@@ -112,6 +123,11 @@ declare const _sfc_main: import("vue").DefineComponent<{
     groupsConfiguration: {
         type: PropType<GroupsConfiguration>;
     };
+    /**
+ * @deprecated
+ *
+ * This property is deprecated as of version 4.3.18 due to newer property 'onSubmitButtonClick'. It will be removed in subsequent versions.
+ */
     onSubmitIconClick: {
         type: PropType<(usersList?: Array<CometChat.User>, groupsList?: Array<CometChat.Group>) => void>;
     };
@@ -135,6 +151,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     selectionLimit: {
         type: NumberConstructor;
+        default: number;
     };
     hideSubmitButton: {
         type: BooleanConstructor;
@@ -148,12 +165,18 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<SelectionMode>;
         default: () => SelectionMode;
     };
+    onSubmitButtonClick: {
+        type: PropType<(usersList?: Array<CometChat.User>, groupsList?: Array<CometChat.Group>) => void>;
+        default: any;
+    };
 }>>, {
     selectionMode: SelectionMode;
     closeIconURL: string;
     contactsStyle: ContactsStyle;
     tabVisibility: TabsVisibility;
+    selectionLimit: number;
     hideSubmitButton: boolean;
     submitButtonText: string;
+    onSubmitButtonClick: (usersList?: Array<CometChat.User>, groupsList?: Array<CometChat.Group>) => void;
 }, {}>;
 export default _sfc_main;
