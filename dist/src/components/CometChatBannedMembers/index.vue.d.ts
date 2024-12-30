@@ -1,9 +1,9 @@
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-import { ConversationUtils, GroupMemberUtils, BannedMembersStyle } from "@cometchat/uikit-shared";
+import { ConversationUtils, GroupMemberUtils, BannedMembersStyle, ListStyle } from "@cometchat/uikit-shared";
 import { AvatarStyle, ListItemStyle } from "@cometchat/uikit-elements";
 import { TitleAlignment, States, CometChatOption, SelectionMode } from "@cometchat/uikit-resources";
 import { Ref, PropType } from "vue";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -134,8 +134,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
     errorStateView: {
         type: PropType<ViewType>;
     };
-}, {
-    BannedMembers: Ref<import("@cometchat/chat-sdk-javascript").GroupMember[]>;
+}>, {
+    BannedMembers: Ref<import("@cometchat/chat-sdk-javascript").GroupMember[], import("@cometchat/chat-sdk-javascript").GroupMember[]>;
     wrapperStyle: () => {
         height: string;
         width: string;
@@ -160,7 +160,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     closeClicked: () => void;
     backClicked: () => void;
-    memberScope: Ref<string[]>;
+    memberScope: Ref<string[], string[]>;
     SelectionMode: typeof SelectionMode;
     backButtonStyle: () => {
         height: string;
@@ -172,6 +172,18 @@ declare const _sfc_main: import("vue").DefineComponent<{
         buttonIconTint: string;
     };
     mylistItemStyle: Ref<{
+        activeBackground?: string;
+        hoverBackground?: string;
+        separatorColor?: string;
+        titleFont?: string;
+        titleColor?: string;
+        padding?: string;
+        height?: string;
+        width?: string;
+        border?: string;
+        borderRadius?: string;
+        background?: string;
+    }, ListItemStyle | {
         activeBackground?: string;
         hoverBackground?: string;
         separatorColor?: string;
@@ -197,13 +209,26 @@ declare const _sfc_main: import("vue").DefineComponent<{
         outerViewBorderRadius?: string;
         outerViewBorderColor?: string;
         backgroundColor?: string;
+    }, AvatarStyle | {
+        borderRadius?: string;
+        width?: string;
+        height?: string;
+        border?: string;
+        nameTextColor?: string;
+        backgroundSize?: string;
+        nameTextFont?: string;
+        outerViewBorderWidth?: string;
+        outerViewBorderSpacing?: string;
+        outerViewBorderRadius?: string;
+        outerViewBorderColor?: string;
+        backgroundColor?: string;
     }>;
     menuListStyle: any;
-    mystatusIndicatorStyle: any;
+    mystatusIndicatorStyle: Ref<any, any>;
     getStatusIndicatorColor: (member: CometChat.GroupMember) => string;
     unbanIconStyle: any;
     onSearch: (key: string) => void;
-    state: Ref<States>;
+    state: Ref<States, States>;
     unBanMember: (member: CometChat.GroupMember) => void;
     States: typeof States;
     listStyle: Ref<{
@@ -231,11 +256,36 @@ declare const _sfc_main: import("vue").DefineComponent<{
         border?: string;
         borderRadius?: string;
         background?: string;
+    }, ListStyle | {
+        titleTextFont?: string;
+        titleTextColor?: string;
+        emptyStateTextFont?: string;
+        emptyStateTextColor?: string;
+        errorStateTextFont?: string;
+        errorStateTextColor?: string;
+        loadingIconTint?: string;
+        separatorColor?: string;
+        boxShadow?: string;
+        searchIconTint?: string;
+        searchBorder?: string;
+        searchBorderRadius?: string;
+        searchBackground?: string;
+        searchPlaceholderTextFont?: string;
+        searchPlaceholderTextColor?: string;
+        searchTextFont?: string;
+        searchTextColor?: string;
+        sectionHeaderTextFont?: string;
+        sectionHeaderTextColor?: string;
+        height?: string;
+        width?: string;
+        border?: string;
+        borderRadius?: string;
+        background?: string;
     }>;
-    searchKeyword: Ref<string>;
+    searchKeyword: Ref<string, string>;
     fetchNextBannedMembers: () => Promise<void>;
     handleSelection: (event: CustomEvent, bannedMember: CometChat.GroupMember) => void;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -366,7 +416,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     errorStateView: {
         type: PropType<ViewType>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     title: string;
     titleAlignment: TitleAlignment;
     searchPlaceholder: string;
@@ -389,5 +439,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     loadingIconURL: string;
     unbanIconURL: string;
     bannedMembersStyle: BannedMembersStyle;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

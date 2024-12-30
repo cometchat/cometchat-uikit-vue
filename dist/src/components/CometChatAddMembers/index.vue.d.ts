@@ -3,7 +3,7 @@ import { UsersStyle, ConversationUtils, GroupMemberUtils, AddMembersStyle } from
 import { AvatarStyle, ListItemStyle } from "@cometchat/uikit-elements";
 import { TitleAlignment, CometChatOption, SelectionMode } from "@cometchat/uikit-resources";
 import { PropType } from "vue";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -138,7 +138,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     errorStateView: {
         type: PropType<ViewType>;
     };
-}, {
+}>, {
     backClicked: () => void;
     closeClicked: () => void;
     backButtonStyle: () => {
@@ -171,7 +171,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     addRemoveUsers: (user: CometChat.User, selected: boolean) => void;
     myaddMembersStyle: any;
     wrapperStyle: () => any;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -306,7 +306,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     errorStateView: {
         type: PropType<ViewType>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     title: string;
     buttonText: string;
     titleAlignment: TitleAlignment;
@@ -330,5 +330,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     statusIndicatorStyle: any;
     listItemStyle: ListItemStyle;
     loadingIconURL: string;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

@@ -5,7 +5,7 @@ import { CallWorkflow, CometChatTheme, DatePatterns, SelectionMode, States, Titl
 import { getCallStatusWithType, verifyCallUser } from "../Utils/utils";
 import { AvatarStyle, ListItemStyle } from "@cometchat/uikit-elements";
 import { CallLogsStyle, OutgoingCallConfiguration, OutgoingCallStyle } from "@cometchat/uikit-shared";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: any;
@@ -117,18 +117,18 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<OutgoingCallConfiguration>;
         default: () => OutgoingCallConfiguration;
     };
-}, {
+}>, {
     callList: any;
-    state: Ref<States>;
+    state: Ref<States, States>;
     SelectionMode: typeof SelectionMode;
     getListItemStyle: typeof getListItemStyle;
     getAvatarStyle: typeof getAvatarStyle;
     getCallStatusWithType: typeof getCallStatusWithType;
     getSubtitleStyle: typeof getSubtitleStyle;
     handleItemClick: (call: any) => void;
-    theme: Ref<CometChatTheme>;
+    theme: Ref<CometChatTheme, CometChatTheme>;
     getCallList: () => Promise<void>;
-    loggedInUser: Ref<import("@cometchat/chat-sdk-javascript").User>;
+    loggedInUser: Ref<import("@cometchat/chat-sdk-javascript").User, import("@cometchat/chat-sdk-javascript").User>;
     verifyCallUser: typeof verifyCallUser;
     getButtonContainerStyle: typeof getButtonContainerStyle;
     handleInfoClick: (call: any) => void;
@@ -141,13 +141,13 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getCallDateStyle: typeof getCallDateStyle;
     getMessageBubbleDate: (item: any, i: number) => string;
     call: any;
-    showOutgoingCallscreen: Ref<boolean>;
+    showOutgoingCallscreen: Ref<boolean, boolean>;
     cancelOutgoingCall: () => void;
     getOutGoingCallStyle: () => OutgoingCallStyle;
-    showOngoingCall: Ref<boolean>;
+    showOngoingCall: Ref<boolean, boolean>;
     sessionId: any;
     CallWorkflow: typeof CallWorkflow;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: any;
@@ -259,7 +259,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<OutgoingCallConfiguration>;
         default: () => OutgoingCallConfiguration;
     };
-}>>, {
+}>> & Readonly<{}>, {
     title: string;
     titleAlignment: TitleAlignment;
     hideSeparator: boolean;
@@ -270,6 +270,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     listItemStyle: ListItemStyle;
     loadingIconURL: string;
     datePattern: DatePatterns;
+    outgoingCallConfiguration: OutgoingCallConfiguration;
     dateSeparatorPattern: DatePatterns;
     activeCall: Record<string, any>;
     infoIconUrl: string;
@@ -280,6 +281,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     missedAudioCallIconUrl: string;
     missedVideoCallIconUrl: string;
     callLogsStyle: CallLogsStyle;
-    outgoingCallConfiguration: OutgoingCallConfiguration;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

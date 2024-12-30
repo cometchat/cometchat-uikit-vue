@@ -1,5 +1,5 @@
 import { FullScreenViewerStyle } from "@cometchat/uikit-elements";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     src: {
         type: StringConstructor;
         default: any;
@@ -13,14 +13,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
     message: {
         type: any;
     };
-}, {
+}>, {
     openImageInFullScreen: (event: any) => void;
-    openFullscreenView: import("vue").Ref<boolean>;
-    imageurlToOpen: import("vue").Ref<string>;
+    openFullscreenView: import("vue").Ref<boolean, boolean>;
+    imageurlToOpen: import("vue").Ref<string, string>;
     Close2xIcon: string;
     fullScreenViewerStyle: FullScreenViewerStyle;
     closeImageInFullScreen: () => void;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     src: {
         type: StringConstructor;
         default: any;
@@ -34,10 +34,10 @@ declare const _sfc_main: import("vue").DefineComponent<{
     message: {
         type: any;
     };
-}>>, {
+}>> & Readonly<{}>, {
     message: any;
     src: string;
     placeholderImage: any;
     imageStyle: any;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

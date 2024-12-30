@@ -1,6 +1,6 @@
 import { FileBubbleStyle } from "@cometchat/uikit-elements";
 import { PropType } from "vue";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     downloadIconURL: {
         type: StringConstructor;
         default: any;
@@ -17,7 +17,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     fileStyle: {
         type: PropType<FileBubbleStyle>;
     };
-}, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     downloadIconURL: {
         type: StringConstructor;
         default: any;
@@ -34,7 +34,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     fileStyle: {
         type: PropType<FileBubbleStyle>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     downloadIconURL: string;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

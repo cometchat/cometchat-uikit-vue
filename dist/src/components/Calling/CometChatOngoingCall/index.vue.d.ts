@@ -2,7 +2,7 @@ import { PropType } from "vue";
 import { CallscreenStyle } from "@cometchat/uikit-elements";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 import { CallWorkflow } from "@cometchat/uikit-resources";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     callSettingsBuilder: {
         type: any;
     };
@@ -34,7 +34,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<(error: CometChat.CometChatException) => void>;
         default: (error: CometChat.CometChatException) => void;
     };
-}, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     callSettingsBuilder: {
         type: any;
     };
@@ -66,7 +66,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<(error: CometChat.CometChatException) => void>;
         default: (error: CometChat.CometChatException) => void;
     };
-}>>, {
+}>> & Readonly<{}>, {
     onError: (error: CometChat.CometChatException) => void;
     ongoingCallStyle: CallscreenStyle;
     callSettingsBuilder: any;
@@ -75,5 +75,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     minimizeIconURL: string;
     maximizeIconURL: string;
     callWorkflow: CallWorkflow;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

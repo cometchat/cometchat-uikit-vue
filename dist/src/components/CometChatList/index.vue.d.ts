@@ -1,8 +1,9 @@
 import { PropType } from "vue";
+import { SearchInputStyle } from "@cometchat/uikit-elements";
 import { ListStyle } from "@cometchat/uikit-shared";
 import { States, TitleAlignment } from "@cometchat/uikit-resources";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: string;
@@ -93,13 +94,13 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<ListStyle>;
         default: () => ListStyle;
     };
-}, {
+}>, {
     SearchIcon: string;
     LoadingIcon: string;
     getKeyValue: <T>(key: any, item: any) => string;
     States: typeof States;
     currentSectionHeader: string;
-    scrollPos: import("vue").Ref<HTMLElement>;
+    scrollPos: import("vue").Ref<HTMLElement, HTMLElement>;
     listWrapperStyle: () => any;
     headerTitle: () => any;
     searchEvent: (...args: any[]) => void;
@@ -117,13 +118,25 @@ declare const _sfc_main: import("vue").DefineComponent<{
         padding: string;
     };
     listStyles: () => any;
-    iconStyle: any;
+    iconStyle: import("vue").Ref<any, any>;
     sectionHeaderStyle: () => {
         font: string;
         color: string;
         padding: string;
     };
     searchStyle: import("vue").Ref<{
+        searchTextFont?: string;
+        searchTextColor?: string;
+        placeholderTextFont?: string;
+        placeholderTextColor?: string;
+        searchIconTint?: string;
+        boxShadow?: string;
+        height?: string;
+        width?: string;
+        border?: string;
+        borderRadius?: string;
+        background?: string;
+    }, SearchInputStyle | {
         searchTextFont?: string;
         searchTextColor?: string;
         placeholderTextFont?: string;
@@ -158,7 +171,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     } | {
         border?: undefined;
     }>;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: string;
@@ -249,7 +262,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<ListStyle>;
         default: () => ListStyle;
     };
-}>>, {
+}>> & Readonly<{}>, {
     title: string;
     titleAlignment: TitleAlignment;
     showSectionHeader: boolean;
@@ -267,5 +280,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     searchText: string;
     list: any[];
     scrollToBottom: boolean;
-}, {}>;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

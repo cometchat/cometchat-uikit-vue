@@ -1,7 +1,7 @@
 import { SchedulerBubbleStyle } from "@cometchat/uikit-shared";
 import { SchedulerMessage } from "@cometchat/uikit-resources";
 import { PropType } from "vue";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     schedulerMessage: {
         type: PropType<SchedulerMessage>;
     };
@@ -42,7 +42,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     schedulerBubbleStyle: {
         type: PropType<SchedulerBubbleStyle>;
     };
-}, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     schedulerMessage: {
         type: PropType<SchedulerMessage>;
     };
@@ -83,7 +83,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     schedulerBubbleStyle: {
         type: PropType<SchedulerBubbleStyle>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     backButtonIconURL: string;
     loadingIconURL: string;
     goalCompletionText: string;
@@ -91,5 +91,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     calendarIconURL: string;
     timezoneIconURL: string;
     emptySlotIconURL: string;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

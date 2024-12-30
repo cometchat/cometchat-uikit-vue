@@ -1,7 +1,7 @@
 import { PropType } from "vue";
 import { TabAlignment, SelectionMode, TabsVisibility } from "@cometchat/uikit-resources";
 import { GroupsConfiguration, UsersConfiguration, ContactsStyle } from "@cometchat/uikit-shared";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
     };
@@ -63,7 +63,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<(usersList?: Array<CometChat.User>, groupsList?: Array<CometChat.Group>) => void>;
         default: any;
     };
-}, {
+}>, {
     TabAlignment: typeof TabAlignment;
     tabsToShow: any[];
     getCloseButtonStyle: () => {
@@ -107,7 +107,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         groupArray: any[];
     };
     submitClicked: () => void;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
     };
@@ -169,7 +169,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<(usersList?: Array<CometChat.User>, groupsList?: Array<CometChat.Group>) => void>;
         default: any;
     };
-}>>, {
+}>> & Readonly<{}>, {
     selectionMode: SelectionMode;
     closeIconURL: string;
     contactsStyle: ContactsStyle;
@@ -178,5 +178,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     hideSubmitButton: boolean;
     submitButtonText: string;
     onSubmitButtonClick: (usersList?: Array<CometChat.User>, groupsList?: Array<CometChat.Group>) => void;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

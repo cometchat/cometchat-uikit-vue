@@ -3,7 +3,7 @@ import { MessageHeaderStyle, BaseStyle } from "@cometchat/uikit-shared";
 import { CometChatTheme } from "@cometchat/uikit-resources";
 import { AvatarStyle, ListItemStyle } from "@cometchat/uikit-elements";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     avatarStyle: {
         type: PropType<AvatarStyle>;
         default: () => AvatarStyle;
@@ -66,7 +66,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<() => void>;
         default: () => void;
     };
-}, {
+}>, {
     getBackButtonStyle: () => {
         height: string;
         width: string;
@@ -78,7 +78,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     checkStatusType: () => any;
     checkGroupType: () => string;
     headerStyle: () => CSSProperties;
-    subtitleText: Ref<string>;
+    subtitleText: Ref<string, string>;
     subtitleStyle: () => {
         textFont: string;
         textColor: string;
@@ -91,7 +91,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         padding: string;
     };
     onBackClicked: () => void;
-    theme: Ref<CometChatTheme>;
+    theme: Ref<CometChatTheme, CometChatTheme>;
     fontHelper: (obj: import("@cometchat/uikit-resources").CometChatFont) => string;
     currentUser: any;
     currentGroup: any;
@@ -143,8 +143,20 @@ declare const _sfc_main: import("vue").DefineComponent<{
         border?: string;
         borderRadius?: string;
         background?: string;
+    }, ListItemStyle | {
+        activeBackground?: string;
+        hoverBackground?: string;
+        separatorColor?: string;
+        titleFont?: string;
+        titleColor?: string;
+        padding?: string;
+        height?: string;
+        width?: string;
+        border?: string;
+        borderRadius?: string;
+        background?: string;
     }>;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     avatarStyle: {
         type: PropType<AvatarStyle>;
         default: () => AvatarStyle;
@@ -207,7 +219,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<() => void>;
         default: () => void;
     };
-}>>, {
+}>> & Readonly<{}>, {
     disableUsersPresence: boolean;
     backButtonIconURL: string;
     onError: (error: CometChat.CometChatException) => void;
@@ -219,5 +231,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     privateGroupIcon: string;
     messageHeaderStyle: MessageHeaderStyle;
     hideBackButton: boolean;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

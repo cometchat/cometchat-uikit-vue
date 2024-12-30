@@ -1,7 +1,7 @@
 import { Ref, PropType } from "vue";
 import { ConversationsConfiguration, GroupsConfiguration, MessagesConfiguration, UsersConfiguration, WithMessagesStyle, ContactsConfiguration } from "@cometchat/uikit-shared";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     user: {
         type: PropType<import("@cometchat/chat-sdk-javascript").User>;
     };
@@ -40,7 +40,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: StringConstructor;
         default: string;
     };
-}, {
+}>, {
     labelStyle: any;
     onItemClick: (conversation: CometChat.Conversation) => void;
     emptyMessageStyle: () => {
@@ -57,9 +57,9 @@ declare const _sfc_main: import("vue").DefineComponent<{
         borderRadius: string;
         background: string;
     };
-    messagesConfig: Ref<any>;
-    currentUser: Ref<any>;
-    currentGroup: Ref<any>;
+    messagesConfig: Ref<any, any>;
+    currentUser: Ref<any, any>;
+    currentGroup: Ref<any, any>;
     activeConversation: any;
     getMenu: () => any;
     getConversationStyle: () => {
@@ -88,14 +88,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
         background?: string;
     };
     getStartConversationButton: () => ViewType;
-    showContacts: Ref<boolean>;
+    showContacts: Ref<boolean, boolean>;
     onContactsItemClick: (user: CometChat.User | null, group: CometChat.Group | null) => void;
     closeContacts: () => void;
     localize: (str: string) => any;
     getUsersConfiguration: () => UsersConfiguration;
     getGroupsConfiguration: () => GroupsConfiguration;
     shouldShowSidebar: import("vue").ComputedRef<boolean>;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     user: {
         type: PropType<import("@cometchat/chat-sdk-javascript").User>;
     };
@@ -134,7 +134,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: StringConstructor;
         default: string;
     };
-}>>, {
+}>> & Readonly<{}>, {
     onError: Function;
     isMobileView: boolean;
     messageText: string;
@@ -143,5 +143,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     conversationConfiguration: ConversationsConfiguration;
     startConversationConfiguration: ContactsConfiguration;
     startConversationIconUrl: string;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

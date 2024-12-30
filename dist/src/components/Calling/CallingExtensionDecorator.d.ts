@@ -1,11 +1,13 @@
-import { CometChatMessageTemplate, CometChatTheme, DocumentIconAlignment, MessageBubbleAlignment } from "@cometchat/uikit-resources";
+import { CometChatMessageTemplate, CometChatTheme, DocumentIconAlignment, MessageBubbleAlignment, CallWorkflow } from "@cometchat/uikit-resources";
+import { CallingConfiguration } from "@cometchat/uikit-shared";
 import { CallscreenStyle } from "@cometchat/uikit-elements";
 import { DataSourceDecorator } from "../shared/Framework/DataSourceDecorator";
 import { DataSource } from "../shared/Framework/DataSource";
 export declare class CallingExtensionDecorator extends DataSourceDecorator {
     theme: CometChatTheme;
     loggedInUser: CometChat.User | null;
-    constructor(dataSource: DataSource);
+    configuration?: CallingConfiguration;
+    constructor(dataSource: DataSource, configuration?: CallingConfiguration);
     addLoginListener(): void;
     getLoggedInUser(): Promise<void>;
     getAllMessageTypes(): string[];
@@ -69,15 +71,17 @@ export declare class CallingExtensionDecorator extends DataSourceDecorator {
             iconURL: string;
             title: any;
             buttonText: any;
-            ccClicked: any;
+            ccClicked: () => void;
         };
     };
-    startDirectCall(sessionId: string): void;
-    getOngoingCallUI(sessionId: string): {
+    startDirectCall(sessionId: string, message: CometChat.CustomMessage): void;
+    getOngoingCallUI(sessionId: string, callSettings: any): {
         componentName: string;
         props: {
             ongoingCallStyle: CallscreenStyle;
             sessionID: string;
+            callWorkflow: CallWorkflow;
+            callSettingsBuilder: any;
         };
     };
     callStatusStyle(_message: CometChat.Call, theme: CometChatTheme): {

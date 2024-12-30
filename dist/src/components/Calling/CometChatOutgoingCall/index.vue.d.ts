@@ -3,7 +3,7 @@ import { OutgoingCallStyle } from "@cometchat/uikit-shared";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 import { IconButtonAlignment } from "@cometchat/uikit-resources";
 import { AvatarStyle, CardStyle } from "@cometchat/uikit-elements";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     call: {
         type: PropType<import("@cometchat/chat-sdk-javascript").Call>;
     };
@@ -40,7 +40,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     onCloseClicked: {
         type: PropType<(call: any) => void>;
     };
-}, {
+}>, {
     wrapperStyle: () => {
         height: string;
         width: string;
@@ -59,7 +59,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getButtonStyle: () => any;
     getAvatarStyle: () => AvatarStyle;
     onClose: (call: any) => void;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     call: {
         type: PropType<import("@cometchat/chat-sdk-javascript").Call>;
     };
@@ -96,12 +96,12 @@ declare const _sfc_main: import("vue").DefineComponent<{
     onCloseClicked: {
         type: PropType<(call: any) => void>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     onError: (error: CometChat.CometChatException) => void;
     avatarStyle: AvatarStyle;
     disableSoundForCalls: boolean;
     declineButtonText: string;
     declineButtonIconURL: string;
     outgoingCallStyle: OutgoingCallStyle;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

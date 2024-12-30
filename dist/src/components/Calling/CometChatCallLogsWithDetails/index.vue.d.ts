@@ -2,7 +2,7 @@ import { PropType, Ref } from 'vue';
 import { getContainerStyle, getLabelStyle, getEmptyContainerStyle } from './style';
 import { CometChatTheme } from '@cometchat/uikit-resources';
 import { CallLogDetailsConfiguration, CallLogsConfiguration, WithDetailsStyle } from '@cometchat/uikit-shared';
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     isMobileView: {
         type: BooleanConstructor;
         default: boolean;
@@ -23,8 +23,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<CallLogsConfiguration>;
         default: () => CallLogsConfiguration;
     };
-}, {
-    activeCall: any;
+}>, {
+    activeCall: Ref<any, any>;
     handleInfoClick: (call: any) => void;
     getCallLogStyle: () => {
         width: string;
@@ -45,11 +45,11 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getContainerStyle: typeof getContainerStyle;
     getLabelStyle: typeof getLabelStyle;
     getEmptyContainerStyle: typeof getEmptyContainerStyle;
-    theme: Ref<CometChatTheme>;
+    theme: Ref<CometChatTheme, CometChatTheme>;
     localize: (str: string) => any;
     computedCallLogDetailsConfiguration: import("vue").ComputedRef<CallLogDetailsConfiguration>;
     computedCallLogConfiguration: import("vue").ComputedRef<CallLogsConfiguration>;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     isMobileView: {
         type: BooleanConstructor;
         default: boolean;
@@ -70,11 +70,11 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<CallLogsConfiguration>;
         default: () => CallLogsConfiguration;
     };
-}>>, {
+}>> & Readonly<{}>, {
     isMobileView: boolean;
     messageText: string;
     withDetailsStyle: WithDetailsStyle;
     callLogDetailsConfiguration: CallLogDetailsConfiguration;
     callLogConfiguration: CallLogsConfiguration;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

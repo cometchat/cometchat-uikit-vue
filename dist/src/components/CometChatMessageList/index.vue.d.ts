@@ -22,7 +22,7 @@ export declare const unreadMessageStyle: () => {
     border: string;
     borderRadius: string;
 };
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     hideError: {
         type: BooleanConstructor;
         default: boolean;
@@ -197,9 +197,9 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<BackdropStyle>;
         default: () => BackdropStyle;
     };
-}, {
-    setScrollListToBottom: Ref<boolean>;
-    componentState: Ref<States>;
+}>, {
+    setScrollListToBottom: Ref<boolean, boolean>;
+    componentState: Ref<States, States>;
     MessageTypesConstant: Readonly<{
         text: string;
         file: string;
@@ -224,8 +224,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
         textColor: string;
     };
     MessageBubbleStyle: any;
-    messagesList: Ref<import("@cometchat/chat-sdk-javascript").BaseMessage[]>;
-    theme: Ref<CometChatTheme>;
+    messagesList: Ref<import("@cometchat/chat-sdk-javascript").BaseMessage[], import("@cometchat/chat-sdk-javascript").BaseMessage[]>;
+    theme: Ref<CometChatTheme, CometChatTheme>;
     loggedInUser: import("@cometchat/chat-sdk-javascript").User;
     MessageBubbleAlignment: typeof MessageBubbleAlignment;
     getBubbleAlignment: (message: CometChat.BaseMessage) => MessageBubbleAlignment;
@@ -239,14 +239,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
         call: string;
         interactive: string;
     }>;
-    showMessageInformation: Ref<boolean>;
-    selectedMessage: Ref<import("@cometchat/chat-sdk-javascript").BaseMessage>;
+    showMessageInformation: Ref<boolean, boolean>;
+    selectedMessage: Ref<import("@cometchat/chat-sdk-javascript").BaseMessage, import("@cometchat/chat-sdk-javascript").BaseMessage>;
     getBubbleLeadingView: (item: CometChat.BaseMessage) => any;
     getListStyle: () => ListStyle;
     getBubbleStatusInfoViewDate: (item: any) => string;
     getBubbleFooterView: (item: CometChat.BaseMessage) => any;
     getBubbleHeaderView: (item: CometChat.BaseMessage) => any;
-    newMessageCount: Ref<string | number>;
+    newMessageCount: Ref<string | number, string | number>;
     unreadMessagesStyle: {
         height: string;
         width: string;
@@ -266,7 +266,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     openThreadView: (message: CometChat.BaseMessage) => void;
     getThreadCount: (message: CometChat.BaseMessage) => string;
     threadedAlignment: MessageBubbleAlignment.left;
-    openThreadViewToggle: Ref<boolean>;
+    openThreadViewToggle: Ref<boolean, boolean>;
     currentMessage: any;
     getBubbleWrapper: (message: CometChat.BaseMessage) => any;
     topCallback: () => Promise<void>;
@@ -314,7 +314,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     SearchIcon: string;
     TitleAlignment: typeof TitleAlignment;
     getBubbleThreadView: (item: CometChat.BaseMessage) => any;
-    showSmartReplyRef: Ref<boolean>;
+    showSmartReplyRef: Ref<boolean, boolean>;
     getSmartReplyView: () => ViewType;
     MessageListFooterStyle: () => {
         display: string;
@@ -330,17 +330,17 @@ declare const _sfc_main: import("vue").DefineComponent<{
         width: string;
         height: string;
     };
-    confirmDialogView: Ref<ViewType>;
+    confirmDialogView: Ref<ViewType, ViewType>;
     getBottomView: (message: CometChat.BaseMessage) => any;
-    showOngoingCallRef: Ref<boolean>;
+    showOngoingCallRef: Ref<boolean, boolean>;
     getOngoingCallView: () => ViewType;
     ListStyle: typeof ListStyle;
     onInformationClose: () => void;
     getMessageTemplate: (selectedMessage: CometChat.BaseMessage) => any;
-    onBottom: Ref<boolean>;
+    onBottom: Ref<boolean, boolean>;
     getStatusInfoView: (message: CometChat.BaseMessage) => any;
     computedBackdropStyle: import("vue").ComputedRef<BackdropStyle>;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     hideError: {
         type: BooleanConstructor;
         default: boolean;
@@ -515,7 +515,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<BackdropStyle>;
         default: () => BackdropStyle;
     };
-}>>, {
+}>> & Readonly<{}>, {
     hideError: boolean;
     errorStateText: string;
     emptyStateText: string;
@@ -550,5 +550,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     reactionsConfiguration: ReactionsConfiguration;
     disableReactions: boolean;
     threadIndicatorIcon: string;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

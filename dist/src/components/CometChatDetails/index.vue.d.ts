@@ -3,7 +3,7 @@ import { AddMembersConfiguration, BannedMembersConfiguration, BaseStyle, Details
 import { CometChatDetailsOption, CometChatDetailsTemplate, SelectionMode } from "@cometchat/uikit-resources";
 import { AvatarStyle, ConfirmDialogStyle, ListItemStyle } from "@cometchat/uikit-elements";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     group: {
         type: PropType<import("@cometchat/chat-sdk-javascript").Group>;
     };
@@ -123,7 +123,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<ConfirmDialogStyle>;
         default: () => ConfirmDialogStyle;
     };
-}, {
+}>, {
     getButtonStyle: (option: CometChatDetailsOption) => {
         height: string;
         width: string;
@@ -148,7 +148,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     onCloseDetails: () => void;
     closeButtonStyle: any;
-    openTransferOwnershipModal: Ref<boolean>;
+    openTransferOwnershipModal: Ref<boolean, boolean>;
     defaultTemplate: any;
     getSectionHeaderStyle: (template: CometChatDetailsTemplate) => {
         textFont: string;
@@ -162,13 +162,13 @@ declare const _sfc_main: import("vue").DefineComponent<{
         textColor: string;
     };
     getTemplateOptions: (template: CometChatDetailsTemplate) => CometChatDetailsOption[] | undefined;
-    subtitleText: Ref<string>;
-    openAddMembersPage: Ref<boolean>;
+    subtitleText: Ref<string, string>;
+    openAddMembersPage: Ref<boolean, boolean>;
     dividerStyle: any;
     getCustomOptionView: (option: CometChatDetailsOption) => any;
-    openBannedMembersPage: Ref<boolean>;
-    openViewMembersPage: Ref<boolean>;
-    confirmLeaveGroupModal: Ref<boolean>;
+    openBannedMembersPage: Ref<boolean, boolean>;
+    openViewMembersPage: Ref<boolean, boolean>;
+    confirmLeaveGroupModal: Ref<boolean, boolean>;
     currentUser: any;
     currentGroup: any;
     setAvatarStyle: () => any;
@@ -183,16 +183,22 @@ declare const _sfc_main: import("vue").DefineComponent<{
     onCloseClick: () => void;
     getConfirmClickHandler: () => any;
     closeTransferOwnership: () => void;
-    leaveButtonTextRef: Ref<string>;
-    confirmDialogMessageRef: Ref<string>;
+    leaveButtonTextRef: Ref<string, string>;
+    confirmDialogMessageRef: Ref<string, string>;
     confirmDialogStyleRef: Ref<{
         height?: string;
         width?: string;
         border?: string;
         borderRadius?: string;
         background?: string;
+    }, BaseStyle | {
+        height?: string;
+        width?: string;
+        border?: string;
+        borderRadius?: string;
+        background?: string;
     }>;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     group: {
         type: PropType<import("@cometchat/chat-sdk-javascript").Group>;
     };
@@ -312,7 +318,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<ConfirmDialogStyle>;
         default: () => ConfirmDialogStyle;
     };
-}>>, {
+}>> & Readonly<{}>, {
     title: string;
     disableUsersPresence: boolean;
     closeButtonIconURL: string;
@@ -339,5 +345,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     deleteButtonText: string;
     deleteConfirmDialogMessage: string;
     deleteDialogStyle: ConfirmDialogStyle;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

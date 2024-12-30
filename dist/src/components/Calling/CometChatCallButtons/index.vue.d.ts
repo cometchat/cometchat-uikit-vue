@@ -1,7 +1,7 @@
 import { PropType, Ref } from "vue";
-import { CallButtonsStyle, OutgoingCallStyle, CometChatUIKitCalls } from "@cometchat/uikit-shared";
+import { CallButtonsStyle, CometChatUIKitCalls, CallScreenConfiguration, OutgoingCallConfiguration } from "@cometchat/uikit-shared";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     user: {
         type: PropType<import("@cometchat/chat-sdk-javascript").User>;
     };
@@ -48,7 +48,15 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<(error: CometChat.CometChatException) => void>;
         default: (error: CometChat.CometChatException) => void;
     };
-}, {
+    ongoingCallConfiguration: {
+        type: PropType<CallScreenConfiguration>;
+        default: () => CallScreenConfiguration;
+    };
+    outgoingCallConfiguration: {
+        type: PropType<OutgoingCallConfiguration>;
+        default: () => OutgoingCallConfiguration;
+    };
+}>, {
     getVoiceCallButtonStyle: () => any;
     getVideoCallButtonStyle: () => any;
     initiateAudioCall: () => void;
@@ -61,15 +69,29 @@ declare const _sfc_main: import("vue").DefineComponent<{
         border: any;
         borderRadius: any;
     };
-    call: Ref<import("@cometchat/chat-sdk-javascript").Call>;
-    showOutgoingCallscreen: Ref<boolean>;
-    showOngoingCall: Ref<boolean>;
+    call: Ref<import("@cometchat/chat-sdk-javascript").Call, import("@cometchat/chat-sdk-javascript").Call>;
+    showOutgoingCallscreen: Ref<boolean, boolean>;
+    showOngoingCall: Ref<boolean, boolean>;
     cancelOutgoingCall: () => void;
-    getOutGoingCallStyle: () => OutgoingCallStyle;
+    getOutGoingCallStyle: () => {
+        titleTextFont?: string;
+        titleTextColor?: string;
+        subtitleTextFont?: string;
+        subtitleTextColor?: string;
+        declineButtonTextFont?: string;
+        declineButtonTextColor?: string;
+        declineButtonIconTint?: string;
+        declineButtonIconBackground?: string;
+        height?: string;
+        width?: string;
+        border?: string;
+        borderRadius?: string;
+        background?: string;
+    };
     getCallBuilder: () => typeof CometChatUIKitCalls.CallSettings;
-    sessionId: Ref<string>;
-    disableButtons: Ref<boolean>;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+    sessionId: Ref<string, string>;
+    disableButtons: Ref<boolean, boolean>;
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     user: {
         type: PropType<import("@cometchat/chat-sdk-javascript").User>;
     };
@@ -116,7 +138,15 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<(error: CometChat.CometChatException) => void>;
         default: (error: CometChat.CometChatException) => void;
     };
-}>>, {
+    ongoingCallConfiguration: {
+        type: PropType<CallScreenConfiguration>;
+        default: () => CallScreenConfiguration;
+    };
+    outgoingCallConfiguration: {
+        type: PropType<OutgoingCallConfiguration>;
+        default: () => OutgoingCallConfiguration;
+    };
+}>> & Readonly<{}>, {
     onError: (error: CometChat.CometChatException) => void;
     voiceCallIconURL: string;
     voiceCallIconText: string;
@@ -127,5 +157,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     callButtonsStyle: CallButtonsStyle;
     onVoiceCallClick: (user: CometChat.User, group: CometChat.Group) => void;
     onVideoCallClick: (user: CometChat.User, group: CometChat.Group) => void;
-}, {}>;
+    ongoingCallConfiguration: CallScreenConfiguration;
+    outgoingCallConfiguration: OutgoingCallConfiguration;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

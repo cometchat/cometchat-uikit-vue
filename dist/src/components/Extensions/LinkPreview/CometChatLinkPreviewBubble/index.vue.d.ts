@@ -1,7 +1,7 @@
 import { PropType } from "vue";
 import { CometChatTextFormatter, LinkPreviewStyle } from "@cometchat/uikit-shared";
 import { TextBubbleStyle } from "@cometchat/uikit-elements";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
     };
@@ -32,7 +32,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     textFormatters: {
         type: PropType<CometChatTextFormatter[]>;
     };
-}, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
     };
@@ -63,7 +63,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     textFormatters: {
         type: PropType<CometChatTextFormatter[]>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     listeners: any;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

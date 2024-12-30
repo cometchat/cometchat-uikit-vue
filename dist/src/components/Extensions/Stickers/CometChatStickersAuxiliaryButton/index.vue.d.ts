@@ -1,6 +1,6 @@
 import { PropType, Ref } from "vue";
 import { Placement } from "@cometchat/uikit-resources";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     openIconURL: {
         type: StringConstructor;
     };
@@ -31,12 +31,12 @@ declare const _sfc_main: import("vue").DefineComponent<{
     componentIndex: {
         type: NumberConstructor;
     };
-}, {
+}>, {
     toggleIcon: (event: any) => void;
-    showOpenIconRef: Ref<boolean>;
+    showOpenIconRef: Ref<boolean, boolean>;
     buttonRef: any;
     localize: (str: string) => any;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, "component-event"[], "component-event", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, "component-event"[], "component-event", import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     openIconURL: {
         type: StringConstructor;
     };
@@ -67,14 +67,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
     componentIndex: {
         type: NumberConstructor;
     };
-}>> & {
+}>> & Readonly<{
     "onComponent-event"?: (...args: any[]) => any;
-}, {
+}>, {
     emojiButtonStyle: any;
     stickerKeyboardStyle: any;
     popoverStyle: any;
     listeners: any;
     stickerKeyboardListeners: any;
     auxiliaryButtonRefs: any;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

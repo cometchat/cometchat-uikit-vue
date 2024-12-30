@@ -1,7 +1,7 @@
 import { CometChatTextFormatter, MessageTranslationStyle } from "@cometchat/uikit-shared";
 import { MessageBubbleAlignment } from "@cometchat/uikit-resources";
 import { PropType } from "vue";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     translatedText: {
         type: StringConstructor;
     };
@@ -20,7 +20,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     textFormatters: {
         type: PropType<CometChatTextFormatter[]>;
     };
-}, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     translatedText: {
         type: StringConstructor;
     };
@@ -39,7 +39,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     textFormatters: {
         type: PropType<CometChatTextFormatter[]>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     textStyle: any;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

@@ -1,7 +1,7 @@
 import { ContextMenuStyle } from "@cometchat/uikit-elements";
 import { CometChatActionsIcon, CometChatActionsView, Placement } from "@cometchat/uikit-resources";
 import { PropType } from "vue";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     data: {
         type: PropType<CometChatActionsIcon[] | CometChatActionsView[]>;
     };
@@ -24,7 +24,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     placement: {
         type: PropType<Placement>;
     };
-}, {
+}>, {
     menuItemStyle: () => {
         background: string;
         padding: string;
@@ -51,7 +51,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         borderRadius: string;
     };
     handleMenuClick: () => boolean;
-    showSubMenu: import("vue").Ref<boolean>;
+    showSubMenu: import("vue").Ref<boolean, boolean>;
     topMenu: any;
     subMenu: any;
     moreButtonStyle: {
@@ -63,7 +63,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getClosePopOverHandler: (index: number, isSubMenu?: boolean) => (_event: any) => void;
     topMenuPopOverRef: any;
     subMenuPopOverRef: any;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     data: {
         type: PropType<CometChatActionsIcon[] | CometChatActionsView[]>;
     };
@@ -86,8 +86,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
     placement: {
         type: PropType<Placement>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     ContextMenuStyle: ContextMenuStyle;
     onOptionClicked: any;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

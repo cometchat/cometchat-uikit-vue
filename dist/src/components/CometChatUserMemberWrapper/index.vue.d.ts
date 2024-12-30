@@ -1,7 +1,7 @@
 import { PropType } from "vue";
 import { UserMemberListType, UserPresencePlacement } from "@cometchat/uikit-resources";
 import { AvatarStyle } from "@cometchat/uikit-elements";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     userMemberListType: {
         type: PropType<UserMemberListType>;
         default: UserMemberListType;
@@ -62,7 +62,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     onError: {
         type: PropType<() => void>;
     };
-}, {
+}>, {
     UserMemberListType: typeof UserMemberListType;
     listItemStyle: {
         height: string;
@@ -81,7 +81,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         background: string;
         borderRadius: string;
     };
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     userMemberListType: {
         type: PropType<UserMemberListType>;
         default: UserMemberListType;
@@ -142,12 +142,12 @@ declare const _sfc_main: import("vue").DefineComponent<{
     onError: {
         type: PropType<() => void>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     disableUsersPresence: boolean;
     hideSeparator: boolean;
     userPresencePlacement: UserPresencePlacement;
     disableLoadingState: boolean;
     userMemberListType: UserMemberListType;
     loadingIconUrl: string;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

@@ -3,7 +3,7 @@ import { getButtonContainerStyle, getBackButtonStyle, getTitleStyle, getListStyl
 import { CometChatTheme, DatePatterns, States } from "@cometchat/uikit-resources";
 import { AvatarStyle, ListItemStyle } from "@cometchat/uikit-elements";
 import { CallLogParticipantsStyle } from "@cometchat/uikit-shared";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -47,8 +47,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
     tailView: {
         type: PropType<(item: any) => ViewType>;
     };
-}, {
-    theme: Ref<CometChatTheme>;
+}>, {
+    theme: Ref<CometChatTheme, CometChatTheme>;
     States: typeof States;
     handleBackClick: () => void;
     getButtonContainerStyle: typeof getButtonContainerStyle;
@@ -61,11 +61,11 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getSubtitleStyle: typeof getSubtitleStyle;
     getCallDateStyle: typeof getCallDateStyle;
     getCallParticipants: () => any;
-    loggedInUser: any;
+    loggedInUser: Ref<any, any>;
     getCallInitiatedAt: () => any;
     getDurationOfCall: (item: any) => string;
     getContainerStyle: typeof getContainerStyle;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -109,12 +109,12 @@ declare const _sfc_main: import("vue").DefineComponent<{
     tailView: {
         type: PropType<(item: any) => ViewType>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     title: string;
     avatarStyle: AvatarStyle;
     listItemStyle: ListItemStyle;
     datePattern: DatePatterns;
     backIconUrl: string;
     callLogParticipantsStyle: CallLogParticipantsStyle;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

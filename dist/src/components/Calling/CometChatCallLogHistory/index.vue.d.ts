@@ -5,7 +5,7 @@ import { CometChatTheme, DatePatterns, SelectionMode, States } from "@cometchat/
 import { getCallStatusWithType, verifyCallUser } from "../Utils/utils";
 import { ListItemStyle } from "@cometchat/uikit-elements";
 import { CallLogHistoryStyle } from "@cometchat/uikit-shared";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     callUser: {
         type: ObjectConstructor;
     };
@@ -75,18 +75,18 @@ declare const _sfc_main: import("vue").DefineComponent<{
     onError: {
         type: PropType<(error: CometChat.CometChatException) => void>;
     };
-}, {
+}>, {
     callList: any;
-    state: Ref<States>;
+    state: Ref<States, States>;
     SelectionMode: typeof SelectionMode;
     getListItemStyle: typeof getListItemStyle;
     getAvatarStyle: typeof getAvatarStyle;
     getCallStatusWithType: typeof getCallStatusWithType;
     getSubtitleStyle: typeof getSubtitleStyle;
     handleItemClick: (call: any) => void;
-    theme: Ref<CometChatTheme>;
+    theme: Ref<CometChatTheme, CometChatTheme>;
     getCallList: () => Promise<void>;
-    loggedInUser: Ref<import("@cometchat/chat-sdk-javascript").User>;
+    loggedInUser: Ref<import("@cometchat/chat-sdk-javascript").User, import("@cometchat/chat-sdk-javascript").User>;
     verifyCallUser: typeof verifyCallUser;
     getBackButtonStyle: typeof getBackButtonStyle;
     getButtonContainerStyle: typeof getButtonContainerStyle;
@@ -98,7 +98,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getCallDuration: (item: any) => string | false;
     getCallStatusStyle: typeof getCallStatusStyle;
     getTitleStyle: typeof getTitleStyle;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     callUser: {
         type: ObjectConstructor;
     };
@@ -168,7 +168,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     onError: {
         type: PropType<(error: CometChat.CometChatException) => void>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     title: string;
     errorStateText: string;
     emptyStateText: string;
@@ -178,5 +178,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     backIconUrl: string;
     dateSeparatorPattern: DatePatterns;
     callLogHistoryStyle: CallLogHistoryStyle;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

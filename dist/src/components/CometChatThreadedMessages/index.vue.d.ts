@@ -1,7 +1,7 @@
 import { Ref, PropType } from "vue";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 import { MessageListConfiguration, MessageComposerConfiguration, ThreadedMessagesStyle } from "@cometchat/uikit-shared";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     onClose: {
         type: PropType<() => void>;
         default: () => void;
@@ -49,7 +49,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, {
+}>, {
     getMessageListStyle: () => {
         emptyStateView: any;
         errorStateView: any;
@@ -95,7 +95,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     actionButtonStyle: any;
     closeView: () => void;
     getThreadCount: () => string;
-    requestBuilder: Ref<import("@cometchat/chat-sdk-javascript").MessagesRequestBuilder>;
+    requestBuilder: Ref<import("@cometchat/chat-sdk-javascript").MessagesRequestBuilder, import("@cometchat/chat-sdk-javascript").MessagesRequestBuilder>;
     group: any;
     user: any;
     wrapperStyle: () => {
@@ -108,7 +108,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     componentDefinition: any;
     messageListViewComputed: import("vue").ComputedRef<ViewType>;
     messageComposerViewComputed: import("vue").ComputedRef<ViewType>;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     onClose: {
         type: PropType<() => void>;
         default: () => void;
@@ -156,7 +156,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>>, {
+}>> & Readonly<{}>, {
     title: string;
     onError: (error: CometChat.CometChatException) => void;
     onClose: () => void;
@@ -165,5 +165,5 @@ declare const _sfc_main: import("vue").DefineComponent<{
     messageListConfiguration: MessageListConfiguration;
     messageComposerConfiguration: MessageComposerConfiguration;
     threadedMessagesStyle: ThreadedMessagesStyle;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;

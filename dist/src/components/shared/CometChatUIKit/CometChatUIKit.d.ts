@@ -1,5 +1,5 @@
 import { CardMessage, CometChatLocalize, CustomInteractiveMessage, FormMessage, SchedulerMessage } from "@cometchat/uikit-resources";
-import { CometChatSoundManager, UIKitSettings } from "@cometchat/uikit-shared";
+import { CallingExtensionDataSource, CometChatSoundManager, UIKitSettings } from "@cometchat/uikit-shared";
 import { AIExtensionDataSource } from "../Framework/AIExtensionDataSource";
 import { ConversationUpdateSettings } from "@cometchat/chat-sdk-javascript";
 import { ExtensionsDataSource } from "../Framework/ExtensionsDatasource";
@@ -11,6 +11,11 @@ export declare class CometChatUIKit {
     static conversationUpdateSettings: ConversationUpdateSettings;
     static init(uiKitSettings: UIKitSettings | null): Promise<Object> | undefined;
     static defaultExtensions: ExtensionsDataSource[];
+    /**
+     * Default callingExtension included in the UI Kit.
+     * @type {CallingExtensionDataSource}
+     */
+    static defaultCallingExtension: CallingExtensionDataSource;
     static defaultAIFeatures: AIExtensionDataSource[];
     static enableCalling(): void;
     private static initiateAfterLogin;

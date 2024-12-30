@@ -1,7 +1,7 @@
 import { Ref, ComputedRef, PropType, CSSProperties } from "vue";
 import { MessageBubbleAlignment, Placement } from "@cometchat/uikit-resources";
 import { MenuListStyle } from "@cometchat/uikit-elements";
-declare const _sfc_main: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     messageBubbleStyle: {
         type: PropType<CSSProperties>;
         default: () => CSSProperties;
@@ -50,8 +50,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
     statusInfoView: {
         type: PropType<ViewType>;
     };
-}, {
-    isHovering: Ref<boolean>;
+}>, {
+    isHovering: Ref<boolean, boolean>;
     getOptionsStyle: () => MenuListStyle;
     wrapperStyle: () => {
         display: string;
@@ -82,6 +82,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
         animationIterationCount?: import("csstype").Property.AnimationIterationCount;
         animationName?: import("csstype").Property.AnimationName;
         animationPlayState?: import("csstype").Property.AnimationPlayState;
+        animationRangeEnd?: import("csstype").Property.AnimationRangeEnd<string | number>;
+        animationRangeStart?: import("csstype").Property.AnimationRangeStart<string | number>;
         animationTimeline?: import("csstype").Property.AnimationTimeline;
         animationTimingFunction?: import("csstype").Property.AnimationTimingFunction;
         appearance?: import("csstype").Property.Appearance;
@@ -203,6 +205,10 @@ declare const _sfc_main: import("vue").DefineComponent<{
         fontStretch?: import("csstype").Property.FontStretch;
         fontStyle?: import("csstype").Property.FontStyle;
         fontSynthesis?: import("csstype").Property.FontSynthesis;
+        fontSynthesisPosition?: import("csstype").Property.FontSynthesisPosition;
+        fontSynthesisSmallCaps?: import("csstype").Property.FontSynthesisSmallCaps;
+        fontSynthesisStyle?: import("csstype").Property.FontSynthesisStyle;
+        fontSynthesisWeight?: import("csstype").Property.FontSynthesisWeight;
         fontVariant?: import("csstype").Property.FontVariant;
         fontVariantAlternates?: import("csstype").Property.FontVariantAlternates;
         fontVariantCaps?: import("csstype").Property.FontVariantCaps;
@@ -276,6 +282,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         maskRepeat?: import("csstype").Property.MaskRepeat;
         maskSize?: import("csstype").Property.MaskSize<string | number>;
         maskType?: import("csstype").Property.MaskType;
+        masonryAutoFlow?: import("csstype").Property.MasonryAutoFlow;
         mathDepth?: import("csstype").Property.MathDepth;
         mathShift?: import("csstype").Property.MathShift;
         mathStyle?: import("csstype").Property.MathStyle;
@@ -315,6 +322,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         overflowWrap?: import("csstype").Property.OverflowWrap;
         overflowX?: import("csstype").Property.OverflowX;
         overflowY?: import("csstype").Property.OverflowY;
+        overlay?: import("csstype").Property.Overlay;
         overscrollBehaviorBlock?: import("csstype").Property.OverscrollBehaviorBlock;
         overscrollBehaviorInline?: import("csstype").Property.OverscrollBehaviorInline;
         overscrollBehaviorX?: import("csstype").Property.OverscrollBehaviorX;
@@ -402,12 +410,15 @@ declare const _sfc_main: import("vue").DefineComponent<{
         textTransform?: import("csstype").Property.TextTransform;
         textUnderlineOffset?: import("csstype").Property.TextUnderlineOffset<string | number>;
         textUnderlinePosition?: import("csstype").Property.TextUnderlinePosition;
+        textWrap?: import("csstype").Property.TextWrap;
+        timelineScope?: import("csstype").Property.TimelineScope;
         top?: import("csstype").Property.Top<string | number>;
         touchAction?: import("csstype").Property.TouchAction;
         transform?: import("csstype").Property.Transform;
         transformBox?: import("csstype").Property.TransformBox;
         transformOrigin?: import("csstype").Property.TransformOrigin<string | number>;
         transformStyle?: import("csstype").Property.TransformStyle;
+        transitionBehavior?: import("csstype").Property.TransitionBehavior;
         transitionDelay?: import("csstype").Property.TransitionDelay<string & {}>;
         transitionDuration?: import("csstype").Property.TransitionDuration<string & {}>;
         transitionProperty?: import("csstype").Property.TransitionProperty;
@@ -416,9 +427,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
         unicodeBidi?: import("csstype").Property.UnicodeBidi;
         userSelect?: import("csstype").Property.UserSelect;
         verticalAlign?: import("csstype").Property.VerticalAlign<string | number>;
+        viewTimelineAxis?: import("csstype").Property.ViewTimelineAxis;
+        viewTimelineInset?: import("csstype").Property.ViewTimelineInset<string | number>;
+        viewTimelineName?: import("csstype").Property.ViewTimelineName;
         viewTransitionName?: import("csstype").Property.ViewTransitionName;
         visibility?: import("csstype").Property.Visibility;
         whiteSpace?: import("csstype").Property.WhiteSpace;
+        whiteSpaceCollapse?: import("csstype").Property.WhiteSpaceCollapse;
+        whiteSpaceTrim?: import("csstype").Property.WhiteSpaceTrim;
         widows?: import("csstype").Property.Widows;
         width?: import("csstype").Property.Width<string | number>;
         willChange?: import("csstype").Property.WillChange;
@@ -430,6 +446,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         zoom?: import("csstype").Property.Zoom;
         all?: import("csstype").Globals;
         animation?: import("csstype").Property.Animation<string & {}>;
+        animationRange?: import("csstype").Property.AnimationRange<string | number>;
         background?: import("csstype").Property.Background<string | number>;
         backgroundPosition?: import("csstype").Property.BackgroundPosition<string | number>;
         border?: import("csstype").Property.Border<string | number>;
@@ -494,6 +511,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         textDecoration?: import("csstype").Property.TextDecoration<string | number>;
         textEmphasis?: import("csstype").Property.TextEmphasis;
         transition?: import("csstype").Property.Transition<string & {}>;
+        viewTimeline?: import("csstype").Property.ViewTimeline;
         MozAnimationDelay?: import("csstype").Property.AnimationDelay<string & {}>;
         MozAnimationDirection?: import("csstype").Property.AnimationDirection;
         MozAnimationDuration?: import("csstype").Property.AnimationDuration<string & {}>;
@@ -503,7 +521,6 @@ declare const _sfc_main: import("vue").DefineComponent<{
         MozAnimationPlayState?: import("csstype").Property.AnimationPlayState;
         MozAnimationTimingFunction?: import("csstype").Property.AnimationTimingFunction;
         MozAppearance?: import("csstype").Property.MozAppearance;
-        MozBackfaceVisibility?: import("csstype").Property.BackfaceVisibility;
         MozBinding?: import("csstype").Property.MozBinding;
         MozBorderBottomColors?: import("csstype").Property.MozBorderBottomColors;
         MozBorderEndColor?: import("csstype").Property.BorderInlineEndColor;
@@ -530,20 +547,16 @@ declare const _sfc_main: import("vue").DefineComponent<{
         MozMarginStart?: import("csstype").Property.MarginInlineStart<string | number>;
         MozOrient?: import("csstype").Property.MozOrient;
         MozOsxFontSmoothing?: import("csstype").Property.FontSmooth<string | number>;
+        MozOutlineRadiusBottomleft?: import("csstype").Property.MozOutlineRadiusBottomleft<string | number>;
+        MozOutlineRadiusBottomright?: import("csstype").Property.MozOutlineRadiusBottomright<string | number>;
+        MozOutlineRadiusTopleft?: import("csstype").Property.MozOutlineRadiusTopleft<string | number>;
+        MozOutlineRadiusTopright?: import("csstype").Property.MozOutlineRadiusTopright<string | number>;
         MozPaddingEnd?: import("csstype").Property.PaddingInlineEnd<string | number>;
         MozPaddingStart?: import("csstype").Property.PaddingInlineStart<string | number>;
-        MozPerspective?: import("csstype").Property.Perspective<string | number>;
-        MozPerspectiveOrigin?: import("csstype").Property.PerspectiveOrigin<string | number>;
         MozStackSizing?: import("csstype").Property.MozStackSizing;
         MozTabSize?: import("csstype").Property.TabSize<string | number>;
         MozTextBlink?: import("csstype").Property.MozTextBlink;
         MozTextSizeAdjust?: import("csstype").Property.TextSizeAdjust;
-        MozTransformOrigin?: import("csstype").Property.TransformOrigin<string | number>;
-        MozTransformStyle?: import("csstype").Property.TransformStyle;
-        MozTransitionDelay?: import("csstype").Property.TransitionDelay<string & {}>;
-        MozTransitionDuration?: import("csstype").Property.TransitionDuration<string & {}>;
-        MozTransitionProperty?: import("csstype").Property.TransitionProperty;
-        MozTransitionTimingFunction?: import("csstype").Property.TransitionTimingFunction;
         MozUserFocus?: import("csstype").Property.MozUserFocus;
         MozUserModify?: import("csstype").Property.MozUserModify;
         MozUserSelect?: import("csstype").Property.UserSelect;
@@ -723,7 +736,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         MozBorderImage?: import("csstype").Property.BorderImage;
         MozColumnRule?: import("csstype").Property.ColumnRule<string | number>;
         MozColumns?: import("csstype").Property.Columns<string | number>;
-        MozTransition?: import("csstype").Property.Transition<string & {}>;
+        MozOutlineRadius?: import("csstype").Property.MozOutlineRadius<string | number>;
         msContentZoomLimit?: import("csstype").Property.MsContentZoomLimit;
         msContentZoomSnap?: import("csstype").Property.MsContentZoomSnap;
         msFlex?: import("csstype").Property.Flex<string | number>;
@@ -781,6 +794,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         KhtmlLineBreak?: import("csstype").Property.LineBreak;
         KhtmlOpacity?: import("csstype").Property.Opacity;
         KhtmlUserSelect?: import("csstype").Property.UserSelect;
+        MozBackfaceVisibility?: import("csstype").Property.BackfaceVisibility;
         MozBackgroundClip?: import("csstype").Property.BackgroundClip;
         MozBackgroundInlinePolicy?: import("csstype").Property.BoxDecorationBreak;
         MozBackgroundOrigin?: import("csstype").Property.BackgroundOrigin;
@@ -802,17 +816,22 @@ declare const _sfc_main: import("vue").DefineComponent<{
         MozOpacity?: import("csstype").Property.Opacity;
         MozOutline?: import("csstype").Property.Outline<string | number>;
         MozOutlineColor?: import("csstype").Property.OutlineColor;
-        MozOutlineRadius?: import("csstype").Property.MozOutlineRadius<string | number>;
-        MozOutlineRadiusBottomleft?: import("csstype").Property.MozOutlineRadiusBottomleft<string | number>;
-        MozOutlineRadiusBottomright?: import("csstype").Property.MozOutlineRadiusBottomright<string | number>;
-        MozOutlineRadiusTopleft?: import("csstype").Property.MozOutlineRadiusTopleft<string | number>;
-        MozOutlineRadiusTopright?: import("csstype").Property.MozOutlineRadiusTopright<string | number>;
         MozOutlineStyle?: import("csstype").Property.OutlineStyle;
         MozOutlineWidth?: import("csstype").Property.OutlineWidth<string | number>;
+        MozPerspective?: import("csstype").Property.Perspective<string | number>;
+        MozPerspectiveOrigin?: import("csstype").Property.PerspectiveOrigin<string | number>;
         MozTextAlignLast?: import("csstype").Property.TextAlignLast;
         MozTextDecorationColor?: import("csstype").Property.TextDecorationColor;
         MozTextDecorationLine?: import("csstype").Property.TextDecorationLine;
         MozTextDecorationStyle?: import("csstype").Property.TextDecorationStyle;
+        MozTransform?: import("csstype").Property.Transform;
+        MozTransformOrigin?: import("csstype").Property.TransformOrigin<string | number>;
+        MozTransformStyle?: import("csstype").Property.TransformStyle;
+        MozTransition?: import("csstype").Property.Transition<string & {}>;
+        MozTransitionDelay?: import("csstype").Property.TransitionDelay<string & {}>;
+        MozTransitionDuration?: import("csstype").Property.TransitionDuration<string & {}>;
+        MozTransitionProperty?: import("csstype").Property.TransitionProperty;
+        MozTransitionTimingFunction?: import("csstype").Property.TransitionTimingFunction;
         MozUserInput?: import("csstype").Property.MozUserInput;
         msImeMode?: import("csstype").Property.ImeMode;
         OAnimation?: import("csstype").Property.Animation<string & {}>;
@@ -845,8 +864,6 @@ declare const _sfc_main: import("vue").DefineComponent<{
         WebkitBoxOrdinalGroup?: import("csstype").Property.BoxOrdinalGroup;
         WebkitBoxOrient?: import("csstype").Property.BoxOrient;
         WebkitBoxPack?: import("csstype").Property.BoxPack;
-        WebkitScrollSnapPointsX?: import("csstype").Property.ScrollSnapPointsX;
-        WebkitScrollSnapPointsY?: import("csstype").Property.ScrollSnapPointsY;
         alignmentBaseline?: import("csstype").Property.AlignmentBaseline;
         baselineShift?: import("csstype").Property.BaselineShift<string | number>;
         clipRule?: import("csstype").Property.ClipRule;
@@ -890,6 +907,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "animation-iteration-count"?: import("csstype").Property.AnimationIterationCount;
         "animation-name"?: import("csstype").Property.AnimationName;
         "animation-play-state"?: import("csstype").Property.AnimationPlayState;
+        "animation-range-end"?: import("csstype").Property.AnimationRangeEnd<string | number>;
+        "animation-range-start"?: import("csstype").Property.AnimationRangeStart<string | number>;
         "animation-timeline"?: import("csstype").Property.AnimationTimeline;
         "animation-timing-function"?: import("csstype").Property.AnimationTimingFunction;
         "aspect-ratio"?: import("csstype").Property.AspectRatio;
@@ -1000,6 +1019,10 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "font-stretch"?: import("csstype").Property.FontStretch;
         "font-style"?: import("csstype").Property.FontStyle;
         "font-synthesis"?: import("csstype").Property.FontSynthesis;
+        "font-synthesis-position"?: import("csstype").Property.FontSynthesisPosition;
+        "font-synthesis-small-caps"?: import("csstype").Property.FontSynthesisSmallCaps;
+        "font-synthesis-style"?: import("csstype").Property.FontSynthesisStyle;
+        "font-synthesis-weight"?: import("csstype").Property.FontSynthesisWeight;
         "font-variant"?: import("csstype").Property.FontVariant;
         "font-variant-alternates"?: import("csstype").Property.FontVariantAlternates;
         "font-variant-caps"?: import("csstype").Property.FontVariantCaps;
@@ -1069,6 +1092,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "mask-repeat"?: import("csstype").Property.MaskRepeat;
         "mask-size"?: import("csstype").Property.MaskSize<string | number>;
         "mask-type"?: import("csstype").Property.MaskType;
+        "masonry-auto-flow"?: import("csstype").Property.MasonryAutoFlow;
         "math-depth"?: import("csstype").Property.MathDepth;
         "math-shift"?: import("csstype").Property.MathShift;
         "math-style"?: import("csstype").Property.MathStyle;
@@ -1184,10 +1208,13 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "text-transform"?: import("csstype").Property.TextTransform;
         "text-underline-offset"?: import("csstype").Property.TextUnderlineOffset<string | number>;
         "text-underline-position"?: import("csstype").Property.TextUnderlinePosition;
+        "text-wrap"?: import("csstype").Property.TextWrap;
+        "timeline-scope"?: import("csstype").Property.TimelineScope;
         "touch-action"?: import("csstype").Property.TouchAction;
         "transform-box"?: import("csstype").Property.TransformBox;
         "transform-origin"?: import("csstype").Property.TransformOrigin<string | number>;
         "transform-style"?: import("csstype").Property.TransformStyle;
+        "transition-behavior"?: import("csstype").Property.TransitionBehavior;
         "transition-delay"?: import("csstype").Property.TransitionDelay<string & {}>;
         "transition-duration"?: import("csstype").Property.TransitionDuration<string & {}>;
         "transition-property"?: import("csstype").Property.TransitionProperty;
@@ -1195,14 +1222,20 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "unicode-bidi"?: import("csstype").Property.UnicodeBidi;
         "user-select"?: import("csstype").Property.UserSelect;
         "vertical-align"?: import("csstype").Property.VerticalAlign<string | number>;
+        "view-timeline-axis"?: import("csstype").Property.ViewTimelineAxis;
+        "view-timeline-inset"?: import("csstype").Property.ViewTimelineInset<string | number>;
+        "view-timeline-name"?: import("csstype").Property.ViewTimelineName;
         "view-transition-name"?: import("csstype").Property.ViewTransitionName;
         "white-space"?: import("csstype").Property.WhiteSpace;
+        "white-space-collapse"?: import("csstype").Property.WhiteSpaceCollapse;
+        "white-space-trim"?: import("csstype").Property.WhiteSpaceTrim;
         "will-change"?: import("csstype").Property.WillChange;
         "word-break"?: import("csstype").Property.WordBreak;
         "word-spacing"?: import("csstype").Property.WordSpacing<string | number>;
         "word-wrap"?: import("csstype").Property.WordWrap;
         "writing-mode"?: import("csstype").Property.WritingMode;
         "z-index"?: import("csstype").Property.ZIndex;
+        "animation-range"?: import("csstype").Property.AnimationRange<string | number>;
         "background-position"?: import("csstype").Property.BackgroundPosition<string | number>;
         "border-block"?: import("csstype").Property.BorderBlock<string | number>;
         "border-block-end"?: import("csstype").Property.BorderBlockEnd<string | number>;
@@ -1249,6 +1282,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "scroll-timeline"?: import("csstype").Property.ScrollTimeline;
         "text-decoration"?: import("csstype").Property.TextDecoration<string | number>;
         "text-emphasis"?: import("csstype").Property.TextEmphasis;
+        "view-timeline"?: import("csstype").Property.ViewTimeline;
         "-moz-animation-delay"?: import("csstype").Property.AnimationDelay<string & {}>;
         "-moz-animation-direction"?: import("csstype").Property.AnimationDirection;
         "-moz-animation-duration"?: import("csstype").Property.AnimationDuration<string & {}>;
@@ -1258,7 +1292,6 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "-moz-animation-play-state"?: import("csstype").Property.AnimationPlayState;
         "-moz-animation-timing-function"?: import("csstype").Property.AnimationTimingFunction;
         "-moz-appearance"?: import("csstype").Property.MozAppearance;
-        "-moz-backface-visibility"?: import("csstype").Property.BackfaceVisibility;
         "-moz-binding"?: import("csstype").Property.MozBinding;
         "-moz-border-bottom-colors"?: import("csstype").Property.MozBorderBottomColors;
         "-moz-border-end-color"?: import("csstype").Property.BorderInlineEndColor;
@@ -1285,20 +1318,16 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "-moz-margin-start"?: import("csstype").Property.MarginInlineStart<string | number>;
         "-moz-orient"?: import("csstype").Property.MozOrient;
         "-moz-osx-font-smoothing"?: import("csstype").Property.FontSmooth<string | number>;
+        "-moz-outline-radius-bottomleft"?: import("csstype").Property.MozOutlineRadiusBottomleft<string | number>;
+        "-moz-outline-radius-bottomright"?: import("csstype").Property.MozOutlineRadiusBottomright<string | number>;
+        "-moz-outline-radius-topleft"?: import("csstype").Property.MozOutlineRadiusTopleft<string | number>;
+        "-moz-outline-radius-topright"?: import("csstype").Property.MozOutlineRadiusTopright<string | number>;
         "-moz-padding-end"?: import("csstype").Property.PaddingInlineEnd<string | number>;
         "-moz-padding-start"?: import("csstype").Property.PaddingInlineStart<string | number>;
-        "-moz-perspective"?: import("csstype").Property.Perspective<string | number>;
-        "-moz-perspective-origin"?: import("csstype").Property.PerspectiveOrigin<string | number>;
         "-moz-stack-sizing"?: import("csstype").Property.MozStackSizing;
         "-moz-tab-size"?: import("csstype").Property.TabSize<string | number>;
         "-moz-text-blink"?: import("csstype").Property.MozTextBlink;
         "-moz-text-size-adjust"?: import("csstype").Property.TextSizeAdjust;
-        "-moz-transform-origin"?: import("csstype").Property.TransformOrigin<string | number>;
-        "-moz-transform-style"?: import("csstype").Property.TransformStyle;
-        "-moz-transition-delay"?: import("csstype").Property.TransitionDelay<string & {}>;
-        "-moz-transition-duration"?: import("csstype").Property.TransitionDuration<string & {}>;
-        "-moz-transition-property"?: import("csstype").Property.TransitionProperty;
-        "-moz-transition-timing-function"?: import("csstype").Property.TransitionTimingFunction;
         "-moz-user-focus"?: import("csstype").Property.MozUserFocus;
         "-moz-user-modify"?: import("csstype").Property.MozUserModify;
         "-moz-user-select"?: import("csstype").Property.UserSelect;
@@ -1478,7 +1507,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "-moz-border-image"?: import("csstype").Property.BorderImage;
         "-moz-column-rule"?: import("csstype").Property.ColumnRule<string | number>;
         "-moz-columns"?: import("csstype").Property.Columns<string | number>;
-        "-moz-transition"?: import("csstype").Property.Transition<string & {}>;
+        "-moz-outline-radius"?: import("csstype").Property.MozOutlineRadius<string | number>;
         "-ms-content-zoom-limit"?: import("csstype").Property.MsContentZoomLimit;
         "-ms-content-zoom-snap"?: import("csstype").Property.MsContentZoomSnap;
         "-ms-flex"?: import("csstype").Property.Flex<string | number>;
@@ -1534,6 +1563,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "-khtml-line-break"?: import("csstype").Property.LineBreak;
         "-khtml-opacity"?: import("csstype").Property.Opacity;
         "-khtml-user-select"?: import("csstype").Property.UserSelect;
+        "-moz-backface-visibility"?: import("csstype").Property.BackfaceVisibility;
         "-moz-background-clip"?: import("csstype").Property.BackgroundClip;
         "-moz-background-inline-policy"?: import("csstype").Property.BoxDecorationBreak;
         "-moz-background-origin"?: import("csstype").Property.BackgroundOrigin;
@@ -1555,17 +1585,22 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "-moz-opacity"?: import("csstype").Property.Opacity;
         "-moz-outline"?: import("csstype").Property.Outline<string | number>;
         "-moz-outline-color"?: import("csstype").Property.OutlineColor;
-        "-moz-outline-radius"?: import("csstype").Property.MozOutlineRadius<string | number>;
-        "-moz-outline-radius-bottomleft"?: import("csstype").Property.MozOutlineRadiusBottomleft<string | number>;
-        "-moz-outline-radius-bottomright"?: import("csstype").Property.MozOutlineRadiusBottomright<string | number>;
-        "-moz-outline-radius-topleft"?: import("csstype").Property.MozOutlineRadiusTopleft<string | number>;
-        "-moz-outline-radius-topright"?: import("csstype").Property.MozOutlineRadiusTopright<string | number>;
         "-moz-outline-style"?: import("csstype").Property.OutlineStyle;
         "-moz-outline-width"?: import("csstype").Property.OutlineWidth<string | number>;
+        "-moz-perspective"?: import("csstype").Property.Perspective<string | number>;
+        "-moz-perspective-origin"?: import("csstype").Property.PerspectiveOrigin<string | number>;
         "-moz-text-align-last"?: import("csstype").Property.TextAlignLast;
         "-moz-text-decoration-color"?: import("csstype").Property.TextDecorationColor;
         "-moz-text-decoration-line"?: import("csstype").Property.TextDecorationLine;
         "-moz-text-decoration-style"?: import("csstype").Property.TextDecorationStyle;
+        "-moz-transform"?: import("csstype").Property.Transform;
+        "-moz-transform-origin"?: import("csstype").Property.TransformOrigin<string | number>;
+        "-moz-transform-style"?: import("csstype").Property.TransformStyle;
+        "-moz-transition"?: import("csstype").Property.Transition<string & {}>;
+        "-moz-transition-delay"?: import("csstype").Property.TransitionDelay<string & {}>;
+        "-moz-transition-duration"?: import("csstype").Property.TransitionDuration<string & {}>;
+        "-moz-transition-property"?: import("csstype").Property.TransitionProperty;
+        "-moz-transition-timing-function"?: import("csstype").Property.TransitionTimingFunction;
         "-moz-user-input"?: import("csstype").Property.MozUserInput;
         "-ms-ime-mode"?: import("csstype").Property.ImeMode;
         "-o-animation"?: import("csstype").Property.Animation<string & {}>;
@@ -1598,8 +1633,6 @@ declare const _sfc_main: import("vue").DefineComponent<{
         "-webkit-box-ordinal-group"?: import("csstype").Property.BoxOrdinalGroup;
         "-webkit-box-orient"?: import("csstype").Property.BoxOrient;
         "-webkit-box-pack"?: import("csstype").Property.BoxPack;
-        "-webkit-scroll-snap-points-x"?: import("csstype").Property.ScrollSnapPointsX;
-        "-webkit-scroll-snap-points-y"?: import("csstype").Property.ScrollSnapPointsY;
         "alignment-baseline"?: import("csstype").Property.AlignmentBaseline;
         "baseline-shift"?: import("csstype").Property.BaselineShift<string | number>;
         "clip-rule"?: import("csstype").Property.ClipRule;
@@ -1641,8 +1674,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
     Placement: typeof Placement;
     MessageBubbleAlignment: typeof MessageBubbleAlignment;
     getPlacementAligmnet: () => Placement;
-    bubbleRef: any;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+    bubbleRef: Ref<any, any>;
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     messageBubbleStyle: {
         type: PropType<CSSProperties>;
         default: () => CSSProperties;
@@ -1691,12 +1724,12 @@ declare const _sfc_main: import("vue").DefineComponent<{
     statusInfoView: {
         type: PropType<ViewType>;
     };
-}>>, {
+}>> & Readonly<{}>, {
     options: any[];
     id: any;
     messageBubbleStyle: CSSProperties;
     alignment: MessageBubbleAlignment;
     moreIconURL: string;
     topMenuSize: number;
-}, {}>;
+}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _sfc_main;
