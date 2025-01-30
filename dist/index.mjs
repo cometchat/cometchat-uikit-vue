@@ -2794,7 +2794,7 @@ class Ss extends Nn {
       ) && Object.prototype.hasOwnProperty.call(
         l["@injected"].extensions,
         "thumbnail-generation"
-      ) && l["@injected"].extensions["thumbnail-generation"].url_small && (s = n.getMetadata()["@injected"].extensions["thumbnail-generation"].url_small), {
+      ) && l["@injected"].extensions["thumbnail-generation"].url_medium && (s = n.getMetadata()["@injected"].extensions["thumbnail-generation"].url_medium), {
         componentName: "CometChatImageModerationBubble",
         props: {
           message: n,
@@ -3939,7 +3939,7 @@ class Ys extends Nn {
       ) && Object.prototype.hasOwnProperty.call(
         s["@injected"].extensions,
         "thumbnail-generation"
-      ) && s["@injected"].extensions["thumbnail-generation"].url_small && (u = o.getMetadata()["@injected"].extensions["thumbnail-generation"].url_small), super.getImageMessageBubble(
+      ) && s["@injected"].extensions["thumbnail-generation"].url_medium && (u = o.getMetadata()["@injected"].extensions["thumbnail-generation"].url_medium), super.getImageMessageBubble(
         u,
         vi,
         o,
@@ -3958,7 +3958,7 @@ class Ys extends Nn {
     ) && Object.prototype.hasOwnProperty.call(
       u["@injected"].extensions,
       "thumbnail-generation"
-    ) && u["@injected"].extensions["thumbnail-generation"].url_small && (s = n.getMetadata()["@injected"].extensions["thumbnail-generation"].url_small), super.getVideoMessageBubble(
+    ) && u["@injected"].extensions["thumbnail-generation"].url_medium && (s = n.getMetadata()["@injected"].extensions["thumbnail-generation"].url_medium), super.getVideoMessageBubble(
       (c = n == null ? void 0 : n.getAttachments()[0]) == null ? void 0 : c.getUrl(),
       n,
       o,
@@ -3990,7 +3990,7 @@ const pt = class pt {
     return y.setSource && y.setSource("uikit-v4", "web", "vuejs"), qi && (qi.uikitSettings = pt == null ? void 0 : pt.uiKitSettings), Ct.attachListener(), new Promise((i, l) => {
       window.CometChatUiKit = {
         name: "@cometchat/chat-uikit-vue",
-        version: "4.3.20"
+        version: "4.3.21"
       }, y.init(t == null ? void 0 : t.appId, o).then(() => {
         y.getLoggedinUser().then((r) => (r && (Ct.setLoggedInUser(r), Ne.init(), this.initiateAfterLogin()), i(r))).catch((r) => (console.log(r), l(r)));
       }).catch((r) => l(r));
