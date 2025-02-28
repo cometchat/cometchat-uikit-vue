@@ -3,7 +3,7 @@ import { IncomingCallStyle, CometChatUIKitCalls, CallScreenConfiguration } from 
 import { CallscreenStyle } from "@cometchat/uikit-elements";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 import { AvatarStyle, IconStyle, ListItemStyle } from "@cometchat/uikit-elements";
-declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+declare const _sfc_main: import("vue").DefineComponent<{
     call: {
         type: PropType<import("@cometchat/chat-sdk-javascript").Call>;
     };
@@ -52,7 +52,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: PropType<CallScreenConfiguration>;
         default: () => CallScreenConfiguration;
     };
-}>, {
+}, {
     wrapperStyle: () => {
         height: any;
         width: any;
@@ -68,9 +68,9 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     getDeclineStyle: () => any;
     getAcceptButtonStyle: () => any;
     getCallBuilder: () => typeof CometChatUIKitCalls.CallSettings | undefined;
-    showOngoingCall: Ref<boolean, boolean>;
+    showOngoingCall: Ref<boolean>;
     ongoingCallStyle: CallscreenStyle;
-    sessionId: Ref<string, string>;
+    sessionId: Ref<string>;
     rejectIncomingCall: (reason?: string) => void;
     acceptIncomingCall: () => void;
     getIconStyle: () => IconStyle;
@@ -80,8 +80,8 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         textColor: any;
     };
     currentCall: any;
-    showIncomingCallScreen: Ref<boolean, boolean>;
-}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    showIncomingCallScreen: Ref<boolean>;
+}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     call: {
         type: PropType<import("@cometchat/chat-sdk-javascript").Call>;
     };
@@ -130,7 +130,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: PropType<CallScreenConfiguration>;
         default: () => CallScreenConfiguration;
     };
-}>> & Readonly<{}>, {
+}>>, {
     subtitleView: ViewType;
     onError: (error: CometChat.CometChatException) => void;
     avatarStyle: AvatarStyle;
@@ -140,5 +140,5 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     acceptButtonText: string;
     declineButtonText: string;
     incomingCallStyle: IncomingCallStyle;
-}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+}, {}>;
 export default _sfc_main;

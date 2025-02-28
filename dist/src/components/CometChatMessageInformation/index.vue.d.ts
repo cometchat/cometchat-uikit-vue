@@ -2,8 +2,8 @@ import { PropType, Ref, StyleValue } from "vue";
 import { CometChatMessageTemplate, Receipts, States, DatePatterns } from "@cometchat/uikit-resources";
 import { ListStyle, MessageInformationStyle } from "@cometchat/uikit-shared";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-import { AvatarStyle, LabelStyle, ReceiptStyle } from "@cometchat/uikit-elements";
-declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+import { AvatarStyle, ReceiptStyle } from "@cometchat/uikit-elements";
+declare const _sfc_main: import("vue").DefineComponent<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -76,7 +76,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     loadingStateView: {
         type: PropType<ViewType>;
     };
-}>, {
+}, {
     currentMessage: {
         getUnreadRepliesCount: () => number;
         setUnreadRepliesCount: (value: number) => void;
@@ -133,20 +133,12 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         setReactions: (reactions: any) => import("@cometchat/chat-sdk-javascript").ReactionCount[];
         getReactions: () => import("@cometchat/chat-sdk-javascript").ReactionCount[];
     };
-    messageReceipt: Ref<import("@cometchat/chat-sdk-javascript").MessageReceipt[], import("@cometchat/chat-sdk-javascript").MessageReceipt[]>;
-    user: Ref<import("@cometchat/chat-sdk-javascript").User, import("@cometchat/chat-sdk-javascript").User>;
-    listStyle: Ref<ListStyle, ListStyle>;
-    state: Ref<States, States>;
+    messageReceipt: Ref<import("@cometchat/chat-sdk-javascript").MessageReceipt[]>;
+    user: Ref<import("@cometchat/chat-sdk-javascript").User>;
+    listStyle: Ref<ListStyle>;
+    state: Ref<States>;
     Receipts: typeof Receipts;
     emptyLabelStyle: Ref<{
-        textFont?: string;
-        textColor?: string;
-        height?: string;
-        width?: string;
-        border?: string;
-        borderRadius?: string;
-        background?: string;
-    }, LabelStyle | {
         textFont?: string;
         textColor?: string;
         height?: string;
@@ -222,7 +214,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         marginBottom: string;
         marginTop: string;
     };
-}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -295,7 +287,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     loadingStateView: {
         type: PropType<ViewType>;
     };
-}>> & Readonly<{}>, {
+}>>, {
     title: string;
     backButtonIconURL: string;
     closeButtonIconURL: string;
@@ -304,5 +296,5 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     deliveredIcon: string;
     readIcon: string;
     messageInformationStyle: MessageInformationStyle;
-}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+}, {}>;
 export default _sfc_main;

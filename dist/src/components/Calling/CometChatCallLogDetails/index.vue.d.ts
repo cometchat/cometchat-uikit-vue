@@ -4,7 +4,7 @@ import { verifyCallUser } from "../Utils/utils";
 import { CometChatCallDetailsOption, CometChatCallDetailsTemplate, CometChatDetailsTemplate, CometChatTheme } from "@cometchat/uikit-resources";
 import { getProfileContainerStyle, getBackButtonStyle, getButtonContainerStyle, getContainerStyle, getTitleStyle } from "./style";
 import { CallLogDetailsStyle, CallLogHistoryConfiguration, CallLogParticipantsConfiguration, CallLogRecordingsConfiguration } from "@cometchat/uikit-shared";
-declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+declare const _sfc_main: import("vue").DefineComponent<{
     call: {
         type: PropType<any>;
         required: true;
@@ -43,16 +43,16 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: PropType<CallLogDetailsStyle>;
         default: () => Record<string, any>;
     };
-}>, {
-    theme: Ref<CometChatTheme, CometChatTheme>;
+}, {
+    theme: Ref<CometChatTheme>;
     verifyCallUser: typeof verifyCallUser;
-    loggedInUser: Ref<import("@cometchat/chat-sdk-javascript").User, import("@cometchat/chat-sdk-javascript").User>;
+    loggedInUser: Ref<import("@cometchat/chat-sdk-javascript").User>;
     getAvatarStyle: (theme: CometChatTheme, avatarStyle?: AvatarStyle) => AvatarStyle;
     getAvatarTitleStyle: (theme: CometChatTheme, style: CallLogDetailsStyle) => {
         color: string;
         font: string;
     };
-    templates: Ref<CometChatDetailsTemplate[], CometChatDetailsTemplate[]>;
+    templates: Ref<CometChatDetailsTemplate[]>;
     getOptionsForTemplate: (template: CometChatDetailsTemplate) => CometChatCallDetailsOption[];
     getProfileContainerStyle: typeof getProfileContainerStyle;
     getBackButtonStyle: typeof getBackButtonStyle;
@@ -68,7 +68,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     getContainerStyle: typeof getContainerStyle;
     getTitleStyle: typeof getTitleStyle;
     localize: (str: string) => any;
-}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     call: {
         type: PropType<any>;
         required: true;
@@ -107,13 +107,13 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: PropType<CallLogDetailsStyle>;
         default: () => Record<string, any>;
     };
-}>> & Readonly<{}>, {
+}>>, {
     title: string;
     avatarStyle: AvatarStyle;
     backIconUrl: string;
     callLogHistoryConfiguration: CallLogHistoryConfiguration;
     callLogParticipantsConfiguration: CallLogParticipantsConfiguration;
     callLogRecordingsConfiguration: CallLogRecordingsConfiguration;
-    callLogDetailsStyle: CallLogDetailsStyle;
-}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+    callLogDetailsStyle: Record<string, any>;
+}, {}>;
 export default _sfc_main;

@@ -1,7 +1,7 @@
 import { CometChatTabItem, TabAlignment, IconButtonAlignment } from "@cometchat/uikit-resources";
 import { BaseStyle } from "@cometchat/uikit-shared";
 import { PropType, Ref } from "vue";
-declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+declare const _sfc_main: import("vue").DefineComponent<{
     tabAlignment: {
         type: PropType<TabAlignment>;
     };
@@ -16,8 +16,8 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: BooleanConstructor;
         default: boolean;
     };
-}>, {
-    childViewRef: Ref<ViewType, ViewType>;
+}, {
+    childViewRef: Ref<ViewType>;
     getTabsStyle: () => any;
     getTabsPlacement: () => any;
     IconButtonAlignment: typeof IconButtonAlignment;
@@ -50,7 +50,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         "justify-content": string;
     };
     getKeepAliveTabs: () => any[];
-}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     tabAlignment: {
         type: PropType<TabAlignment>;
     };
@@ -65,8 +65,8 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: BooleanConstructor;
         default: boolean;
     };
-}>> & Readonly<{}>, {
+}>>, {
     tabsStyle: BaseStyle;
     disableDraggable: boolean;
-}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+}, {}>;
 export default _sfc_main;

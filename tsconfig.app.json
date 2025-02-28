@@ -6,7 +6,7 @@
     "noEmitOnError": false,
     "module": "esnext",
     "outDir": "dist",
-    "strict": false,
+    "strict": true,
     "jsx": "preserve",
     "moduleResolution": "node",
     "skipLibCheck": true,

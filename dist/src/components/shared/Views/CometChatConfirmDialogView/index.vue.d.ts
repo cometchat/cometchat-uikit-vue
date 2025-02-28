@@ -1,4 +1,4 @@
-declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+declare const _sfc_main: import("vue").DefineComponent<{
     backdropStyle: {
         type: typeof import("@cometchat/chat-sdk-javascript").User;
     };
@@ -20,7 +20,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     listeners: {
         type: any;
     };
-}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     backdropStyle: {
         type: typeof import("@cometchat/chat-sdk-javascript").User;
     };
@@ -42,7 +42,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     listeners: {
         type: any;
     };
-}>> & Readonly<{}>, {
+}>>, {
     listeners: any;
-}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+}, {}>;
 export default _sfc_main;

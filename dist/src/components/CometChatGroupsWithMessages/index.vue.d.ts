@@ -2,7 +2,7 @@ import { Ref, PropType } from "vue";
 import { CreateGroupConfiguration, GroupsConfiguration, JoinGroupConfiguration, MessageHeaderStyle, MessagesConfiguration, WithMessagesStyle } from "@cometchat/uikit-shared";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 import { CreateGroupStyle, JoinGroupStyle, ListItemStyle } from "@cometchat/uikit-elements";
-declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+declare const _sfc_main: import("vue").DefineComponent<{
     group: {
         type: PropType<import("@cometchat/chat-sdk-javascript").Group>;
     };
@@ -42,7 +42,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: PropType<(error: CometChat.CometChatException) => void>;
         default: (error: CometChat.CometChatException) => void;
     };
-}>, {
+}, {
     labelStyle: any;
     onItemClick: (group: CometChat.Group) => void;
     emptyMessageStyle: () => {
@@ -59,10 +59,10 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         borderRadius: any;
         background: any;
     };
-    messagesConfig: Ref<any, any>;
-    currentGroup: Ref<any, any>;
-    currentUser: Ref<import("@cometchat/chat-sdk-javascript").User, import("@cometchat/chat-sdk-javascript").User>;
-    openPasswordModal: Ref<boolean, boolean>;
+    messagesConfig: Ref<any>;
+    currentGroup: Ref<any>;
+    currentUser: Ref<import("@cometchat/chat-sdk-javascript").User>;
+    openPasswordModal: Ref<boolean>;
     openCreateGroup: () => void;
     closeCreateGroup: () => void;
     closeJoinGroup: () => void;
@@ -79,7 +79,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
             "cc-button-clicked": () => void;
         };
     };
-    openCreateGroupPage: Ref<boolean, boolean>;
+    openCreateGroupPage: Ref<boolean>;
     backdropStyle: any;
     getCreateGroupStyle: () => CreateGroupStyle;
     protectedGroup: any;
@@ -114,7 +114,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         borderRadius?: string;
         background?: string;
     };
-}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     group: {
         type: PropType<import("@cometchat/chat-sdk-javascript").Group>;
     };
@@ -154,7 +154,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: PropType<(error: CometChat.CometChatException) => void>;
         default: (error: CometChat.CometChatException) => void;
     };
-}>> & Readonly<{}>, {
+}>>, {
     onError: (error: CometChat.CometChatException) => void;
     groupsConfiguration: GroupsConfiguration;
     isMobileView: boolean;
@@ -164,5 +164,5 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     groupsWithMessagesStyle: WithMessagesStyle;
     createGroupConfiguration: CreateGroupConfiguration;
     joinGroupConfiguration: JoinGroupConfiguration;
-}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+}, {}>;
 export default _sfc_main;

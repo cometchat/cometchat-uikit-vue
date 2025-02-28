@@ -1,9 +1,9 @@
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-import { ListStyle, ConversationsStyle, ConversationUtils, CometChatTextFormatter } from "@cometchat/uikit-shared";
+import { ConversationsStyle, ConversationUtils, CometChatTextFormatter } from "@cometchat/uikit-shared";
 import { AvatarStyle, BackdropStyle, BadgeStyle, ConfirmDialogStyle, DateStyle, ListItemStyle, ReceiptStyle } from "@cometchat/uikit-elements";
 import { TitleAlignment, States, CometChatOption, DatePatterns, SelectionMode } from "@cometchat/uikit-resources";
 import { Ref, PropType } from "vue";
-declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+declare const _sfc_main: import("vue").DefineComponent<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -188,12 +188,12 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: PropType<CometChatTextFormatter[]>;
         default: () => CometChatTextFormatter[];
     };
-}>, {
-    Conversations: Ref<import("@cometchat/chat-sdk-javascript").Conversation[], import("@cometchat/chat-sdk-javascript").Conversation[]>;
+}, {
+    Conversations: Ref<import("@cometchat/chat-sdk-javascript").Conversation[]>;
     onClick: (conversation: CometChat.Conversation) => void;
     getActiveConversation: (conversation: CometChat.Conversation) => boolean;
     checkGroupType: (conversation: CometChat.Conversation) => string;
-    isDialogOpen: Ref<boolean, boolean>;
+    isDialogOpen: Ref<boolean>;
     onConfirmClick: () => void;
     onCancelClick: () => void;
     myavatarStyle: any;
@@ -201,31 +201,6 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     mydeleteConversationDialogStyle: any;
     receiptStyleComputed: import("vue").ComputedRef<ReceiptStyle>;
     listStyle: Ref<{
-        titleTextFont?: string;
-        titleTextColor?: string;
-        emptyStateTextFont?: string;
-        emptyStateTextColor?: string;
-        errorStateTextFont?: string;
-        errorStateTextColor?: string;
-        loadingIconTint?: string;
-        separatorColor?: string;
-        boxShadow?: string;
-        searchIconTint?: string;
-        searchBorder?: string;
-        searchBorderRadius?: string;
-        searchBackground?: string;
-        searchPlaceholderTextFont?: string;
-        searchPlaceholderTextColor?: string;
-        searchTextFont?: string;
-        searchTextColor?: string;
-        sectionHeaderTextFont?: string;
-        sectionHeaderTextColor?: string;
-        height?: string;
-        width?: string;
-        border?: string;
-        borderRadius?: string;
-        background?: string;
-    }, ListStyle | {
         titleTextFont?: string;
         titleTextColor?: string;
         emptyStateTextFont?: string;
@@ -284,46 +259,12 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         submenuBorder: string;
         submenuBorderRadius: string;
         submenuBackground: string;
-    }, {
-        width: string;
-        height: string;
-        border: string;
-        borderRadius: string;
-        background: string;
-        textFont: string;
-        textColor: string;
-        iconTint: string;
-        iconBackground: string;
-        iconBorder: string;
-        iconBorderRadius: string;
-        submenuWidth: string;
-        submenuHeight: string;
-        submenuBorder: string;
-        submenuBorderRadius: string;
-        submenuBackground: string;
-    } | {
-        width: string;
-        height: string;
-        border: string;
-        borderRadius: string;
-        background: string;
-        textFont: string;
-        textColor: string;
-        iconTint: string;
-        iconBackground: string;
-        iconBorder: string;
-        iconBorderRadius: string;
-        submenuWidth: string;
-        submenuHeight: string;
-        submenuBorder: string;
-        submenuBorderRadius: string;
-        submenuBackground: string;
     }>;
     ConversationUtils: typeof ConversationUtils;
     DatePatterns: typeof DatePatterns;
     onOptionClick: (event: any, conversation: CometChat.Conversation) => void;
     getConversation: () => Promise<void>;
-    state: Ref<States, States>;
+    state: Ref<States>;
     myoptions: any;
     mydateStyle: any;
     mybadgeStyle: any;
@@ -334,7 +275,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     setConversationOptions: (item: CometChat.Conversation) => any;
     handleSelection: (event: CustomEvent, conversation: CometChat.Conversation) => void;
     mentions: string;
-}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: () => any;
@@ -519,7 +460,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
         type: PropType<CometChatTextFormatter[]>;
         default: () => CometChatTextFormatter[];
     };
-}>> & Readonly<{}>, {
+}>>, {
     title: string;
     titleAlignment: TitleAlignment;
     disableUsersPresence: boolean;
@@ -553,5 +494,5 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     backdropStyle: BackdropStyle;
     disableMentions: boolean;
     textFormatters: CometChatTextFormatter[];
-}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+}, {}>;
 export default _sfc_main;

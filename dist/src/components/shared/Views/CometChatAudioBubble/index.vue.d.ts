@@ -1,4 +1,4 @@
-declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+declare const _sfc_main: import("vue").DefineComponent<{
     audioUrl: {
         type: StringConstructor;
         default: any;
@@ -6,7 +6,7 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     audioStyle: {
         type: any;
     };
-}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+}, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     audioUrl: {
         type: StringConstructor;
         default: any;
@@ -14,8 +14,8 @@ declare const _sfc_main: import("vue").DefineComponent<import("vue").ExtractProp
     audioStyle: {
         type: any;
     };
-}>> & Readonly<{}>, {
+}>>, {
     audioUrl: string;
     audioStyle: any;
-}, {}, undefined, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+}, {}>;
 export default _sfc_main;
