@@ -275,6 +275,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
     setConversationOptions: (item: CometChat.Conversation) => any;
     handleSelection: (event: CustomEvent, conversation: CometChat.Conversation) => void;
     mentions: string;
+    getCheckboxStyle: () => {
+        height: string;
+        width: string;
+        border: string;
+        borderRadius: string;
+        checkedBackgroundColor: string;
+        uncheckedBackgroundColor: string;
+    };
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;

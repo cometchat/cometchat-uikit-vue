@@ -235,6 +235,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
     searchKeyword: Ref<string>;
     fetchNextBannedMembers: () => Promise<void>;
     handleSelection: (event: CustomEvent, bannedMember: CometChat.GroupMember) => void;
+    getCheckboxStyle: () => {
+        height: string;
+        width: string;
+        border: string;
+        borderRadius: string;
+        checkedBackgroundColor: string;
+        uncheckedBackgroundColor: string;
+    };
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;

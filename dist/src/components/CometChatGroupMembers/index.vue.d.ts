@@ -1814,6 +1814,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
     mygroupScopeStyle: any;
     handleSelection: (event: CustomEvent, groupMember: CometChat.GroupMember) => void;
     onClick: (user: CometChat.GroupMember) => void;
+    getCheckboxStyle: () => {
+        height: string;
+        width: string;
+        border: string;
+        borderRadius: string;
+        checkedBackgroundColor: string;
+        uncheckedBackgroundColor: string;
+    };
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;

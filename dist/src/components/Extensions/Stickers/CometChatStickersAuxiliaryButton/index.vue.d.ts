@@ -72,8 +72,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
 }, {
     emojiButtonStyle: any;
     stickerKeyboardStyle: any;
-    popoverStyle: any;
     listeners: any;
+    popoverStyle: any;
     stickerKeyboardListeners: any;
     auxiliaryButtonRefs: any;
 }, {}>;

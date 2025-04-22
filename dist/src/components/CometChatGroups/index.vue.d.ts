@@ -1748,6 +1748,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
     States: typeof States;
     searchKeyword: Ref<string>;
     handleSelection: (event: CustomEvent, group: CometChat.Group) => void;
+    getCheckboxStyle: () => {
+        height: string;
+        width: string;
+        border: string;
+        borderRadius: string;
+        checkedBackgroundColor: string;
+        uncheckedBackgroundColor: string;
+    };
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;

@@ -179,7 +179,6 @@ declare const _sfc_main: import("vue").DefineComponent<{
     auxilaryPlacement: Placement.top;
     emojiPopover: PopoverStyle;
     inputChangeHandler: (event: any) => void;
-    popoverStyle: PopoverStyle;
     actionsheetStyle: ActionSheetStyle;
     attachmentButtonStyle: any;
     stickerButtonRef: any;
@@ -208,7 +207,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getEmojiButtonStyle: () => any;
     getEmojiKeyboardStyle: () => EmojiKeyboardStyle;
     getActionsheetStyle: () => ActionSheetStyle;
-    getPopoverStyle: () => PopoverStyle;
+    getPopoverStyle: () => {
+        width: string;
+        height: string;
+        border: string;
+        background: string;
+        borderRadius: string;
+        boxShadow: string;
+    };
     getStickerKeyboardStyle: () => StickersStyle;
     getPreviewStyle: () => PreviewStyle;
     getAttachmentOptions: () => any;
