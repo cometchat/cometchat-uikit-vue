@@ -24,6 +24,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     placement: {
         type: PropType<Placement>;
     };
+    parentClassName: StringConstructor;
 }, {
     menuItemStyle: () => {
         background: string;
@@ -44,13 +45,12 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     contextMenuStyle: () => any;
     topMenuStyle: () => any;
-    subMenuStyle: (showSubMenu: boolean) => any;
     buttonStyle: {
         background: string;
         border: string;
         borderRadius: string;
     };
-    handleMenuClick: () => boolean;
+    handleMenuClick: (event: any) => void;
     showSubMenu: import("vue").Ref<boolean>;
     topMenu: any;
     subMenu: any;
@@ -63,6 +63,13 @@ declare const _sfc_main: import("vue").DefineComponent<{
     getClosePopOverHandler: (index: number, isSubMenu?: boolean) => (_event: any) => void;
     topMenuPopOverRef: any;
     subMenuPopOverRef: any;
+    rootElement: any;
+    submenuPosition: import("vue").Ref<"bottom" | "top">;
+    submenuPositionClass: import("vue").ComputedRef<"cc-submenu-top" | "cc-submenu-bottom">;
+    subMenuWrapperStyle: () => {
+        background: any;
+        border: string;
+    };
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     data: {
         type: PropType<CometChatActionsIcon[] | CometChatActionsView[]>;
@@ -86,6 +93,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     placement: {
         type: PropType<Placement>;
     };
+    parentClassName: StringConstructor;
 }>>, {
     ContextMenuStyle: ContextMenuStyle;
     onOptionClicked: any;

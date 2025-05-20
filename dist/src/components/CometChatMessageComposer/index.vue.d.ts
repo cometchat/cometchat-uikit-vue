@@ -182,7 +182,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     actionsheetStyle: ActionSheetStyle;
     attachmentButtonStyle: any;
     stickerButtonRef: any;
-    closePreview: () => void;
+    onPreviewClosed: () => void;
     openActionSheet: (event: any) => void;
     handleActions: (event: any) => void;
     messageText: Ref<string>;
