@@ -79,6 +79,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         getProcessedText: () => string;
         getTags: () => String[];
         setTags: (tags: String[]) => void;
+        getModerationStatus: () => import("@cometchat/chat-sdk-javascript").ModerationStatus;
         getUnreadRepliesCount: () => number;
         setUnreadRepliesCount: (value: number) => void;
         getId: () => number;
