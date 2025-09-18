@@ -80,6 +80,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         avatarStyle: import("@cometchat/uikit-elements").AvatarStyle;
         dateSeparatorStyle: import("@cometchat/uikit-elements").DateStyle;
         messageListStyle: import("@cometchat/uikit-shared").MessageListStyle;
+        newMessageIndicatorStyle: import("@cometchat/uikit-shared").NewMessageIndicatorStyle;
         onError: (error: import("@cometchat/chat-sdk-javascript").CometChatException) => void;
         backdropStyle: import("@cometchat/uikit-elements").BackdropStyle;
         disableMentions: boolean;
@@ -88,6 +89,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         emojiKeyboardStyle: import("@cometchat/uikit-elements").EmojiKeyboardStyle;
         threadIndicatorIcon: string;
         textFormatters: import("@cometchat/uikit-shared").CometChatTextFormatter[];
+        newMessageIndicatorIconUrl: string;
         height: string;
     };
     titleStyle: any;
