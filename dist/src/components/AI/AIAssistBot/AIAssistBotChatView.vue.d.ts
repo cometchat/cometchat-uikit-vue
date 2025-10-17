@@ -128,8 +128,12 @@ declare const _sfc_main: import("vue").DefineComponent<{
         getMentionedUsers: () => import("@cometchat/chat-sdk-javascript").User[];
         setHasMentionedMe: (hasMentionedMe: boolean) => void;
         hasMentionedMe: () => boolean;
-        setReactions: (reactions: any) => import("@cometchat/chat-sdk-javascript").ReactionCount[];
+        setReactions: (reactions: import("@cometchat/chat-sdk-javascript").ReactionCount[]) => void;
         getReactions: () => import("@cometchat/chat-sdk-javascript").ReactionCount[];
+        getQuotedMessageId: () => number;
+        setQuotedMessageId: (value: number) => void;
+        getQuotedMessage: () => import("@cometchat/chat-sdk-javascript").BaseMessage;
+        setQuotedMessage: (value: import("@cometchat/chat-sdk-javascript").BaseMessage) => void;
     }[]>;
     subtitleText: any;
     States: typeof States;

@@ -9,7 +9,7 @@ export declare const MessageListFooterStyle: () => {
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 import { AvatarStyle, BackdropStyle, DateStyle, EmojiKeyboardStyle } from "@cometchat/uikit-elements";
 import { States, MessageListAlignment, DatePatterns, TimestampAlignment, CometChatMessageTemplate, CometChatTheme, MessageBubbleAlignment, CometChatActionsView, CometChatActionsIcon, TitleAlignment } from "@cometchat/uikit-resources";
-import { MessageListStyle, ListStyle, MessageInformationConfiguration, ReactionsConfiguration, CometChatTextFormatter } from "@cometchat/uikit-shared";
+import { MessageListStyle, ListStyle, MessageInformationConfiguration, ReactionsConfiguration, CometChatTextFormatter, NewMessageIndicatorStyle } from "@cometchat/uikit-shared";
 export declare const defaultDateSeparatorStyle: DateStyle;
 export declare const unreadMessageStyle: () => {
     height: string;
@@ -136,6 +136,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: StringConstructor;
         default: string;
     };
+    newMessageIndicatorStyle: {
+        type: typeof NewMessageIndicatorStyle;
+        default: NewMessageIndicatorStyle;
+    };
+    newMessageIndicatorIconUrl: {
+        type: StringConstructor;
+        default: string;
+    };
     onThreadRepliesClick: {
         type: FunctionConstructor;
         default: () => void;
@@ -253,11 +261,15 @@ declare const _sfc_main: import("vue").DefineComponent<{
         background: string;
         display: string;
         justifyContent: string;
+        buttonIconTint: string;
+        iconHeight: string;
+        iconWidth: string;
         font: string;
         buttonTextColor: string;
         border: string;
         borderRadius: string;
         padding: string;
+        gap: string;
     };
     scrollToBottom: (skipRequestBuilderCreation?: boolean) => void;
     UnreadCount: any;
@@ -454,6 +466,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: StringConstructor;
         default: string;
     };
+    newMessageIndicatorStyle: {
+        type: typeof NewMessageIndicatorStyle;
+        default: NewMessageIndicatorStyle;
+    };
+    newMessageIndicatorIconUrl: {
+        type: StringConstructor;
+        default: string;
+    };
     onThreadRepliesClick: {
         type: FunctionConstructor;
         default: () => void;
@@ -543,6 +563,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
     timestampAlignment: TimestampAlignment;
     DateSeparatorPattern: DatePatterns;
     newMessageIndicatorText: string;
+    newMessageIndicatorStyle: NewMessageIndicatorStyle;
+    newMessageIndicatorIconUrl: string;
     onThreadRepliesClick: Function;
     dateSeparatorStyle: DateStyle;
     messageListStyle: MessageListStyle;

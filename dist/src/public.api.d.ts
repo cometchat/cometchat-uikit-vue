@@ -27,6 +27,7 @@ export { TextModeratorExtensionDecorator } from "./components/Extensions/TextMod
 export { ThumbnailGenerationExtension } from "./components/Extensions/ThumbnailGeneration/ThumbnailGenerationExtension";
 export { ThumbnailGenerationExtensionDecorator } from "./components/Extensions/ThumbnailGeneration/ThumbnailGenerationExtensionDecorator";
 export { CallingExtension } from "./components/Calling/CallingExtension";
+export { shouldShowCustomMimeTypes } from "./components/shared/Utils/UtilityFunctions";
 export { CallingExtensionDecorator } from "./components/Calling/CallingExtensionDecorator";
 export { default as CometChatCallButtons } from "./components/Calling/CometChatCallButtons/index.vue";
 export { default as CometChatIncomingCall } from "./components/Calling/CometChatIncomingCall/index.vue";
