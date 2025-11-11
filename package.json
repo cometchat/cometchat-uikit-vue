@@ -1,6 +1,6 @@
 {
   "name": "@cometchat/chat-uikit-vue",
-  "version": "4.3.31",
+  "version": "4.3.32",
   "private": false,
   "description": "Ready-to-use Chat UI Components for Vue(Javascript/Web)",
   "author": "CometChat",
@@ -55,10 +55,10 @@
     "vue": "^3.3.2"
   },
   "peerDependencies": {
-    "@cometchat/chat-sdk-javascript": "^4.1.1",
-    "@cometchat/uikit-elements": "^4.3.27",
-    "@cometchat/uikit-resources": "^4.3.23",
-    "@cometchat/uikit-shared": "^4.3.28"
+    "@cometchat/chat-sdk-javascript": "^4.1.3",
+    "@cometchat/uikit-elements": "~4.3.28",
+    "@cometchat/uikit-resources": "~4.3.24",
+    "@cometchat/uikit-shared": "~4.3.29"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",

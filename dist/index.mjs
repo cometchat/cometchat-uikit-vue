@@ -3986,12 +3986,12 @@ const Et = class Et {
     const n = new y.AppSettingsBuilder();
     t.getRoles() ? n.subscribePresenceForRoles(t.getRoles()) : t.getSubscriptionType() === "ALL_USERS" ? n.subscribePresenceForAllUsers() : t.getSubscriptionType() === "FRIENDS" && n.subscribePresenceForFriends(), n.autoEstablishSocketConnection(
       t.isAutoEstablishSocketConnection()
-    ), n.setRegion(t.getRegion()), n.overrideAdminHost(t == null ? void 0 : t.getAdminHost()), n.overrideClientHost(t == null ? void 0 : t.getClientHost());
+    ), n.setRegion(t.getRegion()), n.overrideAdminHost(t == null ? void 0 : t.getAdminHost()), n.overrideClientHost(t == null ? void 0 : t.getClientHost()), t.getStorageMode() && n.setStorageMode(t.getStorageMode());
     const o = n.build();
     return y.setSource && y.setSource("uikit-v4", "web", "vuejs"), qi && (qi.uikitSettings = Et == null ? void 0 : Et.uiKitSettings), Lt.attachListener(), new Promise((a, l) => {
       window.CometChatUiKit = {
         name: "@cometchat/chat-uikit-vue",
-        version: "4.3.31"
+        version: "4.3.32"
       }, y.init(t == null ? void 0 : t.appId, o).then(() => {
         y.getLoggedinUser().then((r) => (r && (Lt.setLoggedInUser(r), De.init(), this.initiateAfterLogin()), a(r))).catch((r) => (console.log(r), l(r)));
       }).catch((r) => l(r));
